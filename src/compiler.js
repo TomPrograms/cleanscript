@@ -96,7 +96,7 @@ module.exports = class Compiler {
           }
         }
 
-        if (i < stmt.params.length - 1) currentParamString += ",";
+        if (i < method.parameters.length - 1) currentParamString += ",";
         paramsString += currentParamString;
       });
 
