@@ -29,7 +29,7 @@ var print = lambda (val) : console.log(val);
 
 print(checkValInVals()); // true
 print(checkValInVals(2)); // false
-print(checkValInVals(2, [2,3])); // true
+print(checkValInVals(2, 2, 3)); // true
 ```
 
 Compiles to the following Javascript:
