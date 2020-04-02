@@ -1,4 +1,4 @@
-<img src="./doc/logo.png" alt="Cleanscript Logo" align="right" height="175"/>
+<img src="./docs/logo.png" alt="Cleanscript Logo" align="right" height="175"/>
 
 # Cleanscript
 
