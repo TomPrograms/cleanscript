@@ -291,6 +291,12 @@ module.exports = class Lexer {
         this.parseString('"');
         break;
 
+      case " ":
+      case "\r":
+      case "\t":
+        // Ignore whitespace.
+        break;
+
       case "'":
         this.parseString("'");
         break;
