@@ -434,14 +434,78 @@ module.exports = class Parser {
     return new Stmt.Await(this.expression());
   }
 
+  forStatement() {
+    this.consume(tokenTypes.LEFT_PAREN, "Expected '(' after 'for'.");
+
+    let initializer;
+    if (this.match(tokenTypes.SEMICOLON)) {
+      initializer = null;
+    } else if (this.check(tokenTypes.VAR) || this.check(tokenTypes.CONST) || this.check(tokenTypes.LET)) {
+      if (this.match(tokenTypes.VAR)) initializer = this.varDeclaration();
+      else if (this.match(tokenTypes.CONST)) initializer = this.constDeclaration();
+      else if (this.match(tokenTypes.LET)) initializer = this.letDeclaration();
+    } else {
+      initializer = this.expressionStatement();
+    }
+
+    let condition = null;
+    if (!this.check(tokenTypes.SEMICOLON)) {
+      condition = this.expression();
+    }
+
+    this.consume(
+      tokenTypes.SEMICOLON,
+      "Expected ';' after condition statement"
+    );
+
+    let increment = null;
+    if (!this.check(tokenTypes.RIGHT_PAREN)) {
+      increment = this.expression();
+    }
+
+    this.consume(tokenTypes.RIGHT_PAREN, "Expected ')' after clauses");
+    this.consume(tokenTypes.COLON, "Expected ':' at end of for statement.");
+
+    let body = [];
+    if (this.match(tokenTypes.INDENT)) {
+      body = this.block();
+    } else {
+      body.push(this.statement());
+      if (this.match(tokenTypes.INDENT)) {
+        body = body.concat(this.block());
+      }
+    }
+    body = new Stmt.Block(body);
+
+    return new Stmt.For(initializer, condition, increment, body);
+  }
+
+  whileStatement() {
+    let condition = this.expression();
+    this.consume(tokenTypes.COLON, "Expected ':' after if statement.");
+    
+    let body = [];
+    if (this.match(tokenTypes.INDENT)) {
+      body = this.block();
+    } else {
+      body.push(this.statement());
+      if (this.match(tokenTypes.INDENT)) {
+        body = body.concat(this.block());
+      }
+    }
+    body = new Stmt.Block(body);
+    
+    return new Stmt.While(condition, body);
+  }
+
   statement() {
     // if (this.match(tokenTypes.TRY)) return this.tryStatement();
     // if (this.match(tokenTypes.SWITCH)) return this.switchStatement();
     if (this.match(tokenTypes.RETURN)) return this.returnStatement();
     if (this.match(tokenTypes.CONTINUE)) return this.continueStatement();
     if (this.match(tokenTypes.BREAK)) return this.breakStatement();
-    // if (this.match(tokenTypes.FOR)) return this.forStatement();
-    // if (this.match(tokenTypes.WHILE)) return this.whileStatement();
+    if (this.match(tokenTypes.FOR)) return this.forStatement();
+    if (this.match(tokenTypes.WHILE)) return this.whileStatement();
     if (this.match(tokenTypes.IF)) return this.ifStatement();
 
     return this.expressionStatement();

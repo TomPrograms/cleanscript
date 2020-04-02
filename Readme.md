@@ -8,6 +8,7 @@
 - Compiles to Javascript for compatibility with browsers, NodeJS and Electron.
 - Merges familiar syntax from Python and Javascript for a clean look.
 - Cleanscript still allows you to leverage all the powerful built-in Javascript libraries, objects and prototypes.
+- Mix-in Javascript at-will to access the maturity and power of pure Javascript.
 
 <br>
 

@@ -2,39 +2,12 @@ let includeFunctionFlag = false;
 let includeFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || typeof obj === "string") {return obj.indexOf(val) !== -1;}return val in obj;};`;
 
 module.exports = class Compiler {
-  visitLambdaExpr(expr) {
-    let paramsString = "";
-    let wildcardDefault = null;
-    expr.params.forEach((param, i) => {
-      let { name, type } = param;
-      let defaultValue = param.default;
-      let currentParamString = "";
+  visitWhileStmt(stmt) {
+    return `while(${stmt.condition.accept(this)}){${stmt.body.accept(this)}};`
+  }
 
-      currentParamString += name.lexeme;
-
-      if (type === "wildcard") {
-        currentParamString = "..." + currentParamString;
-        if (defaultValue) {
-          // a wildcard default requires code in body, so save it for later
-          wildcardDefault = { name: name.lexeme, value: defaultValue.value };
-        }
-      } else {
-        if (defaultValue) {
-          currentParamString += `=${defaultValue.value}`;
-        }
-      }
-
-      if (i < expr.params.length - 1) currentParamString += ",";
-      paramsString += currentParamString;
-    });
-
-    // support wildcard defaults
-    let wildcardDefaultCode = "";
-    if (wildcardDefault) {
-      wildcardDefaultCode = `${wildcardDefault.name} = ${wildcardDefault.name}.length > 0 ? ${wildcardDefault.name} : ${wildcardDefault.value};`;
-    }
-
-    return `function (${paramsString}) {${wildcardDefaultCode}return ${expr.body.accept(this)}}`;
+  visitForStmt(stmt) {
+    return `for(${stmt.initializer.accept(this)}${stmt.condition.accept(this)};${stmt.increment.accept(this)}){${stmt.body.accept(this)}}`
   }
 
   visitFunctionStmt(stmt) {
@@ -168,6 +141,41 @@ module.exports = class Compiler {
 
   visitAssignExpr(expr) {
     return `${expr.name.lexeme} = ${expr.value.accept(this)}`;
+  }
+  
+  visitLambdaExpr(expr) {
+    let paramsString = "";
+    let wildcardDefault = null;
+    expr.params.forEach((param, i) => {
+      let { name, type } = param;
+      let defaultValue = param.default;
+      let currentParamString = "";
+
+      currentParamString += name.lexeme;
+
+      if (type === "wildcard") {
+        currentParamString = "..." + currentParamString;
+        if (defaultValue) {
+          // a wildcard default requires code in body, so save it for later
+          wildcardDefault = { name: name.lexeme, value: defaultValue.value };
+        }
+      } else {
+        if (defaultValue) {
+          currentParamString += `=${defaultValue.value}`;
+        }
+      }
+
+      if (i < expr.params.length - 1) currentParamString += ",";
+      paramsString += currentParamString;
+    });
+
+    // support wildcard defaults
+    let wildcardDefaultCode = "";
+    if (wildcardDefault) {
+      wildcardDefaultCode = `${wildcardDefault.name} = ${wildcardDefault.name}.length > 0 ? ${wildcardDefault.name} : ${wildcardDefault.value};`;
+    }
+
+    return `function (${paramsString}) {${wildcardDefaultCode}return ${expr.body.accept(this)}}`;
   }
 
   visitCallExpr(expr) {

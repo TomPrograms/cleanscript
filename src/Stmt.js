@@ -95,18 +95,6 @@ class Block extends Stmt {
   }
 }
 
-class Do extends Stmt {
-  constructor(doBranch, whileCondition) {
-    super();
-    this.doBranch = doBranch;
-    this.whileCondition = whileCondition;
-  }
-
-  accept(visitor) {
-    return visitor.visitDoStmt(this);
-  }
-}
-
 class While extends Stmt {
   constructor(condition, body) {
     super();
@@ -237,7 +225,6 @@ module.exports = {
   New,
   Class,
   Block,
-  Do,
   While,
   For,
   JSRAW,
