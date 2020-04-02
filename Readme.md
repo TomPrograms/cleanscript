@@ -27,9 +27,18 @@ function checkValInVals(val=1, *vals=[1]):
 
 var print = lambda (val) : console.log(val);
 
-print(checkValInVals()); // true
-print(checkValInVals(2)); // false
-print(checkValInVals(2, 2, 3)); // true
+try:
+  print(checkValInVals()); // true
+  print(checkValInVals(2)); // false
+  print(checkValInVals(2, 2, 3)); // true
+catch error:
+  console.error(error);
+else:
+  // only runs if catch doesn't
+  console.log('No errors!');
+finally:
+  // runs at the end
+  console.log("Everything finished here!");
 ```
 
 Compiles to the following Javascript:
@@ -51,7 +60,21 @@ var print = function (val) {
   return console.log(val);
 };
 
-print(checkValInVals());
-print(checkValInVals(2));
-print(checkValInVals(2, [2, 3]));
+try {
+  let $_successful = true;
+  try {
+    print(checkValInVals());
+    print(checkValInVals(2));
+    print(checkValInVals(2, 2, 3));
+  } catch (error) {
+    $_successful = false;
+    console.error(error);
+  }
+  if ($_successful) {
+    console.log("No errors!");
+  }
+} finally {
+  console.log("Everything finished here!");
+}
+
 ```
