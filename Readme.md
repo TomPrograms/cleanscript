@@ -10,12 +10,8 @@
 - Cleanscript still allows you to leverage all the powerful built-in Javascript libraries, objects and prototypes.
 - Mix-in Javascript at-will to access the maturity and power of pure Javascript.
 
-<br>
-
-<a href="https://npmjs.com/package/cleanscript">
-  <img src="https://img.shields.io/npm/v/cleanscript?color=green">
-</a>
-<img src="https://img.shields.io/badge/license-MIT-blue">
+[![Cleanscript NPM Version](https://img.shields.io/npm/v/cleanscript?color=green)](https://npmjs.com/package/cleanscript)
+[![Cleanscript License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
 ## Example
 
@@ -76,5 +72,4 @@ try {
 } finally {
   console.log("Everything finished here!");
 }
-
 ```
