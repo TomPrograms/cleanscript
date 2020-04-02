@@ -22,10 +22,10 @@ module.exports = class Compiler {
   visitTryStmt(stmt) {
     if (stmt.elseBranch) {
       let tryBranch = `try{${stmt.tryBranch.accept(this)}}`;
-      let catchBranch = stmt.catchBranch ? `catch${stmt.catchBranch.catchVar ? `(${stmt.catchBranch.catchVar.lexeme})` : ""} {$successful=false;${stmt.catchBranch.block.accept(this)}}` : "catch{}";
+      let catchBranch = stmt.catchBranch ? `catch${stmt.catchBranch.catchVar ? `(${stmt.catchBranch.catchVar.lexeme})` : ""} {$_successful=false;${stmt.catchBranch.block.accept(this)}}` : "catch{}";
       let finallyBranch = stmt.finallyBranch ? `finally{${stmt.finallyBranch.accept(this)}}` : "finally{}";
-      let elseBranch = stmt.elseBranch ? `if ($successful) {${stmt.elseBranch.accept(this)}}` : "";
-      return `try {$successful=true;${tryBranch}${catchBranch}${elseBranch}}${finallyBranch}`;
+      let elseBranch = stmt.elseBranch ? `if ($_successful) {${stmt.elseBranch.accept(this)}}` : "";
+      return `try {let $_successful=true;${tryBranch}${catchBranch}${elseBranch}}${finallyBranch}`;
     } else {
       let tryBranch = `try{${stmt.tryBranch.accept(this)}}`;
       let catchBranch = stmt.catchBranch ? `catch${stmt.catchBranch.catchVar ? `(${stmt.catchBranch.catchVar.lexeme})` : ""} {${stmt.catchBranch.block.accept(this)}}` : "catch{}";
