@@ -498,9 +498,48 @@ module.exports = class Parser {
     return new Stmt.While(condition, body);
   }
 
+  switchStatement() {
+    let condition = this.expression();
+    this.consume(tokenTypes.COLON, "Expected ':' after switch statement.");
+
+    function parseBody() {
+      let body = [];
+      if (this.match(tokenTypes.INDENT)) {
+        body = this.block();
+      } else {
+        body.push(this.statement());
+        if (this.match(tokenTypes.INDENT)) {
+          body = body.concat(this.block());
+        }
+      }
+      return new Stmt.Block(body);
+    }
+
+    this.consume(tokenTypes.INDENT, "Expected indent after switch statement.");
+
+    let branches = [];
+    let defaultBranch = null;
+    while (!this.match(tokenTypes.DEDENT) && !this.isAtEnd()) {
+      if (this.match(tokenTypes.CASE)) {
+        let condition = this.expression();
+        this.consume(tokenTypes.COLON, "Expected ':' after case statement.");
+        
+        let branch = parseBody.call(this);
+        branches.push({branch, condition})
+      } else if (this.match(tokenTypes.DEFAULT)) {
+        this.consume(tokenTypes.COLON, "Expected ':' after case statement.");
+        
+        let branch = parseBody.call(this);
+        defaultBranch = { branch, condition };
+      }
+    }
+
+    return new Stmt.Switch(condition, branches, defaultBranch);
+  }
+
   statement() {
     // if (this.match(tokenTypes.TRY)) return this.tryStatement();
-    // if (this.match(tokenTypes.SWITCH)) return this.switchStatement();
+    if (this.match(tokenTypes.SWITCH)) return this.switchStatement();
     if (this.match(tokenTypes.RETURN)) return this.returnStatement();
     if (this.match(tokenTypes.CONTINUE)) return this.continueStatement();
     if (this.match(tokenTypes.BREAK)) return this.breakStatement();

@@ -10,6 +10,15 @@ module.exports = class Compiler {
     return `for(${stmt.initializer.accept(this)}${stmt.condition.accept(this)};${stmt.increment.accept(this)}){${stmt.body.accept(this)}}`
   }
 
+  visitSwitchStmt(stmt) {
+    let branchString = "";
+    stmt.branches.forEach(branch => {
+      branchString += `case ${branch.condition.accept(this)}: ${branch.branch.accept(this)}`
+    });
+    let defaultString = `default: ${stmt.defaultBranch.branch.accept(this)}`;
+    return `switch(${stmt.condition.accept(this)}){${branchString}${defaultString}}`;
+  }
+
   visitFunctionStmt(stmt) {
     let paramsString = "";
     let wildcardDefault = null;
