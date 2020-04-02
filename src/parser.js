@@ -453,10 +453,7 @@ module.exports = class Parser {
       condition = this.expression();
     }
 
-    this.consume(
-      tokenTypes.SEMICOLON,
-      "Expected ';' after condition statement"
-    );
+    this.consume(tokenTypes.SEMICOLON, "Expected ';' after condition statement");
 
     let increment = null;
     if (!this.check(tokenTypes.RIGHT_PAREN)) {
@@ -483,7 +480,7 @@ module.exports = class Parser {
   whileStatement() {
     let condition = this.expression();
     this.consume(tokenTypes.COLON, "Expected ':' after if statement.");
-    
+
     let body = [];
     if (this.match(tokenTypes.INDENT)) {
       body = this.block();
@@ -494,7 +491,7 @@ module.exports = class Parser {
       }
     }
     body = new Stmt.Block(body);
-    
+
     return new Stmt.While(condition, body);
   }
 
@@ -523,12 +520,12 @@ module.exports = class Parser {
       if (this.match(tokenTypes.CASE)) {
         let condition = this.expression();
         this.consume(tokenTypes.COLON, "Expected ':' after case statement.");
-        
+
         let branch = parseBody.call(this);
-        branches.push({branch, condition})
+        branches.push({ branch, condition });
       } else if (this.match(tokenTypes.DEFAULT)) {
         this.consume(tokenTypes.COLON, "Expected ':' after case statement.");
-        
+
         let branch = parseBody.call(this);
         defaultBranch = { branch, condition };
       }
@@ -537,8 +534,57 @@ module.exports = class Parser {
     return new Stmt.Switch(condition, branches, defaultBranch);
   }
 
+  tryStatement() {
+    const parseBody = () => {
+      let body = [];
+      if (this.match(tokenTypes.INDENT)) {
+        body = this.block();
+      } else {
+        body.push(this.statement());
+        if (this.match(tokenTypes.INDENT)) {
+          body = body.concat(this.block());
+        }
+      }
+      return new Stmt.Block(body);
+    };
+
+    this.consume(tokenTypes.COLON, "Expected ':' after try statement.");
+    let tryBlock = parseBody();
+
+    let catchBlock = null;
+    if (this.match(tokenTypes.CATCH)) {
+      let catchValue = null;
+      if (this.check(tokenTypes.IDENTIFIER)) {
+        catchValue = this.consume(tokenTypes.IDENTIFIER, "Expected function name.");
+      }
+
+      this.consume(tokenTypes.COLON, "Expected ':' after catch statement.");
+
+      catchBlock = {
+        block: parseBody(),
+        catchVar: catchValue,
+      };
+    }
+
+    let elseBlock = null;
+    if (this.match(tokenTypes.ELSE)) {
+      this.consume(tokenTypes.COLON, "Expected ':' after else statement.");
+
+      elseBlock = parseBody();
+    }
+
+    let finallyBlock = null;
+    if (this.match(tokenTypes.FINALLY)) {
+      this.consume(tokenTypes.COLON, "Expected ':' after finally statement.");
+
+      finallyBlock = parseBody();
+    }
+
+    return new Stmt.Try(tryBlock, catchBlock, elseBlock, finallyBlock);
+  }
+
   statement() {
-    // if (this.match(tokenTypes.TRY)) return this.tryStatement();
+    if (this.match(tokenTypes.TRY)) return this.tryStatement();
     if (this.match(tokenTypes.SWITCH)) return this.switchStatement();
     if (this.match(tokenTypes.RETURN)) return this.returnStatement();
     if (this.match(tokenTypes.CONTINUE)) return this.continueStatement();

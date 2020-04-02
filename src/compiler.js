@@ -3,20 +3,35 @@ let includeFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || 
 
 module.exports = class Compiler {
   visitWhileStmt(stmt) {
-    return `while(${stmt.condition.accept(this)}){${stmt.body.accept(this)}};`
+    return `while(${stmt.condition.accept(this)}){${stmt.body.accept(this)}};`;
   }
 
   visitForStmt(stmt) {
-    return `for(${stmt.initializer.accept(this)}${stmt.condition.accept(this)};${stmt.increment.accept(this)}){${stmt.body.accept(this)}}`
+    return `for(${stmt.initializer.accept(this)}${stmt.condition.accept(this)};${stmt.increment.accept(this)}){${stmt.body.accept(this)}}`;
   }
 
   visitSwitchStmt(stmt) {
     let branchString = "";
-    stmt.branches.forEach(branch => {
-      branchString += `case ${branch.condition.accept(this)}: ${branch.branch.accept(this)}`
+    stmt.branches.forEach((branch) => {
+      branchString += `case ${branch.condition.accept(this)}: ${branch.branch.accept(this)}`;
     });
     let defaultString = `default: ${stmt.defaultBranch.branch.accept(this)}`;
     return `switch(${stmt.condition.accept(this)}){${branchString}${defaultString}}`;
+  }
+
+  visitTryStmt(stmt) {
+    if (stmt.elseBranch) {
+      let tryBranch = `try{${stmt.tryBranch.accept(this)}}`;
+      let catchBranch = stmt.catchBranch ? `catch${stmt.catchBranch.catchVar ? `(${stmt.catchBranch.catchVar.lexeme})` : ""} {$successful=false;${stmt.catchBranch.block.accept(this)}}` : "catch{}";
+      let finallyBranch = stmt.finallyBranch ? `finally{${stmt.finallyBranch.accept(this)}}` : "finally{}";
+      let elseBranch = stmt.elseBranch ? `if ($successful) {${stmt.elseBranch.accept(this)}}` : "";
+      return `try {$successful=true;${tryBranch}${catchBranch}${elseBranch}}${finallyBranch}`;
+    } else {
+      let tryBranch = `try{${stmt.tryBranch.accept(this)}}`;
+      let catchBranch = stmt.catchBranch ? `catch${stmt.catchBranch.catchVar ? `(${stmt.catchBranch.catchVar.lexeme})` : ""} {${stmt.catchBranch.block.accept(this)}}` : "catch{}";
+      let finallyBranch = stmt.finallyBranch ? `finally{${stmt.finallyBranch.accept(this)}}` : "";
+      return `${tryBranch}${catchBranch}${finallyBranch}`;
+    }
   }
 
   visitFunctionStmt(stmt) {
@@ -33,7 +48,10 @@ module.exports = class Compiler {
         currentParamString = "..." + currentParamString;
         if (defaultValue) {
           // a wildcard default requires code in body, so save it for later
-          wildcardDefault = { name: name.lexeme, value: defaultValue.accept(this) };
+          wildcardDefault = {
+            name: name.lexeme,
+            value: defaultValue.accept(this),
+          };
         }
       } else {
         if (defaultValue) {
@@ -151,7 +169,7 @@ module.exports = class Compiler {
   visitAssignExpr(expr) {
     return `${expr.name.lexeme} = ${expr.value.accept(this)}`;
   }
-  
+
   visitLambdaExpr(expr) {
     let paramsString = "";
     let wildcardDefault = null;

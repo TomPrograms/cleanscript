@@ -7,9 +7,7 @@
   "bin": {
     "cleanscript": "./bin/cleanscript"
   },
-  "scripts": {
-    "format": "prettier --write {**,**/**}/*.{js,md} --print-width 120"
-  },
+  "scripts": {},
   "author": "Tom",
   "license": "MIT",
   "homepage": "https://github.com/tomprograms/cleanscript#readme",
