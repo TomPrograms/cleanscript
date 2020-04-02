@@ -73,3 +73,11 @@ try {
   console.log("Everything finished here!");
 }
 ```
+
+## Credit
+
+Author: [Tom](https://github.com/TomPrograms)
+
+## License
+
+[MIT](LICENSE)
