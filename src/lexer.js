@@ -161,7 +161,10 @@ module.exports = class Lexer {
     }
 
     const c = this.code.substring(this.start, this.current);
-    const type = c in reservedWords ? reservedWords[c] : tokenTypes.IDENTIFIER;
+
+    let type;
+    if (c === "constructor") type = tokenTypes.IDENTIFIER;
+    else type = c in reservedWords ? reservedWords[c] : tokenTypes.IDENTIFIER;
 
     this.addToken(type);
   }
