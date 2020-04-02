@@ -16,3 +16,36 @@
   <img src="https://img.shields.io/npm/v/cleanscript?color=green">
 </a>
 <img src="https://img.shields.io/badge/license-MIT-blue">
+
+## Example
+
+For example, the following Cleanscript code:
+
+```
+function checkValInVals(val=1, *vals=[1]):
+  return val in vals;
+
+checkValInVals(); // true
+checkValInVals(2); // false
+checkValInVals(2, [2,3]); // true
+```
+
+Compiles to the following Javascript:
+
+```js
+function $_in(val, obj) {
+  if (obj instanceof Array || typeof obj === "string") {
+    return obj.indexOf(val) !== -1;
+  }
+  return val in obj;
+}
+
+function checkValInVals(val = 1, ...vals) {
+  vals = vals.length > 0 ? vals : [1];
+  return $_in(val, vals);
+}
+
+checkValInVals();
+checkValInVals(2);
+checkValInVals(2, [2, 3]);
+```
