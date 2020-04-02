@@ -1,0 +1,10 @@
+{
+  "name": "cleanscript",
+  "version": "1.0.0",
+  "description": "Cleanscript is an indent-based, clean language that compiles to Javascript.",
+  "main": "index.js",
+  "repository": "TomPrograms/cleanscript",
+  "scripts": {},
+  "author": "Tom",
+  "license": "MIT"
+}
