@@ -1,0 +1,33 @@
+#! /usr/bin/env node
+
+const path = require("path");
+const fs = require("fs");
+const Cleanscript = require("../index.js");
+
+const args = process.argv.splice(2);
+
+function isDir(path) {
+  try {
+    let stat = fs.lstatSync(path);
+    return stat.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+let target;
+let prettify = false;
+let minimise = false;
+args.forEach((arg, i) => {
+  if (!arg.startsWith("--")) target = arg;
+  else if (arg === "--minimise") minimise = true;
+  else if (arg === "--prettify") prettify = true;
+});
+
+if (!path.isAbsolute(target)) target = path.resolve(target);
+
+if (isDir(target)) {
+  Cleanscript.compileDir(target);
+} else {
+  Cleanscript.compileFile(target, {prettify, minimise});
+}

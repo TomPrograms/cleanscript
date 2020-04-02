@@ -4,7 +4,14 @@
   "description": "Cleanscript is an indent-based, clean language that compiles to Javascript.",
   "main": "index.js",
   "repository": "TomPrograms/cleanscript",
-  "scripts": {},
+  "bin": {
+    "cleanscript": "./bin/cleanscript"
+  },
+  "scripts": {
+    "format": "prettier --write {**,**/**}/*.{js,md} --print-width 120"
+  },
   "author": "Tom",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://github.com/tomprograms/cleanscript#readme",
+  "dependencies": {}
 }

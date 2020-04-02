@@ -25,9 +25,11 @@ For example, the following Cleanscript code:
 function checkValInVals(val=1, *vals=[1]):
   return val in vals;
 
-checkValInVals(); // true
-checkValInVals(2); // false
-checkValInVals(2, [2,3]); // true
+var print = lambda (val) : console.log(val);
+
+print(checkValInVals()); // true
+print(checkValInVals(2)); // false
+print(checkValInVals(2, [2,3])); // true
 ```
 
 Compiles to the following Javascript:
@@ -45,7 +47,11 @@ function checkValInVals(val = 1, ...vals) {
   return $_in(val, vals);
 }
 
-checkValInVals();
-checkValInVals(2);
-checkValInVals(2, [2, 3]);
+var print = function (val) {
+  return console.log(val);
+};
+
+print(checkValInVals());
+print(checkValInVals(2));
+print(checkValInVals(2, [2, 3]));
 ```
