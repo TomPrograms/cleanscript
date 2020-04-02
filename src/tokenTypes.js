@@ -71,5 +71,5 @@ module.exports = {
   EOF: "EOF",
   INDENT: "INDENT",
   DEDENT: "DEDENT",
-  LAMBDA: "LAMBDA"
+  LAMBDA: "LAMBDA",
 };

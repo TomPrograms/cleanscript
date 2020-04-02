@@ -1,18 +1,12 @@
 let includeFunctionFlag = false;
-let includeFunctionCode = `
-function $_in(val, obj) {
-  if (obj instanceof Array || typeof obj === "string") {
-    return obj.indexOf(val) != -1;
-  }
-  return val in obj;
-};`;
+let includeFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || typeof obj === "string") {return obj.indexOf(val) !== -1;}return val in obj;};`;
 
 module.exports = class Compiler {
   visitLambdaExpr(expr) {
     let paramsString = "";
     let wildcardDefault = null;
     expr.params.forEach((param, i) => {
-      let {name, type} = param;
+      let { name, type } = param;
       let defaultValue = param.default;
       let currentParamString = "";
 
@@ -22,7 +16,7 @@ module.exports = class Compiler {
         currentParamString = "..." + currentParamString;
         if (defaultValue) {
           // a wildcard default requires code in body, so save it for later
-          wildcardDefault = {name: name.lexeme, value: defaultValue.value};
+          wildcardDefault = { name: name.lexeme, value: defaultValue.value };
         }
       } else {
         if (defaultValue) {
@@ -30,24 +24,24 @@ module.exports = class Compiler {
         }
       }
 
-      if (i < expr.params.length-1) currentParamString += ',';
+      if (i < expr.params.length - 1) currentParamString += ",";
       paramsString += currentParamString;
     });
 
     // support wildcard defaults
-    let wildcardDefaultCode = '';
+    let wildcardDefaultCode = "";
     if (wildcardDefault) {
       wildcardDefaultCode = `${wildcardDefault.name} = ${wildcardDefault.name}.length > 0 ? ${wildcardDefault.name} : ${wildcardDefault.value};`;
     }
 
-    return `function (${paramsString}) {${wildcardDefaultCode}return ${expr.body.accept(this) }}`
+    return `function (${paramsString}) {${wildcardDefaultCode}return ${expr.body.accept(this)}}`;
   }
 
   visitFunctionStmt(stmt) {
     let paramsString = "";
     let wildcardDefault = null;
     stmt.params.forEach((param, i) => {
-      let {name, type} = param;
+      let { name, type } = param;
       let defaultValue = param.default;
       let currentParamString = "";
 
@@ -57,34 +51,34 @@ module.exports = class Compiler {
         currentParamString = "..." + currentParamString;
         if (defaultValue) {
           // a wildcard default requires code in body, so save it for later
-          wildcardDefault = {name: name.lexeme, value: defaultValue.value};
+          wildcardDefault = { name: name.lexeme, value: defaultValue.accept(this) };
         }
       } else {
         if (defaultValue) {
-          currentParamString += `=${defaultValue.value}`;
+          currentParamString += `=${defaultValue.accept(this)}`;
         }
       }
 
-      if (i < stmt.params.length-1) currentParamString += ',';
+      if (i < stmt.params.length - 1) currentParamString += ",";
       paramsString += currentParamString;
     });
 
     // support wildcard defaults
-    let wildcardDefaultCode = '';
+    let wildcardDefaultCode = "";
     if (wildcardDefault) {
       wildcardDefaultCode = `${wildcardDefault.name} = ${wildcardDefault.name}.length > 0 ? ${wildcardDefault.name} : ${wildcardDefault.value};`;
     }
 
-    return `function ${stmt.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${stmt.body.accept(this) }};`
+    return `function ${stmt.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${stmt.body.accept(this)}};`;
   }
 
   visitClassStmt(stmt) {
     let methods = "";
-    stmt.methods.forEach(method => {
+    stmt.methods.forEach((method) => {
       let paramsString = "";
       let wildcardDefault = null;
       method.parameters.forEach((param, i) => {
-        let {name, type} = param;
+        let { name, type } = param;
         let defaultValue = param.default;
         let currentParamString = "";
 
@@ -94,7 +88,7 @@ module.exports = class Compiler {
           currentParamString = "..." + currentParamString;
           if (defaultValue) {
             // a wildcard default requires code in body, so save it for later
-            wildcardDefault = {name: name.lexeme, value: defaultValue.value};
+            wildcardDefault = { name: name.lexeme, value: defaultValue.value };
           }
         } else {
           if (defaultValue) {
@@ -102,25 +96,25 @@ module.exports = class Compiler {
           }
         }
 
-        if (i < stmt.params.length-1) currentParamString += ',';
+        if (i < stmt.params.length - 1) currentParamString += ",";
         paramsString += currentParamString;
       });
 
       // support wildcard defaults
-      let wildcardDefaultCode = '';
+      let wildcardDefaultCode = "";
       if (wildcardDefault) {
         wildcardDefaultCode = `${wildcardDefault.name} = ${wildcardDefault.name}.length > 0 ? ${wildcardDefault.name} : ${wildcardDefault.value};`;
       }
 
-      methods += `${method.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${method.body.accept(this) }};`
+      methods += `${method.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${method.body.accept(this)}};`;
     });
-    
-    const extendString = stmt.superclass ? `extends ${stmt.superclass}`: "";
-    return `class ${stmt.name.lexeme} ${extendString} {${methods}}`
+
+    const extendString = stmt.superclass ? `extends ${stmt.superclass}` : "";
+    return `class ${stmt.name.lexeme} ${extendString} {${methods}}`;
   }
 
   visitBlockStmt(stmt) {
-    for (let i=0; i <stmt.statements.length; i++) {
+    for (let i = 0; i < stmt.statements.length; i++) {
       stmt.statements[i] = stmt.statements[i].accept(this);
     }
     return stmt.statements.join("");
@@ -131,57 +125,57 @@ module.exports = class Compiler {
   }
 
   visitAwaitStmt(stmt) {
-    return `await ${stmt.object.accept(this)}`
+    return `await ${stmt.object.accept(this)}`;
   }
 
   visitIfStmt(stmt) {
     let mainBranch = `if(${stmt.condition.accept(this)}){${stmt.thenBranch.accept(this)}}`;
     let elifBranches = "";
-    stmt.elifBranches.forEach(branch => {
-      elifBranches += `else if(${branch.condition.accept(this)}){${branch.branch.accept(this)}}`
+    stmt.elifBranches.forEach((branch) => {
+      elifBranches += `else if(${branch.condition.accept(this)}){${branch.branch.accept(this)}}`;
     });
     let elseBranch = `else{${stmt.elseBranch.accept(this)}}`;
-    return `${mainBranch}${elifBranches}${elseBranch}`
+    return `${mainBranch}${elifBranches}${elseBranch}`;
   }
 
   visitBreakStmt(stmt) {
-    return `break;`
+    return `break;`;
   }
 
   visitContinueStmt(stmt) {
-    return `continue;`
+    return `continue;`;
   }
-  
+
   visitExpressionStmt(stmt) {
-    return `${stmt.expression.accept(this)};`
+    return `${stmt.expression.accept(this)};`;
   }
 
   visitReturnStmt(stmt) {
-    return `return ${stmt.value.accept(this)};`
+    return `return ${stmt.value.accept(this)};`;
   }
 
   visitVarStmt(stmt) {
-    return `var ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`
+    return `var ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`;
   }
 
   visitConstStmt(stmt) {
-    return `const ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`
+    return `const ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`;
   }
 
   visitLetStmt(stmt) {
-    return `let ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`
+    return `let ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`;
   }
 
   visitAssignExpr(expr) {
-    return `${expr.name.lexeme} = ${expr.value.accept(this)}`
+    return `${expr.name.lexeme} = ${expr.value.accept(this)}`;
   }
 
   visitCallExpr(expr) {
     expr.args.forEach((arg, i) => {
-      expr.args[i] = arg.accept(this)
+      expr.args[i] = arg.accept(this);
     });
-    const argsString = expr.args.join(", ")
-    return `${expr.callee.accept(this)}(${argsString})`
+    const argsString = expr.args.join(", ");
+    return `${expr.callee.accept(this)}(${argsString})`;
   }
 
   visitUnaryExpr(expr) {
@@ -193,22 +187,22 @@ module.exports = class Compiler {
       return `${expr.left.accept(this)}${convertOperator(expr.operator)}${expr.right.accept(this)}`;
     } else if (expr.operator.type === "IN") {
       includeFunctionFlag = true;
-      return `$_in(${expr.left.accept(this)},${expr.right.accept(this)})`
+      return `$_in(${expr.left.accept(this)},${expr.right.accept(this)})`;
     }
   }
 
   visitVariableExpr(expr) {
-    return `${expr.name.lexeme}`
+    return `${expr.name.lexeme}`;
   }
 
   visitBinaryExpr(expr) {
-    let operator = expr.operator.lexeme
+    let operator = expr.operator.lexeme;
 
     // always use strictly equals
     if (operator === "==") operator = "===";
     if (operator === "!=") operator = "!==";
-    
-    return `${expr.left.accept(this)}${operator}${expr.right.accept(this)}`
+
+    return `${expr.left.accept(this)}${operator}${expr.right.accept(this)}`;
   }
 
   visitLiteralExpr(expr) {
@@ -216,25 +210,25 @@ module.exports = class Compiler {
     if (typeof value === "string") {
       return `"${value}"`;
     } else if (typeof value === "number") {
-      return `${value}`
+      return `${value}`;
     } else if (value === true) return true;
     else if (value === false) return false;
   }
-  
+
   visitGetExpr(expr) {
-    return `${expr.object.accept(this)}.${expr.name.lexeme}`
+    return `${expr.object.accept(this)}.${expr.name.lexeme}`;
   }
 
   visitSetExpr(expr) {
-    return `${expr.object.name.lexeme}.${expr.name.lexeme} = ${expr.value.accept(this)}`
+    return `${expr.object.name.lexeme}.${expr.name.lexeme} = ${expr.value.accept(this)}`;
   }
 
   visitSubscriptExpr(expr) {
-    return `${expr.callee.name.lexeme}[${expr.index.accept(this)}]`
+    return `${expr.callee.name.lexeme}[${expr.index.accept(this)}]`;
   }
 
   visitAssignsubscriptExpr(expr) {
-    return `${expr.obj.name.lexeme}[${expr.index.accept(this)}] = ${expr.value.accept(this)}`
+    return `${expr.obj.name.lexeme}[${expr.index.accept(this)}] = ${expr.value.accept(this)}`;
   }
 
   visitJSRAWStmt(expr) {
@@ -244,13 +238,13 @@ module.exports = class Compiler {
   visitDictionaryExpr(expr) {
     let dictionaryContents = "";
     expr.keys.forEach((key, i) => {
-      dictionaryContents += `${key.accept(this)}:${expr.values[i].accept(this)},`
+      dictionaryContents += `${key.accept(this)}:${expr.values[i].accept(this)},`;
     });
-    return `{${dictionaryContents}}`
+    return `{${dictionaryContents}}`;
   }
 
   visitGroupingExpr(expr) {
-    return `(${expr.expression.accept(this)})`
+    return `(${expr.expression.accept(this)})`;
   }
 
   visitArrayExpr(expr) {
@@ -258,13 +252,13 @@ module.exports = class Compiler {
     values.forEach((value, i) => {
       values[i] = value.accept(this);
     });
-    return `[${expr.values.join(",")}]`
+    return `[${expr.values.join(",")}]`;
   }
 
   compile(ast) {
     let compiled = "";
-    ast.forEach(stmt => {
-      compiled += stmt.accept(this);  
+    ast.forEach((stmt) => {
+      compiled += stmt.accept(this);
     });
 
     // include helper functions
@@ -274,4 +268,4 @@ module.exports = class Compiler {
 
     return compiled;
   }
-}
+};

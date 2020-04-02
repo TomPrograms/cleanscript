@@ -225,5 +225,5 @@ module.exports = {
   This,
   Unary,
   Variable,
-  Lambda
+  Lambda,
 };

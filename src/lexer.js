@@ -33,7 +33,7 @@ const reservedWords = {
   finally: tokenTypes.FINALLY,
   JSRAW: tokenTypes.JSRAW,
   lambda: tokenTypes.LAMBDA,
-  await: tokenTypes.AWAIT
+  await: tokenTypes.AWAIT,
 };
 
 class Stack {
@@ -42,7 +42,7 @@ class Stack {
   }
 
   get head() {
-    return this.stack[this.stack.length-1];
+    return this.stack[this.stack.length - 1];
   }
 
   push(value) {
@@ -66,7 +66,6 @@ class Token {
     return this.type + " " + this.lexeme + " " + this.literal;
   }
 }
-
 
 module.exports = class Lexer {
   isDigit(c) {
@@ -129,11 +128,7 @@ module.exports = class Lexer {
     }
 
     if (this.endOfCode()) {
-      this.Dragon.lexerError(
-        this.line,
-        this.previous(),
-        "Unterminated string."
-      );
+      this.Dragon.lexerError(this.line, this.previous(), "Unterminated string.");
       return;
     }
 
@@ -223,14 +218,10 @@ module.exports = class Lexer {
         this.addToken(tokenTypes.STAR);
         break;
       case "!":
-        this.addToken(
-          this.match("=") ? tokenTypes.BANG_EQUAL : tokenTypes.BANG
-        );
+        this.addToken(this.match("=") ? tokenTypes.BANG_EQUAL : tokenTypes.BANG);
         break;
       case "=":
-        this.addToken(
-          this.match("=") ? tokenTypes.EQUAL_EQUAL : tokenTypes.EQUAL
-        );
+        this.addToken(this.match("=") ? tokenTypes.EQUAL_EQUAL : tokenTypes.EQUAL);
         break;
 
       case "&":
@@ -288,7 +279,7 @@ module.exports = class Lexer {
 
         if (indentSize > this.indentStack.head) {
           this.indentStack.push(indentSize);
-          this.tokens.push(new Token(tokenTypes.INDENT, null, null, this.line))
+          this.tokens.push(new Token(tokenTypes.INDENT, null, null, this.line));
         } else if (indentSize < this.indentStack.head) {
           this.indentStack.pop();
           this.tokens.push(new Token(tokenTypes.DEDENT, null, null, this.line));
@@ -312,11 +303,11 @@ module.exports = class Lexer {
 
   tokenize(code) {
     this.code = code;
-    
+
     this.current = 0;
     this.start = 0;
     this.line = 1;
-    
+
     this.indentStack = new Stack([0]);
     this.tokens = [];
 
@@ -328,4 +319,4 @@ module.exports = class Lexer {
     this.tokens.push(new Token(tokenTypes.EOF, "", null, this.line));
     return this.tokens;
   }
-}
+};

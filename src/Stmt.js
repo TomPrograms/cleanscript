@@ -18,7 +18,7 @@ class JSRAW extends Stmt {
     super();
     this.code = code;
   }
-  
+
   accept(visitor) {
     return visitor.visitJSRAWStmt(this);
   }
@@ -249,5 +249,5 @@ module.exports = {
   Await,
   Var,
   Let,
-  Const
+  Const,
 };

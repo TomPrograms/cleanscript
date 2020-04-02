@@ -3,14 +3,25 @@ const Parser = require("./src/parser.js")
 const Compiler = require("./src/compiler.js");
 
 const code = `
+// function checkInScore(val, list):
+//   function promiseInternal(resolve, reject):
+//     resolve(val in list);
 
-function asynctest:
-  return Promise.resolve();
+//   return new Promise(promiseInternal);
 
-function handlepromise(x):
-  console.log(x);
+// var list = [1, 2, 3];
+// var double = lambda (x, i) : list[i] = x * 2;
+// list.forEach(double);
 
-asynctest().then(handlepromise);
+// const handlePromise = lambda (x) : console.log(x);
+// checkInScore(4, list).then(handlePromise);
+
+function checkValInVals(val=1, *vals=[1]):
+  return val in vals;
+
+checkValInVals(); // true
+checkValInVals(2); // false
+checkValInVals(2, [2,3]); // true
 `;
 
 const lexer = new Lexer();
