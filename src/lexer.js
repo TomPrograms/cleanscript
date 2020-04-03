@@ -128,7 +128,7 @@ module.exports = class Lexer {
     }
 
     if (this.endOfCode()) {
-      this.Dragon.lexerError(this.line, this.previous(), "Unterminated string.");
+      // unterminated string
       return;
     }
 

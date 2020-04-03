@@ -47,11 +47,11 @@ function compileFile(filepath, { prettify, minimise }) {
   fs.writeFileSync(newPath, compiled);
 }
 
-function compileDir(dirpath, options = {}) {
+function compileDir(dirpath, { prettify, minimise }) {
   let files = findFilesInDir(dirpath, "csc");
 
   files.forEach((file) => {
-    compileFile(file, options);
+    compileFile(file, { prettify, minimise });
   });
 }
 

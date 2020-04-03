@@ -27,7 +27,7 @@ args.forEach((arg, i) => {
 if (!path.isAbsolute(target)) target = path.resolve(target);
 
 if (isDir(target)) {
-  Cleanscript.compileDir(target);
+  Cleanscript.compileDir(target, { prettify, minimise });
 } else {
-  Cleanscript.compileFile(target, {prettify, minimise});
+  Cleanscript.compileFile(target, { prettify, minimise });
 }
