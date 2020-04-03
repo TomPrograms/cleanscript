@@ -62,7 +62,10 @@ module.exports = class Parser {
         let value = this.assignment();
         values.push(value);
         if (this.peek().type !== tokenTypes.RIGHT_SQUARE_BRACKET) {
-          this.consume(tokenTypes.COMMA, "Expected a comma before the next expression.");
+          this.consume(
+            tokenTypes.COMMA,
+            "Expected a comma before the next expression."
+          );
         }
       }
       return new Expr.Array(values);
@@ -75,14 +78,20 @@ module.exports = class Parser {
       }
       while (!this.match(tokenTypes.RIGHT_BRACE)) {
         let key = this.assignment();
-        this.consume(tokenTypes.COLON, "Expected a colon between key and value.");
+        this.consume(
+          tokenTypes.COLON,
+          "Expected a colon between key and value."
+        );
         let value = this.assignment();
 
         keys.push(key);
         values.push(value);
 
         if (this.peek().type !== tokenTypes.RIGHT_BRACE) {
-          this.consume(tokenTypes.COMMA, "Expected a comma before the next expression.");
+          this.consume(
+            tokenTypes.COMMA,
+            "Expected a comma before the next expression."
+          );
         }
       }
       return new Expr.Dictionary(keys, values);
@@ -129,7 +138,10 @@ module.exports = class Parser {
             paramObj["type"] = "standard";
           }
 
-          paramObj["name"] = this.consume(tokenTypes.IDENTIFIER, "Expect parameter name.");
+          paramObj["name"] = this.consume(
+            tokenTypes.IDENTIFIER,
+            "Expect parameter name."
+          );
 
           if (this.match(tokenTypes.EQUAL)) {
             paramObj["default"] = this.primary();
@@ -144,7 +156,10 @@ module.exports = class Parser {
       this.match(tokenTypes.RIGHT_PAREN, "Expected ')' after arguments.");
     }
 
-    this.consume(tokenTypes.COLON, "Expected colon after function name or parameters.");
+    this.consume(
+      tokenTypes.COLON,
+      "Expected colon after function name or parameters."
+    );
 
     // parse body
     let body = this.expression();
@@ -163,7 +178,10 @@ module.exports = class Parser {
       } while (this.match(tokenTypes.COMMA));
     }
 
-    let paren = this.consume(tokenTypes.RIGHT_PAREN, "Expect ')' after arguments.");
+    let paren = this.consume(
+      tokenTypes.RIGHT_PAREN,
+      "Expect ')' after arguments."
+    );
 
     return new Expr.Call(callee, paren, args);
   }
@@ -175,11 +193,17 @@ module.exports = class Parser {
       if (this.match(tokenTypes.LEFT_PAREN)) {
         expr = this.finishCall(expr);
       } else if (this.match(tokenTypes.DOT)) {
-        let name = this.consume(tokenTypes.IDENTIFIER, "Expected property name after '.'.");
+        let name = this.consume(
+          tokenTypes.IDENTIFIER,
+          "Expected property name after '.'."
+        );
         expr = new Expr.Get(expr, name);
       } else if (this.match(tokenTypes.LEFT_SQUARE_BRACKET)) {
         let index = this.expression();
-        let closeBracket = this.consume(tokenTypes.RIGHT_SQUARE_BRACKET, "Expected ']' after subscript index.");
+        let closeBracket = this.consume(
+          tokenTypes.RIGHT_SQUARE_BRACKET,
+          "Expected ']' after subscript index."
+        );
         expr = new Expr.Subscript(expr, index, closeBracket);
       } else {
         break;
@@ -274,7 +298,14 @@ module.exports = class Parser {
   comparison() {
     let expr = this.bitOr();
 
-    while (this.match(tokenTypes.GREATER, tokenTypes.GREATER_EQUAL, tokenTypes.LESS, tokenTypes.LESS_EQUAL)) {
+    while (
+      this.match(
+        tokenTypes.GREATER,
+        tokenTypes.GREATER_EQUAL,
+        tokenTypes.LESS,
+        tokenTypes.LESS_EQUAL
+      )
+    ) {
       let operator = this.previous();
       let right = this.bitOr();
       expr = new Expr.Binary(expr, operator, right);
@@ -440,9 +471,14 @@ module.exports = class Parser {
     let initializer;
     if (this.match(tokenTypes.SEMICOLON)) {
       initializer = null;
-    } else if (this.check(tokenTypes.VAR) || this.check(tokenTypes.CONST) || this.check(tokenTypes.LET)) {
+    } else if (
+      this.check(tokenTypes.VAR) ||
+      this.check(tokenTypes.CONST) ||
+      this.check(tokenTypes.LET)
+    ) {
       if (this.match(tokenTypes.VAR)) initializer = this.varDeclaration();
-      else if (this.match(tokenTypes.CONST)) initializer = this.constDeclaration();
+      else if (this.match(tokenTypes.CONST))
+        initializer = this.constDeclaration();
       else if (this.match(tokenTypes.LET)) initializer = this.letDeclaration();
     } else {
       initializer = this.expressionStatement();
@@ -453,7 +489,10 @@ module.exports = class Parser {
       condition = this.expression();
     }
 
-    this.consume(tokenTypes.SEMICOLON, "Expected ';' after condition statement");
+    this.consume(
+      tokenTypes.SEMICOLON,
+      "Expected ';' after condition statement"
+    );
 
     let increment = null;
     if (!this.check(tokenTypes.RIGHT_PAREN)) {
@@ -555,7 +594,10 @@ module.exports = class Parser {
     if (this.match(tokenTypes.CATCH)) {
       let catchValue = null;
       if (this.check(tokenTypes.IDENTIFIER)) {
-        catchValue = this.consume(tokenTypes.IDENTIFIER, "Expected function name.");
+        catchValue = this.consume(
+          tokenTypes.IDENTIFIER,
+          "Expected function name."
+        );
       }
 
       this.consume(tokenTypes.COLON, "Expected ':' after catch statement.");
@@ -614,7 +656,10 @@ module.exports = class Parser {
       initializer = this.expression();
     }
 
-    this.consume(tokenTypes.SEMICOLON, "Expect ';' after variable declaration.");
+    this.consume(
+      tokenTypes.SEMICOLON,
+      "Expect ';' after variable declaration."
+    );
     return new Stmt.Var(name, initializer);
   }
 
@@ -625,7 +670,10 @@ module.exports = class Parser {
       initializer = this.expression();
     }
 
-    this.consume(tokenTypes.SEMICOLON, "Expect ';' after variable declaration.");
+    this.consume(
+      tokenTypes.SEMICOLON,
+      "Expect ';' after variable declaration."
+    );
     return new Stmt.Const(name, initializer);
   }
 
@@ -636,7 +684,10 @@ module.exports = class Parser {
       initializer = this.expression();
     }
 
-    this.consume(tokenTypes.SEMICOLON, "Expect ';' after variable declaration.");
+    this.consume(
+      tokenTypes.SEMICOLON,
+      "Expect ';' after variable declaration."
+    );
     return new Stmt.Let(name, initializer);
   }
 
@@ -661,7 +712,10 @@ module.exports = class Parser {
             paramObj["type"] = "standard";
           }
 
-          paramObj["name"] = this.consume(tokenTypes.IDENTIFIER, "Expect parameter name.");
+          paramObj["name"] = this.consume(
+            tokenTypes.IDENTIFIER,
+            "Expect parameter name."
+          );
 
           if (this.match(tokenTypes.EQUAL)) {
             paramObj["default"] = this.primary();
@@ -676,7 +730,10 @@ module.exports = class Parser {
       this.match(tokenTypes.RIGHT_PAREN, "Expected ')' after arguments.");
     }
 
-    this.consume(tokenTypes.COLON, "Expected colon after function name or parameters.");
+    this.consume(
+      tokenTypes.COLON,
+      "Expected colon after function name or parameters."
+    );
 
     // parse body
     let body = [];
@@ -701,7 +758,10 @@ module.exports = class Parser {
   }
 
   JSRAWDeclaration() {
-    let code = this.consume(tokenTypes.STRING, "Expected string containing Javascript code.");
+    let code = this.consume(
+      tokenTypes.STRING,
+      "Expected string containing Javascript code."
+    );
     this.consume(tokenTypes.SEMICOLON, "Expected semi-colon after JSRAW code.");
     return new Stmt.JSRAW(code);
   }
@@ -725,7 +785,8 @@ module.exports = class Parser {
       methods.push(this.functionBody());
     }
 
-    if (!this.isAtEnd()) this.consume(tokenTypes.DEDENT, "Expected dedent after class.");
+    if (!this.isAtEnd())
+      this.consume(tokenTypes.DEDENT, "Expected dedent after class.");
 
     return new Stmt.Class(name, superclassName, methods);
   }

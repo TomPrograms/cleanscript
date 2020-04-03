@@ -7,9 +7,13 @@
   "bin": {
     "cleanscript": "./bin/cleanscript"
   },
-  "scripts": {},
+  "scripts": {
+    "format": "prettier --write **/*.{js,md}"
+  },
   "author": "Tom",
   "license": "MIT",
   "homepage": "https://github.com/tomprograms/cleanscript#readme",
-  "dependencies": {}
+  "dependencies": {
+    "chokidar": "^3.3.1"
+  }
 }

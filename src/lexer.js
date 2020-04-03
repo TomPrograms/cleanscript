@@ -221,10 +221,14 @@ module.exports = class Lexer {
         this.addToken(tokenTypes.STAR);
         break;
       case "!":
-        this.addToken(this.match("=") ? tokenTypes.BANG_EQUAL : tokenTypes.BANG);
+        this.addToken(
+          this.match("=") ? tokenTypes.BANG_EQUAL : tokenTypes.BANG
+        );
         break;
       case "=":
-        this.addToken(this.match("=") ? tokenTypes.EQUAL_EQUAL : tokenTypes.EQUAL);
+        this.addToken(
+          this.match("=") ? tokenTypes.EQUAL_EQUAL : tokenTypes.EQUAL
+        );
         break;
 
       case "&":

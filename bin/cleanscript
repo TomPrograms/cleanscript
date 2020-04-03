@@ -6,28 +6,18 @@ const Cleanscript = require("../index.js");
 
 const args = process.argv.splice(2);
 
-function isDir(path) {
-  try {
-    let stat = fs.lstatSync(path);
-    return stat.isDirectory();
-  } catch {
-    return false;
-  }
-}
-
 let target;
 let prettify = false;
 let minimise = false;
+let watch = false;
 args.forEach((arg, i) => {
   if (!arg.startsWith("--")) target = arg;
+  else if (arg === "--watch") watch = true;
   else if (arg === "--minimise") minimise = true;
   else if (arg === "--prettify") prettify = true;
 });
 
 if (!path.isAbsolute(target)) target = path.resolve(target);
 
-if (isDir(target)) {
-  Cleanscript.compileDir(target, { prettify, minimise });
-} else {
-  Cleanscript.compileFile(target, { prettify, minimise });
-}
+Cleanscript.compile(target, { prettify, minimise });
+if (watch) Cleanscript.watch(target, {prettify, minimise});
