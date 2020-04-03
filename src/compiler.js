@@ -1,6 +1,44 @@
 let includeFunctionFlag = false;
 let includeFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || typeof obj === "string") {return obj.indexOf(val) !== -1;}return val in obj;};`;
 
+function renderParamsString(params) {
+  let paramsString = "";
+  let wildcardDefault = null;
+  params.forEach((param, i) => {
+    let { name, type } = param;
+    let defaultValue = param.default;
+    let currentParamString = "";
+
+    currentParamString += name.lexeme;
+
+    if (type === "wildcard") {
+      currentParamString = "..." + currentParamString;
+      if (defaultValue) {
+        // a wildcard default requires code in body, so save it for later
+        wildcardDefault = {
+          name: name.lexeme,
+          value: defaultValue.accept(this),
+        };
+      }
+    } else {
+      if (defaultValue) {
+        currentParamString += `=${defaultValue.accept(this)}`;
+      }
+    }
+
+    if (i < params.length - 1) currentParamString += ",";
+    paramsString += currentParamString;
+  });
+
+  // support wildcard defaults
+  let wildcardDefaultCode = "";
+  if (wildcardDefault) {
+    wildcardDefaultCode = `${wildcardDefault.name} = ${wildcardDefault.name}.length > 0 ? ${wildcardDefault.name} : ${wildcardDefault.value};`;
+  }
+
+  return { paramsString, wildcardDefaultCode };
+}
+
 module.exports = class Compiler {
   visitWhileStmt(stmt) {
     return `while(${stmt.condition.accept(this)}){${stmt.body.accept(this)}};`;
@@ -35,77 +73,14 @@ module.exports = class Compiler {
   }
 
   visitFunctionStmt(stmt) {
-    let paramsString = "";
-    let wildcardDefault = null;
-    stmt.params.forEach((param, i) => {
-      let { name, type } = param;
-      let defaultValue = param.default;
-      let currentParamString = "";
-
-      currentParamString += name.lexeme;
-
-      if (type === "wildcard") {
-        currentParamString = "..." + currentParamString;
-        if (defaultValue) {
-          // a wildcard default requires code in body, so save it for later
-          wildcardDefault = {
-            name: name.lexeme,
-            value: defaultValue.accept(this),
-          };
-        }
-      } else {
-        if (defaultValue) {
-          currentParamString += `=${defaultValue.accept(this)}`;
-        }
-      }
-
-      if (i < stmt.params.length - 1) currentParamString += ",";
-      paramsString += currentParamString;
-    });
-
-    // support wildcard defaults
-    let wildcardDefaultCode = "";
-    if (wildcardDefault) {
-      wildcardDefaultCode = `${wildcardDefault.name} = ${wildcardDefault.name}.length > 0 ? ${wildcardDefault.name} : ${wildcardDefault.value};`;
-    }
-
+    const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(stmt.params);
     return `function ${stmt.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${stmt.body.accept(this)}};`;
   }
 
   visitClassStmt(stmt) {
     let methods = "";
     stmt.methods.forEach((method) => {
-      let paramsString = "";
-      let wildcardDefault = null;
-      method.parameters.forEach((param, i) => {
-        let { name, type } = param;
-        let defaultValue = param.default;
-        let currentParamString = "";
-
-        currentParamString += name.lexeme;
-
-        if (type === "wildcard") {
-          currentParamString = "..." + currentParamString;
-          if (defaultValue) {
-            // a wildcard default requires code in body, so save it for later
-            wildcardDefault = { name: name.lexeme, value: defaultValue.value };
-          }
-        } else {
-          if (defaultValue) {
-            currentParamString += `=${defaultValue.value}`;
-          }
-        }
-
-        if (i < method.parameters.length - 1) currentParamString += ",";
-        paramsString += currentParamString;
-      });
-
-      // support wildcard defaults
-      let wildcardDefaultCode = "";
-      if (wildcardDefault) {
-        wildcardDefaultCode = `${wildcardDefault.name} = ${wildcardDefault.name}.length > 0 ? ${wildcardDefault.name} : ${wildcardDefault.value};`;
-      }
-
+      const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(method.parameters);
       methods += `${method.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${method.body.accept(this)}};`;
     });
 
@@ -171,37 +146,7 @@ module.exports = class Compiler {
   }
 
   visitLambdaExpr(expr) {
-    let paramsString = "";
-    let wildcardDefault = null;
-    expr.params.forEach((param, i) => {
-      let { name, type } = param;
-      let defaultValue = param.default;
-      let currentParamString = "";
-
-      currentParamString += name.lexeme;
-
-      if (type === "wildcard") {
-        currentParamString = "..." + currentParamString;
-        if (defaultValue) {
-          // a wildcard default requires code in body, so save it for later
-          wildcardDefault = { name: name.lexeme, value: defaultValue.value };
-        }
-      } else {
-        if (defaultValue) {
-          currentParamString += `=${defaultValue.value}`;
-        }
-      }
-
-      if (i < expr.params.length - 1) currentParamString += ",";
-      paramsString += currentParamString;
-    });
-
-    // support wildcard defaults
-    let wildcardDefaultCode = "";
-    if (wildcardDefault) {
-      wildcardDefaultCode = `${wildcardDefault.name} = ${wildcardDefault.name}.length > 0 ? ${wildcardDefault.name} : ${wildcardDefault.value};`;
-    }
-
+    const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(expr.params);
     return `function (${paramsString}) {${wildcardDefaultCode}return ${expr.body.accept(this)}}`;
   }
 
