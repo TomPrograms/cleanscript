@@ -1,3 +1,5 @@
+const tokenTypes = require("./tokenTypes.js");
+
 let includeFunctionFlag = false;
 let includeFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || typeof obj === "string") {return obj.indexOf(val) !== -1;}return val in obj;};`;
 
@@ -159,7 +161,13 @@ module.exports = class Compiler {
   }
 
   visitUnaryExpr(expr) {
-    return `!${expr.right.accept(this)}`;
+    let right = expr.right.accept(this);
+
+    switch (expr.operator.type) {
+      case tokenTypes.MINUS: return `-${right}`;
+      case tokenTypes.BANG: return `!${right}`;
+      case tokenTypes.BIT_NOT: return `~${right}`;
+    }
   }
 
   visitLogicalExpr(expr) {
