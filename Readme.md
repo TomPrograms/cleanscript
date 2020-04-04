@@ -37,9 +37,11 @@ finally:
   console.log("Everything finished here!");
 ```
 
-Compiles to the following Javascript (when using the `--no-mangle`, `--no-minify` and `--prettify` flags):
+Compiles to the following Javascript (when using the `--no-minify` and `--prettify` flags):
 
 ```js
+/* Compiled by Cleanscript */
+
 function $_in(val, obj) {
   if (obj instanceof Array || typeof obj === "string") {
     return obj.indexOf(val) !== -1;
