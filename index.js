@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 
 const chokidar = require("chokidar");
+const Terser = require("terser");
 const prettier = require("prettier");
 
 const Lexer = require("./src/lexer.js");
@@ -26,7 +27,7 @@ function findFilesInDir(base, ext, files, result) {
 }
 
 function compileCode(code, options) {
-  let { prettify } = options;
+  let { prettify, minify, mangle } = options;
 
   const lexer = new Lexer();
   const tokens = lexer.tokenize(code);
@@ -41,15 +42,27 @@ function compileCode(code, options) {
   const compiler = new Compiler();
   let js = compiler.compile(AST);
 
-  if (prettify) {
+  if (minify === true) {
+    js = Terser.minify(js, {
+      mangle: mangle ? { toplevel: true } : undefined,
+      output: {
+        indent_level: 2,
+      },
+    }).code;
+  }
+
+  if (prettify === true) {
     js = prettier.format(js, { parser: "babel" });
   }
+
+  // add cleanscript preamble
+  js = "/* Compiled by Cleanscript */\n\n" + js;
 
   return js;
 }
 
 function compileFile(filepath, options = {}) {
-  let { prettify } = options;
+  let { prettify, minify, mangle } = options;
   let pathData = path.parse(filepath);
   let filename = pathData.name;
   let directory = pathData.dir;
@@ -57,17 +70,17 @@ function compileFile(filepath, options = {}) {
   let js = fs.readFileSync(filepath).toString();
 
   var newPath = path.join(directory, filename + ".js");
-  const compiled = compileCode(js, { prettify });
+  const compiled = compileCode(js, { prettify, minify, mangle });
 
   fs.writeFileSync(newPath, compiled);
 }
 
 function compileDir(dirpath, options = {}) {
-  let { prettify } = options;
+  let { prettify, minify, mangle } = options;
   let files = findFilesInDir(dirpath, "csc");
 
   files.forEach((file) => {
-    compileFile(file, { prettify });
+    compileFile(file, { prettify, minify, mangle });
   });
 }
 
@@ -81,17 +94,17 @@ function isDir(path) {
 }
 
 function compile(target, options = {}) {
-  let { prettify } = options;
-  if (isDir(target)) compileDir(target, { prettify });
-  else compileFile(target, { prettify });
+  let { prettify, minify, mangle } = options;
+  if (isDir(target)) compileDir(target, { prettify, minify, mangle });
+  else compileFile(target, { prettify, minify, mangle });
 }
 
 function watch(target, options = {}) {
-  let { prettify } = options;
+  let { prettify, minify, mangle } = options;
   if (isDir(target)) target = path.join(target, "/**/*.csc");
 
   const watcher = chokidar.watch(target);
-  watcher.on("change", (path) => compile(path, { prettify }));
+  watcher.on("change", (path) => compile(path, { prettify, minify, mangle }));
 }
 
 module.exports.compileCode = compileCode;

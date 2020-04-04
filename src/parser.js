@@ -29,7 +29,11 @@ module.exports = class Parser {
     if (token.type === tokenTypes.EOF) {
       console.error(`[Line: ${token.line}] Error at end: ${message}`);
     } else {
-      console.error(`[Line: ${token.line}] Error${token.lexeme ? ` at "${token.lexeme}"` : ``}: ${message}`);
+      console.error(
+        `[Line: ${token.line}] Error${
+          token.lexeme ? ` at "${token.lexeme}"` : ``
+        }: ${message}`
+      );
     }
     this.hadError = true;
     this.synchronize();

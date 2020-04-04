@@ -37,7 +37,7 @@ finally:
   console.log("Everything finished here!");
 ```
 
-Compiles to the following Javascript:
+Compiles to the following Javascript (when using the `--no-mangle`, `--no-minify` and `--prettify` flags):
 
 ```js
 function $_in(val, obj) {
