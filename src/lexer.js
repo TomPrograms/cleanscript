@@ -68,6 +68,11 @@ class Token {
 }
 
 module.exports = class Lexer {
+  errorMessage(line, where, message) {
+    this.error = true;
+    console.error(`[Line: ${line}] Error${where}: ${message}`);
+  }
+
   isDigit(c) {
     return c >= "0" && c <= "9";
   }
@@ -128,7 +133,11 @@ module.exports = class Lexer {
     }
 
     if (this.endOfCode()) {
-      // unterminated string
+      this.errorMessage(
+        this.line,
+        ` at ${this.previous()}`,
+        "Unterminated string."
+      );
       return;
     }
 
@@ -311,6 +320,13 @@ module.exports = class Lexer {
       default:
         if (this.isDigit(char)) this.parseNumber();
         else if (this.isAlpha(char)) this.identifyKeyword();
+        else {
+          this.errorMessage(
+            this.line,
+            ` at "${char}"`,
+            "Unexpected character."
+          );
+        }
     }
   }
 
@@ -320,6 +336,7 @@ module.exports = class Lexer {
     this.current = 0;
     this.start = 0;
     this.line = 1;
+    this.error = false;
 
     this.indentStack = new Stack([0]);
     this.tokens = [];
