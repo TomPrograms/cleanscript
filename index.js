@@ -66,6 +66,7 @@ function compileFile(filepath, options = {}) {
   let pathData = path.parse(filepath);
   let filename = pathData.name;
   let directory = pathData.dir;
+  let extension = pathData.ext;
 
   let js = fs.readFileSync(filepath).toString();
 
@@ -73,6 +74,10 @@ function compileFile(filepath, options = {}) {
   const compiled = compileCode(js, { prettify, minify, mangle });
 
   fs.writeFileSync(newPath, compiled);
+
+  console.log(
+    `Cleanscript: Compiled "${filename + extension}" to "${filename + ".js"}".`
+  );
 }
 
 function compileDir(dirpath, options = {}) {
