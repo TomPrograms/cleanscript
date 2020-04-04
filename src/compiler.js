@@ -111,7 +111,7 @@ module.exports = class Compiler {
     stmt.elifBranches.forEach((branch) => {
       elifBranches += `else if(${branch.condition.accept(this)}){${branch.branch.accept(this)}}`;
     });
-    let elseBranch = `else{${stmt.elseBranch.accept(this)}}`;
+    let elseBranch = stmt.elseBranch ? `else{${stmt.elseBranch.accept(this)}}` : "";
     return `${mainBranch}${elifBranches}${elseBranch}`;
   }
 
