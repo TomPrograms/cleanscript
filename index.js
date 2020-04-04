@@ -43,12 +43,14 @@ function compileCode(code, options) {
   let js = compiler.compile(AST);
 
   if (minify === true) {
-    js = Terser.minify(js, {
+    let minified = Terser.minify(js, {
       mangle: mangle ? { toplevel: true } : undefined,
       output: {
         indent_level: 2,
       },
     }).code;
+
+    if (minified) js = minified;
   }
 
   if (prettify === true) {
