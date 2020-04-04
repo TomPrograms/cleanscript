@@ -123,9 +123,9 @@ class Subscript extends Expr {
 }
 
 class Assignsubscript extends Expr {
-  constructor(obj, index, value) {
+  constructor(object, index, value) {
     super();
-    this.obj = obj;
+    this.object = object;
     this.index = index;
     this.value = value;
   }

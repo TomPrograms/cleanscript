@@ -164,9 +164,12 @@ module.exports = class Compiler {
     let right = expr.right.accept(this);
 
     switch (expr.operator.type) {
-      case tokenTypes.MINUS: return `-${right}`;
-      case tokenTypes.BANG: return `!${right}`;
-      case tokenTypes.BIT_NOT: return `~${right}`;
+      case tokenTypes.MINUS:
+        return `-${right}`;
+      case tokenTypes.BANG:
+        return `!${right}`;
+      case tokenTypes.BIT_NOT:
+        return `~${right}`;
     }
   }
 
@@ -208,15 +211,23 @@ module.exports = class Compiler {
   }
 
   visitSetExpr(expr) {
-    return `${expr.object.name.lexeme}.${expr.name.lexeme} = ${expr.value.accept(this)}`;
+    let object = expr.object.accept(this);
+    let callee = expr.name.lexeme;
+    let value = expr.value.accept(this);
+    return `${object}.${callee} = ${value}`;
   }
 
   visitSubscriptExpr(expr) {
-    return `${expr.callee.name.lexeme}[${expr.index.accept(this)}]`;
+    let callee = expr.callee.accept(this);
+    let index = expr.index.accept(this);
+    return `${callee}[${index}]`;
   }
 
   visitAssignsubscriptExpr(expr) {
-    return `${expr.obj.name.lexeme}[${expr.index.accept(this)}] = ${expr.value.accept(this)}`;
+    let object = expr.object.accept(this);
+    let callee = expr.index.accept(this);
+    let value = expr.value.accept(this);
+    return `${object}[${callee}] = ${value}`;
   }
 
   visitJSRAWStmt(expr) {

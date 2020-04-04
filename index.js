@@ -32,12 +32,12 @@ function compileCode(code, options) {
   const lexer = new Lexer();
   const tokens = lexer.tokenize(code);
 
-  if (lexer.hadError) return;
+  if (lexer.hadError) return false;
 
   const parser = new Parser();
   const AST = parser.parse(tokens);
 
-  if (parser.hadError) return;
+  if (parser.hadError) return false;
 
   const compiler = new Compiler();
   let js = compiler.compile(AST);
@@ -51,10 +51,15 @@ function compileCode(code, options) {
     }).code;
 
     if (minified) js = minified;
+    else console.error("Couldn't minify JS due to issue parsing compiled JS.");
   }
 
   if (prettify === true) {
-    js = prettier.format(js, { parser: "babel" });
+    try {
+      js = prettier.format(js, { parser: "babel" });
+    } catch {
+      console.error("Couldn't prettify JS due to issue parsing compiled JS.");
+    }
   }
 
   // add cleanscript preamble
@@ -75,11 +80,15 @@ function compileFile(filepath, options = {}) {
   var newPath = path.join(directory, filename + ".js");
   const compiled = compileCode(js, { prettify, minify, mangle });
 
-  fs.writeFileSync(newPath, compiled);
+  if (compiled !== false) {
+    fs.writeFileSync(newPath, compiled);
 
-  console.log(
-    `Cleanscript: Compiled "${filename + extension}" to "${filename + ".js"}".`
-  );
+    console.log(
+      `Cleanscript: Compiled "${filename + extension}" to "${
+        filename + ".js"
+      }".`
+    );
+  }
 }
 
 function compileDir(dirpath, options = {}) {
