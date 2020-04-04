@@ -3,14 +3,41 @@ const Expr = require("./Expr.js");
 const Stmt = require("./Stmt.js");
 
 module.exports = class Parser {
+  synchronize() {
+    this.advance();
+
+    while (!this.isAtEnd()) {
+      if (this.previous().type == tokenTypes.SEMICOLON) return;
+
+      switch (this.peek().type) {
+        case tokenTypes.CLASS:
+        case tokenTypes.FUNCTION:
+        case tokenTypes.VAR:
+        case tokenTypes.FOR:
+        case tokenTypes.IF:
+        case tokenTypes.WHILE:
+        case tokenTypes.PRINT:
+        case tokenTypes.RETURN:
+          return;
+      }
+
+      this.advance();
+    }
+  }
+
   error(token, message) {
-    console.log(token, message);
-    throw new Error();
+    if (token.type === tokenTypes.EOF) {
+      console.error(`[Line: ${token.line}] Error at end: ${message}`);
+    } else {
+      console.error(`[Line: ${token.line}] Error${token.lexeme ? ` at "${token.lexeme}"` : ``}: ${message}`);
+    }
+    this.hadError = true;
+    this.synchronize();
   }
 
   consume(type, errorMessage) {
     if (this.check(type)) return this.advance();
-    else throw this.error(this.peek(), errorMessage);
+    else this.error(this.peek(), errorMessage);
   }
 
   check(type) {
@@ -116,7 +143,7 @@ module.exports = class Parser {
       return new Expr.Grouping(expr);
     }
 
-    throw this.error(this.peek(), "Expect expression.");
+    this.error(this.peek(), "Expect expression.");
   }
 
   lambdaExpression() {
@@ -805,6 +832,7 @@ module.exports = class Parser {
   parse(tokens) {
     this.tokens = tokens;
     this.current = 0;
+    this.hadError = false;
 
     this.statements = [];
     while (!this.isAtEnd()) {

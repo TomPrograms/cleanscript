@@ -69,7 +69,7 @@ class Token {
 
 module.exports = class Lexer {
   errorMessage(line, where, message) {
-    this.error = true;
+    this.hadError = true;
     console.error(`[Line: ${line}] Error${where}: ${message}`);
   }
 
@@ -336,7 +336,7 @@ module.exports = class Lexer {
     this.current = 0;
     this.start = 0;
     this.line = 1;
-    this.error = false;
+    this.hadError = false;
 
     this.indentStack = new Stack([0]);
     this.tokens = [];

@@ -31,10 +31,12 @@ function compileCode(code, options) {
   const lexer = new Lexer();
   const tokens = lexer.tokenize(code);
 
-  if (lexer.error) return;
+  if (lexer.hadError) return;
 
   const parser = new Parser();
   const AST = parser.parse(tokens);
+
+  if (parser.hadError) return;
 
   const compiler = new Compiler();
   let js = compiler.compile(AST);
