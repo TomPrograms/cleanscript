@@ -174,9 +174,18 @@ module.exports = class Compiler {
   }
 
   visitLogicalExpr(expr) {
-    if (expr.operator.type === "OR" || expr.operator.type === "AND") {
-      return `${expr.left.accept(this)}${convertOperator(expr.operator)}${expr.right.accept(this)}`;
-    } else if (expr.operator.type === "IN") {
+    function convertOperator(operator) {
+      switch (operator) {
+        case "OR":
+          return "||";
+        case "AND":
+          return "&&";
+      }
+    }
+    let operator = expr.operator.type;
+    if (operator === "OR" || operator === "AND") {
+      return `${expr.left.accept(this)}${convertOperator(operator)}${expr.right.accept(this)}`;
+    } else if (operator === "IN") {
       includeFunctionFlag = true;
       return `$_in(${expr.left.accept(this)},${expr.right.accept(this)})`;
     }
