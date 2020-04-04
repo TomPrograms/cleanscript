@@ -50,7 +50,7 @@ function compileCode(code, options) {
       },
     }).code;
 
-    if (minified) js = minified;
+    if (minified !== undefined) js = minified;
     else console.error("Couldn't minify JS due to issue parsing compiled JS.");
   }
 
