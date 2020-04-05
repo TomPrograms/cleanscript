@@ -11,6 +11,7 @@ const reservedWords = {
   if: tokenTypes.IF,
   elif: tokenTypes.ELIF,
   null: tokenTypes.NULL,
+  undefined: tokenTypes.UNDEFINED,
   or: tokenTypes.OR,
   return: tokenTypes.RETURN,
   super: tokenTypes.SUPER,
