@@ -50,8 +50,6 @@ module.exports = {
   OR: "OR",
   PRINT: "PRINT",
   RETURN: "RETURN",
-  SUPER: "SUPER",
-  THIS: "THIS",
   TRUE: "TRUE",
   VAR: "VAR",
   LET: "LET",

@@ -161,29 +161,6 @@ class Set extends Expr {
   }
 }
 
-class Super extends Expr {
-  constructor(keyword, method) {
-    super();
-    this.keyword = keyword;
-    this.method = method;
-  }
-
-  accept(visitor) {
-    return visitor.visitSuperExpr(this);
-  }
-}
-
-class This extends Expr {
-  constructor(keyword) {
-    super();
-    this.keyword = keyword;
-  }
-
-  accept(visitor) {
-    return visitor.visitThisExpr(this);
-  }
-}
-
 class Unary extends Expr {
   constructor(operator, right) {
     super();
@@ -221,8 +198,6 @@ module.exports = {
   Assignsubscript,
   Logical,
   Set,
-  Super,
-  This,
   Unary,
   Variable,
   Lambda,

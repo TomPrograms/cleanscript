@@ -14,8 +14,6 @@ const reservedWords = {
   undefined: tokenTypes.UNDEFINED,
   or: tokenTypes.OR,
   return: tokenTypes.RETURN,
-  super: tokenTypes.SUPER,
-  this: tokenTypes.THIS,
   true: tokenTypes.TRUE,
   var: tokenTypes.VAR,
   let: tokenTypes.LET,
