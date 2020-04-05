@@ -85,7 +85,7 @@ module.exports = class Compiler {
       methods += `${method.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${method.body.accept(this)}};`;
     });
 
-    const extendString = stmt.superclass ? `extends ${stmt.superclass}` : "";
+    const extendString = stmt.superclass ? `extends ${stmt.superclass.lexeme}` : "";
     return `class ${stmt.name.lexeme} ${extendString} {${methods}}`;
   }
 
