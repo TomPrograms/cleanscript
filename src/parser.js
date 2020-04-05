@@ -231,7 +231,23 @@ module.exports = class Parser {
         );
         expr = new Expr.Get(expr, name);
       } else if (this.match(tokenTypes.LEFT_SQUARE_BRACKET)) {
-        let index = this.expression();
+        let index = {
+          leftValue: undefined,
+          colon: false,
+          rightValue: undefined
+        };
+
+        if (this.match(tokenTypes.COLON)) {
+          index.colon = true;
+          index.rightValue = this.expression();
+        } else {
+          index.leftValue = this.expression();
+          if (this.match(tokenTypes.COLON)) {
+            index.colon = true;
+            if (!this.check(tokenTypes.RIGHT_SQUARE_BRACKET)) index.rightValue = this.expression();
+          }
+        }
+
         let closeBracket = this.consume(
           tokenTypes.RIGHT_SQUARE_BRACKET,
           "Expected ']' after subscript index."

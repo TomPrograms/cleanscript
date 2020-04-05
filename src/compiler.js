@@ -229,15 +229,51 @@ module.exports = class Compiler {
 
   visitSubscriptExpr(expr) {
     let callee = expr.callee.accept(this);
-    let index = expr.index.accept(this);
-    return `${callee}[${index}]`;
+    let indexData = expr.index;
+    
+    if (!indexData.colon) {
+      return `${callee}[${indexData.leftValue.accept(this)}]`; 
+    }
+
+    if (indexData.leftValue) {
+      // [a:b] indexes
+      if (indexData.rightValue) {
+        return `${callee}.slice(${indexData.leftValue.accept(this)}, ${indexData.rightValue.accept(this)})`
+      }
+
+      // [a:] indexes
+      else {
+        return `${callee}.slice(${indexData.leftValue.accept(this)}, ${callee}.length)`;
+      }
+    } else {
+      // [:a] indexes
+      return `${callee}.slice(0, ${indexData.rightValue.accept(this)})`; 
+    }
+
   }
 
   visitAssignsubscriptExpr(expr) {
     let object = expr.object.accept(this);
-    let callee = expr.index.accept(this);
     let value = expr.value.accept(this);
-    return `${object}[${callee}] = ${value}`;
+    let indexData = expr.index;
+
+    if (indexData.leftValue) indexData.leftValue = indexData.leftValue.accept(this);
+    if (indexData.rightValue) indexData.rightValue = indexData.rightValue.accept(this);
+
+    if (indexData.leftValue) {
+      // [a:b] indexes
+      if (indexData.rightValue) {
+        return `[].splice.apply(${object}, [${indexData.leftValue}, ${indexData.rightValue} - ${indexData.leftValue}].concat(${value}))`
+      }
+
+      // [a:] indexes
+      else {
+        return `[].splice.apply(${object}, [${indexData.leftValue}, ${object}.length - ${indexData.leftValue}].concat('a'))`;
+      }
+    } else {
+      // [:a] indexes
+      return `[].splice.apply(${object}, [0, ${indexData.rightValue}].concat(${value}))`; 
+    }
   }
 
   visitJSRAWStmt(expr) {
