@@ -1,7 +1,6 @@
 const tokenTypes = require("./tokenTypes.js");
 
-let includeFunctionFlag = false;
-let includeFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || typeof obj === "string") {return obj.indexOf(val) !== -1;}return val in obj;};`;
+let inFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || typeof obj === "string") {return obj.indexOf(val) !== -1;}return val in obj;};`;
 
 function renderParamsString(params) {
   let paramsString = "";
@@ -186,7 +185,7 @@ module.exports = class Compiler {
     if (operator === "OR" || operator === "AND") {
       return `${expr.left.accept(this)}${convertOperator(operator)}${expr.right.accept(this)}`;
     } else if (operator === "IN") {
-      includeFunctionFlag = true;
+      this.flags.includeInFunctionFlag = true;
       return `$_in(${expr.left.accept(this)},${expr.right.accept(this)})`;
     }
   }
@@ -266,14 +265,19 @@ module.exports = class Compiler {
   }
 
   compile(ast) {
+    // reset flags
+    this.flags = {
+      includeInFunctionFlag: false
+    };
+
     let compiled = "";
     ast.forEach((stmt) => {
       compiled += stmt.accept(this);
     });
 
     // include helper functions
-    if (includeFunctionFlag) {
-      compiled = includeFunctionCode + compiled;
+    if (this.flags.includeInFunctionFlag) {
+      compiled = inFunctionCode + compiled;
     }
 
     return compiled;
