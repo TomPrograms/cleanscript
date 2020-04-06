@@ -306,6 +306,9 @@ module.exports = class Lexer {
         this.parseString('"');
         break;
 
+      case '`':
+        this.parseString("`");
+
       case " ":
       case "\r":
       case "\t":
