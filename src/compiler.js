@@ -207,7 +207,7 @@ module.exports = class Compiler {
   visitLiteralExpr(expr) {
     let value = expr.value;
     if (typeof value === "string") {
-      return `"${value}"`;
+      return JSON.stringify(expr.value);
     } else if (typeof value === "number") {
       return `${value}`;
     } else if (value === true) return true;
