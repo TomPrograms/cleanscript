@@ -130,7 +130,8 @@ module.exports = class Compiler {
   }
 
   visitReturnStmt(stmt) {
-    return `return ${stmt.value.accept(this)};`;
+    let value = stmt.value ? stmt.value.accept(this) : "";
+    return `return ${value};`;
   }
   
   visitYieldStmt(stmt) {
