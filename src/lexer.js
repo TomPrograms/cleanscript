@@ -298,8 +298,12 @@ module.exports = class Lexer {
           this.indentStack.push(indentSize);
           this.tokens.push(new Token(tokenTypes.INDENT, null, null, this.line));
         } else if (indentSize < this.indentStack.head) {
-          this.indentStack.pop();
-          this.tokens.push(new Token(tokenTypes.DEDENT, null, null, this.line));
+          while (indentSize < this.indentStack.head) {
+            this.indentStack.pop();
+            this.tokens.push(
+              new Token(tokenTypes.DEDENT, null, null, this.line)
+            );
+          }
         }
 
         break;

@@ -529,7 +529,10 @@ module.exports = class Parser {
   }
 
   forStatement() {
-    let variable = this.consume(tokenTypes.IDENTIFIER, "Expected variable name.");
+    let variable = this.consume(
+      tokenTypes.IDENTIFIER,
+      "Expected variable name."
+    );
 
     this.consume(tokenTypes.IN, "Expected 'in' keyword.");
 
