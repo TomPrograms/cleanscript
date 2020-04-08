@@ -13,6 +13,48 @@
 [![Cleanscript NPM Version](https://img.shields.io/npm/v/cleanscript?color=green)](https://npmjs.com/package/cleanscript)
 [![Cleanscript License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
+## Installation
+
+For global installation to compile from the command line:
+
+```
+npm i -g cleanscript
+```
+
+For programmatic compilation within projects:
+
+```
+npm i cleanscript
+```
+
+## Usage
+
+Once installed (at least globally) you can compile a file through the command line. The path provided should be relative to the command line's current execution location:
+
+```
+cleanscript ./test.drg
+```
+
+You can also compile all the `.csc` files in a folder (and its sub-folders recursively), by targeting a folder when compiling:
+
+```
+cleanscript ./
+```
+
+You can also provide the `--watch` option, which, while running, will recompile its target when changes (like a save) occur. This works with individual files and folders.
+
+```
+cleanscript ./
+```
+
+You can also provide other flags, relevant to Cleanscript through the command line:
+
+```
+--no-minify - This will stop Cleanscript from minifying the output.
+--no-mangle - If minifying, this will stop variable names from being mangled.
+--prettify - This will prettify the Cleanscript output.
+```
+
 ## Example
 
 For example, the following Cleanscript code:
