@@ -1,6 +1,7 @@
 const tokenTypes = require("./tokenTypes.js");
 
-let inFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || typeof obj === "string") {return obj.indexOf(val) !== -1;}return val in obj;};`;
+var inFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || typeof obj === "string") {return obj.indexOf(val) !== -1;}return val in obj;};`;
+var createIterableCode = `function $_createIterable(object) { if (object.constructor === [].constructor || object.constructor === "".constructor){return object;}else if (Set && object.constructor === Set) {return Array.from(object);}return Object.keys(object);}`;
 
 function renderParamsString(params) {
   let paramsString = "";
@@ -38,7 +39,7 @@ function renderParamsString(params) {
   }
 
   return { paramsString, wildcardDefaultCode };
-}
+};
 
 module.exports = class Compiler {
   visitWhileStmt(stmt) {
@@ -46,7 +47,10 @@ module.exports = class Compiler {
   }
 
   visitForStmt(stmt) {
-    return `for(${stmt.initializer.accept(this)}${stmt.condition.accept(this)};${stmt.increment.accept(this)}){${stmt.body.accept(this)}}`;
+    this.flags.includeCreateIterableFlag = true;
+    let varName = stmt.variable.lexeme;
+    let iterator = stmt.iterator.accept(this);
+    return `var $_iterator = $_createIterable(${iterator});for (let $_forVar = 0; $_forVar < $_iterator.length; $_forVar++) {var ${varName} = $_iterator[$_forVar];${stmt.body.accept(this)}}`;
   }
 
   visitSwitchStmt(stmt) {
@@ -74,7 +78,7 @@ module.exports = class Compiler {
   }
 
   visitFunctionStmt(stmt) {
-    const asyncDeclaration = stmt.async ? "async": "";
+    const asyncDeclaration = stmt.async ? "async" : "";
     const functionKeyword = stmt.generator ? "function*" : "function";
     const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(stmt.params);
     return `${asyncDeclaration} ${functionKeyword} ${stmt.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${stmt.body.accept(this)}};`;
@@ -133,7 +137,7 @@ module.exports = class Compiler {
     let value = stmt.value ? stmt.value.accept(this) : "";
     return `return ${value};`;
   }
-  
+
   visitYieldStmt(stmt) {
     return `yield ${stmt.value.accept(this)};`;
   }
@@ -155,7 +159,7 @@ module.exports = class Compiler {
   }
 
   visitLambdaExpr(expr) {
-    const asyncDeclaration = expr.async ? "async": "";
+    const asyncDeclaration = expr.async ? "async" : "";
     const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(expr.params);
     return `${asyncDeclaration} function (${paramsString}) {${wildcardDefaultCode}return ${expr.body.accept(this)}}`;
   }
@@ -239,15 +243,15 @@ module.exports = class Compiler {
   visitSubscriptExpr(expr) {
     let callee = expr.callee.accept(this);
     let indexData = expr.index;
-    
+
     if (!indexData.colon) {
-      return `${callee}[${indexData.leftValue.accept(this)}]`; 
+      return `${callee}[${indexData.leftValue.accept(this)}]`;
     }
 
     if (indexData.leftValue) {
       // [a:b] indexes
       if (indexData.rightValue) {
-        return `${callee}.slice(${indexData.leftValue.accept(this)}, ${indexData.rightValue.accept(this)})`
+        return `${callee}.slice(${indexData.leftValue.accept(this)}, ${indexData.rightValue.accept(this)})`;
       }
 
       // [a:] indexes
@@ -256,9 +260,8 @@ module.exports = class Compiler {
       }
     } else {
       // [:a] indexes
-      return `${callee}.slice(0, ${indexData.rightValue.accept(this)})`; 
+      return `${callee}.slice(0, ${indexData.rightValue.accept(this)})`;
     }
-
   }
 
   visitAssignsubscriptExpr(expr) {
@@ -272,7 +275,7 @@ module.exports = class Compiler {
     if (indexData.leftValue) {
       // [a:b] indexes
       if (indexData.rightValue) {
-        return `[].splice.apply(${object}, [${indexData.leftValue}, ${indexData.rightValue} - ${indexData.leftValue}].concat(${value}))`
+        return `[].splice.apply(${object}, [${indexData.leftValue}, ${indexData.rightValue} - ${indexData.leftValue}].concat(${value}))`;
       }
 
       // [a:] indexes
@@ -281,7 +284,7 @@ module.exports = class Compiler {
       }
     } else {
       // [:a] indexes
-      return `[].splice.apply(${object}, [0, ${indexData.rightValue}].concat(${value}))`; 
+      return `[].splice.apply(${object}, [0, ${indexData.rightValue}].concat(${value}))`;
     }
   }
 
@@ -312,7 +315,8 @@ module.exports = class Compiler {
   compile(ast) {
     // reset flags
     this.flags = {
-      includeInFunctionFlag: false
+      includeInFunctionFlag: false,
+      includeCreateIterableFlag: false,
     };
 
     let compiled = "";
@@ -323,6 +327,10 @@ module.exports = class Compiler {
     // include helper functions
     if (this.flags.includeInFunctionFlag) {
       compiled = inFunctionCode + compiled;
+    }
+
+    if (this.flags.includeCreateIterableFlag) {
+      compiled = createIterableCode + compiled;
     }
 
     return compiled;

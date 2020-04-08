@@ -122,11 +122,10 @@ class While extends Stmt {
 }
 
 class For extends Stmt {
-  constructor(initializer, condition, increment, body) {
+  constructor(iterator, variable, body) {
     super();
-    this.initializer = initializer;
-    this.condition = condition;
-    this.increment = increment;
+    this.variable = variable;
+    this.iterator = iterator;
     this.body = body;
   }
 

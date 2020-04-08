@@ -529,41 +529,13 @@ module.exports = class Parser {
   }
 
   forStatement() {
-    this.consume(tokenTypes.LEFT_PAREN, "Expected '(' after 'for'.");
+    let variable = this.consume(tokenTypes.IDENTIFIER, "Expected variable name.");
 
-    let initializer;
-    if (this.match(tokenTypes.SEMICOLON)) {
-      initializer = null;
-    } else if (
-      this.check(tokenTypes.VAR) ||
-      this.check(tokenTypes.CONST) ||
-      this.check(tokenTypes.LET)
-    ) {
-      if (this.match(tokenTypes.VAR)) initializer = this.varDeclaration();
-      else if (this.match(tokenTypes.CONST))
-        initializer = this.constDeclaration();
-      else if (this.match(tokenTypes.LET)) initializer = this.letDeclaration();
-    } else {
-      initializer = this.expressionStatement();
-    }
+    this.consume(tokenTypes.IN, "Expected 'in' keyword.");
 
-    let condition = null;
-    if (!this.check(tokenTypes.SEMICOLON)) {
-      condition = this.expression();
-    }
+    let iterator = this.expression();
 
-    this.consume(
-      tokenTypes.SEMICOLON,
-      "Expected ';' after condition statement"
-    );
-
-    let increment = null;
-    if (!this.check(tokenTypes.RIGHT_PAREN)) {
-      increment = this.expression();
-    }
-
-    this.consume(tokenTypes.RIGHT_PAREN, "Expected ')' after clauses");
-    this.consume(tokenTypes.COLON, "Expected ':' at end of for statement.");
+    this.consume(tokenTypes.COLON, "Expected colon after for statement.");
 
     let body = [];
     if (this.match(tokenTypes.INDENT)) {
@@ -576,7 +548,7 @@ module.exports = class Parser {
     }
     body = new Stmt.Block(body);
 
-    return new Stmt.For(initializer, condition, increment, body);
+    return new Stmt.For(iterator, variable, body);
   }
 
   whileStatement() {
