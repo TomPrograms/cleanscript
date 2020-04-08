@@ -11,15 +11,17 @@ let prettify = false;
 let watch = false;
 let minify = true;
 let mangle = true;
+let recursive = true;
 args.forEach((arg, i) => {
   if (!arg.startsWith("--")) target = arg;
   else if (arg === "--watch") watch = true;
   else if (arg === "--no-minify") minify = false;
   else if (arg === "--prettify") prettify = true;
   else if (arg === "--no-mangle") mangle = false;
+  else if (arg === "--no-recursive") recursive = false;
 });
 
 if (!path.isAbsolute(target)) target = path.resolve(target);
 
-Cleanscript.compile(target, { prettify, minify, mangle });
-if (watch) Cleanscript.watch(target, { prettify, minify, mangle });
+Cleanscript.compile(target, { prettify, minify, mangle, recursive });
+if (watch) Cleanscript.watch(target, { prettify, minify, mangle, recursive });

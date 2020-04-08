@@ -9,21 +9,36 @@ const Lexer = require("./src/lexer.js");
 const Parser = require("./src/parser.js");
 const Compiler = require("./src/compiler.js");
 
-function findFilesInDir(base, ext, files, result) {
-  files = files || fs.readdirSync(base);
-  result = result || [];
+function findFilesInDir(base, ext, recursive = true) {
+  function recursiveFind(base, files, result) {
+    files = files || fs.readdirSync(base);
+    result = result || [];
 
-  files.forEach(function (file) {
-    var newbase = path.join(base, file);
-    if (fs.statSync(newbase).isDirectory()) {
-      result = findFilesInDir(newbase, ext, fs.readdirSync(newbase), result);
-    } else {
-      if (file.substr(-1 * (ext.length + 1)) == "." + ext) {
-        result.push(newbase);
+    files.forEach(function (file) {
+      var newbase = path.join(base, file);
+      if (fs.statSync(newbase).isDirectory()) {
+        result = recursiveFind(newbase, fs.readdirSync(newbase), result);
+      } else {
+        if (file.substr(-1 * (ext.length + 1)) == "." + ext) {
+          result.push(newbase);
+        }
       }
-    }
-  });
-  return result;
+    });
+    return result;
+  }
+
+  function nonRecursiveFind(base) {
+    let files = fs.readdirSync(base);
+    let result = [];
+    files.forEach((file) => {
+      if (file.substr(-1 * (ext.length + 1)) == "." + ext) {
+        result.push(file);
+      }
+    });
+    return result;
+  }
+
+  return (recursive ? recursiveFind : nonRecursiveFind)(base);
 }
 
 function compileCode(code, options) {
@@ -92,8 +107,8 @@ function compileFile(filepath, options = {}) {
 }
 
 function compileDir(dirpath, options = {}) {
-  let { prettify, minify, mangle } = options;
-  let files = findFilesInDir(dirpath, "csc");
+  let { prettify, minify, mangle, recursive } = options;
+  let files = findFilesInDir(dirpath, "csc", recursive);
 
   files.forEach((file) => {
     compileFile(file, { prettify, minify, mangle });
@@ -110,14 +125,19 @@ function isDir(path) {
 }
 
 function compile(target, options = {}) {
-  let { prettify, minify, mangle } = options;
-  if (isDir(target)) compileDir(target, { prettify, minify, mangle });
+  let { prettify, minify, mangle, recursive } = options;
+  if (isDir(target))
+    compileDir(target, { prettify, minify, mangle, recursive });
   else compileFile(target, { prettify, minify, mangle });
 }
 
 function watch(target, options = {}) {
-  let { prettify, minify, mangle } = options;
-  if (isDir(target)) target = path.join(target, "/**/*.csc");
+  let { prettify, minify, mangle, recursive } = options;
+  if (isDir(target) && recursive) {
+    target = path.join(target, "/**/*.csc");
+  } else if (isDir(target) && !recursive) {
+    target = path.join(target, "/*.csc");
+  }
 
   const watcher = chokidar.watch(target);
   watcher.on("change", (path) => compile(path, { prettify, minify, mangle }));
