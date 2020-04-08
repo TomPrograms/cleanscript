@@ -5,9 +5,10 @@
 > Cleanscript is an small, indent-based language that compiles to Javascript.
 
 - Clean, indent-based grammar.
+- Cleanscripts includes useful features such as advanced Pythonic indexes and Pythonic for loops.
 - Compiles to Javascript for compatibility with browsers, NodeJS and Electron.
-- Merges familiar syntax from Python and Javascript for a clean look.
-- Still utilise all the powerful built-in Javascript libraries, objects and prototypes.
+- Merges familiar syntax from Python and Javascript for an easy-to-learn, clean syntax.
+- Cleanscript still allows you to utilise all the powerful built-in Javascript libraries, objects and prototypes.
 - Mix-in Javascript at-will to access the maturity and power of pure Javascript.
 
 [![Cleanscript NPM Version](https://img.shields.io/npm/v/cleanscript?color=green)](https://npmjs.com/package/cleanscript)
