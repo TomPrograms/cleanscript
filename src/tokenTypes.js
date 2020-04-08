@@ -49,6 +49,7 @@ module.exports = {
   AWAIT: "AWAIT",
   OR: "OR",
   RETURN: "RETURN",
+  YIELD: "YIELD",
   TRUE: "TRUE",
   VAR: "VAR",
   LET: "LET",

@@ -75,8 +75,9 @@ module.exports = class Compiler {
 
   visitFunctionStmt(stmt) {
     const asyncDeclaration = stmt.async ? "async": "";
+    const functionKeyword = stmt.generator ? "function*" : "function";
     const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(stmt.params);
-    return `${asyncDeclaration} function ${stmt.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${stmt.body.accept(this)}};`;
+    return `${asyncDeclaration} ${functionKeyword} ${stmt.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${stmt.body.accept(this)}};`;
   }
 
   visitClassStmt(stmt) {
@@ -130,6 +131,10 @@ module.exports = class Compiler {
 
   visitReturnStmt(stmt) {
     return `return ${stmt.value.accept(this)};`;
+  }
+  
+  visitYieldStmt(stmt) {
+    return `yield ${stmt.value.accept(this)};`;
   }
 
   visitVarStmt(stmt) {

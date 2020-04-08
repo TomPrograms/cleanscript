@@ -25,12 +25,13 @@ class JSRAW extends Stmt {
 }
 
 class Function extends Stmt {
-  constructor(name, params, body, async) {
+  constructor(name, params, body, async, generator) {
     super();
     this.name = name;
     this.params = params;
     this.body = body;
     this.async = async;
+    this.generator = generator;
   }
 
   accept(visitor) {
@@ -47,6 +48,18 @@ class Return extends Stmt {
 
   accept(visitor) {
     return visitor.visitReturnStmt(this);
+  }
+}
+
+class Yield extends Stmt {
+  constructor(keyword, value) {
+    super();
+    this.keyword = keyword;
+    this.value = value;
+  }
+
+  accept(visitor) {
+    return visitor.visitYieldStmt(this);
   }
 }
 
@@ -223,6 +236,7 @@ module.exports = {
   Expression,
   Function,
   Return,
+  Yield,
   New,
   Class,
   Block,

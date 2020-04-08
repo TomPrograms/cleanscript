@@ -469,6 +469,18 @@ module.exports = class Parser {
     return new Stmt.Return(keyword, value);
   }
 
+  yieldStatement() {
+    let keyword = this.previous();
+    let value = null;
+
+    if (!this.check(tokenTypes.SEMICOLON)) {
+      value = this.expression();
+    }
+
+    this.consume(tokenTypes.SEMICOLON, "Expected ';' after return.");
+    return new Stmt.Yield(keyword, value);
+  }
+
   ifStatement() {
     function parseBody() {
       let body = [];
@@ -680,6 +692,7 @@ module.exports = class Parser {
     if (this.match(tokenTypes.TRY)) return this.tryStatement();
     if (this.match(tokenTypes.SWITCH)) return this.switchStatement();
     if (this.match(tokenTypes.RETURN)) return this.returnStatement();
+    if (this.match(tokenTypes.YIELD)) return this.yieldStatement();
     if (this.match(tokenTypes.CONTINUE)) return this.continueStatement();
     if (this.match(tokenTypes.BREAK)) return this.breakStatement();
     if (this.match(tokenTypes.FOR)) return this.forStatement();
@@ -804,10 +817,14 @@ module.exports = class Parser {
   }
 
   functionDeclaration() {
+    let generator = false;
+    if (this.match(tokenTypes.STAR)) generator = true;
+
     let async = false;
     if (this.match(tokenTypes.ASYNC)) async = true;
+
     const { name, body, parameters } = this.functionBody();
-    return new Stmt.Function(name, parameters, body, async);
+    return new Stmt.Function(name, parameters, body, async, generator);
   }
 
   JSRAWDeclaration() {
