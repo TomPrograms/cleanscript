@@ -108,7 +108,7 @@ module.exports = class Parser {
         return new Expr.Dictionary([], []);
       }
       while (!this.match(tokenTypes.RIGHT_BRACE)) {
-        if (this.check(tokenTypes.INDENT)) this.consume(tokenTypes.INDENT); 
+        while (this.match(tokenTypes.INDENT) || this.match(tokenTypes.DEDENT)) {continue;}
 
         let key = this.assignment();
         this.consume(
@@ -120,7 +120,7 @@ module.exports = class Parser {
         keys.push(key);
         values.push(value);
 
-        if (this.check(tokenTypes.DEDENT)) this.consume(tokenTypes.DEDENT); 
+        while (this.match(tokenTypes.INDENT) || this.match(tokenTypes.DEDENT)) {continue;}
         if (this.peek().type !== tokenTypes.RIGHT_BRACE) {
           this.consume(
             tokenTypes.COMMA,
