@@ -285,13 +285,15 @@ module.exports = class Lexer {
         }
         break;
 
+      case "\r":
       case "\n":
         this.line += 1;
 
         let indentStart = this.current;
-        while (this.match(" ")) {
+        do {
+          if (this.peek() === "\r") return;
           if (this.peek() === "\n") return;
-        }
+        } while (this.match(" "));
         let indentSize = this.current - indentStart;
 
         if (indentSize > this.indentStack.head) {

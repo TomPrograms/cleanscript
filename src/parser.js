@@ -691,6 +691,7 @@ module.exports = class Parser {
   varDeclaration() {
     let name = this.consume(tokenTypes.IDENTIFIER, "Expect variable name.");
     let initializer = null;
+    
     if (this.match(tokenTypes.EQUAL)) {
       initializer = this.expression();
     }
