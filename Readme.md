@@ -61,23 +61,26 @@ You can also provide other flags, relevant to Cleanscript through the command li
 For example, the following Cleanscript code:
 
 ```
-function checkValInVals(val=1, *vals=[1]):
-  return val in vals;
+function checkValInVals(flag=false, *vals=[3]):
+  // python style for loops
+  for val in vals:
+    if val == 3 and flag == true:
+      return true;
+  return false;
 
 var print = lambda (val) : console.log(val);
 
 try:
-  print(checkValInVals()); // true
-  print(checkValInVals(2)); // false
-  print(checkValInVals(2, 2, 3)); // true
+  print(checkValInVals()); // false
+  print(checkValInVals(true)); // true
+  print(checkValInVals(true, 2)); // false
+  print(checkValInVals(true, 2, 3)); // true
+  print(checkValInVals(false, 2, 3)); // false
 catch error:
   console.error(error);
 else:
   // only runs if catch doesn't
   console.log('No errors!');
-finally:
-  // runs at the end
-  console.log("Everything finished here!");
 ```
 
 Compiles to the following Javascript (when using the `--no-minify` and `--prettify` flags):
@@ -85,16 +88,28 @@ Compiles to the following Javascript (when using the `--no-minify` and `--pretti
 ```js
 /* Compiled by Cleanscript */
 
-function $_in(val, obj) {
-  if (obj instanceof Array || typeof obj === "string") {
-    return obj.indexOf(val) !== -1;
+function $_createIterable(object) {
+  if (
+    object.constructor === [].constructor ||
+    object.constructor === "".constructor
+  ) {
+    return object;
+  } else if (Set && object.constructor === Set) {
+    return Array.from(object);
   }
-  return val in obj;
+  return Object.keys(object);
 }
 
-function checkValInVals(val = 1, ...vals) {
-  vals = vals.length > 0 ? vals : [1];
-  return $_in(val, vals);
+function checkValInVals(flag = false, ...vals) {
+  vals = vals.length > 0 ? vals : [3];
+  var $_iterator = $_createIterable(vals);
+  for (let $_forVar = 0; $_forVar < $_iterator.length; $_forVar++) {
+    var val = $_iterator[$_forVar];
+    if (val === 3 && flag === true) {
+      return true;
+    }
+  }
+  return false;
 }
 
 var print = function (val) {
@@ -105,8 +120,10 @@ try {
   let $_successful = true;
   try {
     print(checkValInVals());
-    print(checkValInVals(2));
-    print(checkValInVals(2, 2, 3));
+    print(checkValInVals(true));
+    print(checkValInVals(true, 2));
+    print(checkValInVals(true, 2, 3));
+    print(checkValInVals(false, 2, 3));
   } catch (error) {
     $_successful = false;
     console.error(error);
@@ -115,7 +132,6 @@ try {
     console.log("No errors!");
   }
 } finally {
-  console.log("Everything finished here!");
 }
 ```
 
