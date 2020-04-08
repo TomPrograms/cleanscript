@@ -285,7 +285,6 @@ module.exports = class Lexer {
         }
         break;
 
-      case "\r":
       case "\n":
         this.line += 1;
 
