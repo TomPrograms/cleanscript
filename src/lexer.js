@@ -25,6 +25,7 @@ const reservedWords = {
   continue: tokenTypes.CONTINUE,
   switch: tokenTypes.SWITCH,
   case: tokenTypes.CASE,
+  async: tokenTypes.ASYNC,
   default: tokenTypes.DEFAULT,
   extends: tokenTypes.EXTENDS,
   try: tokenTypes.TRY,
@@ -306,7 +307,7 @@ module.exports = class Lexer {
         this.parseString('"');
         break;
 
-      case '`':
+      case "`":
         this.parseString("`");
 
       case " ":

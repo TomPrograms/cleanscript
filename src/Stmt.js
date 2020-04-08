@@ -25,11 +25,12 @@ class JSRAW extends Stmt {
 }
 
 class Function extends Stmt {
-  constructor(name, params, body) {
+  constructor(name, params, body, async) {
     super();
     this.name = name;
     this.params = params;
     this.body = body;
+    this.async = async;
   }
 
   accept(visitor) {

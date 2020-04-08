@@ -74,15 +74,17 @@ module.exports = class Compiler {
   }
 
   visitFunctionStmt(stmt) {
+    const asyncDeclaration = stmt.async ? "async": "";
     const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(stmt.params);
-    return `function ${stmt.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${stmt.body.accept(this)}};`;
+    return `${asyncDeclaration} function ${stmt.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${stmt.body.accept(this)}};`;
   }
 
   visitClassStmt(stmt) {
     let methods = "";
     stmt.methods.forEach((method) => {
-      const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(method.parameters);
-      methods += `${method.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${method.body.accept(this)}};`;
+      const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(method.func.parameters);
+      const asyncDeclaration = method.async ? "async" : "";
+      methods += `${asyncDeclaration} ${method.func.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${method.func.body.accept(this)}};`;
     });
 
     const extendString = stmt.superclass ? `extends ${stmt.superclass.lexeme}` : "";
@@ -147,8 +149,9 @@ module.exports = class Compiler {
   }
 
   visitLambdaExpr(expr) {
+    const asyncDeclaration = expr.async ? "async": "";
     const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(expr.params);
-    return `function (${paramsString}) {${wildcardDefaultCode}return ${expr.body.accept(this)}}`;
+    return `${asyncDeclaration} function (${paramsString}) {${wildcardDefaultCode}return ${expr.body.accept(this)}}`;
   }
 
   visitCallExpr(expr) {

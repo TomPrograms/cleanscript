@@ -28,10 +28,11 @@ class Binary extends Expr {
 }
 
 class Lambda extends Expr {
-  constructor(params, body) {
+  constructor(params, body, async) {
     super();
     this.params = params;
     this.body = body;
+    this.async = async;
   }
 
   accept(visitor) {

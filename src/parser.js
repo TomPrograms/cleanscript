@@ -151,6 +151,9 @@ module.exports = class Parser {
   }
 
   lambdaExpression() {
+    let async = false;
+    if (this.match(tokenTypes.ASYNC)) async = true;
+
     // parse parameters
     let parameters = [];
     if (this.match(tokenTypes.LEFT_PAREN)) {
@@ -195,7 +198,7 @@ module.exports = class Parser {
     // parse body
     let body = this.expression();
 
-    return new Expr.Lambda(parameters, body);
+    return new Expr.Lambda(parameters, body, async);
   }
 
   finishCall(callee) {
@@ -233,7 +236,7 @@ module.exports = class Parser {
         let index = {
           leftValue: undefined,
           colon: false,
-          rightValue: undefined
+          rightValue: undefined,
         };
 
         if (this.match(tokenTypes.COLON)) {
@@ -243,7 +246,8 @@ module.exports = class Parser {
           index.leftValue = this.expression();
           if (this.match(tokenTypes.COLON)) {
             index.colon = true;
-            if (!this.check(tokenTypes.RIGHT_SQUARE_BRACKET)) index.rightValue = this.expression();
+            if (!this.check(tokenTypes.RIGHT_SQUARE_BRACKET))
+              index.rightValue = this.expression();
           }
         }
 
@@ -800,8 +804,10 @@ module.exports = class Parser {
   }
 
   functionDeclaration() {
+    let async = false;
+    if (this.match(tokenTypes.ASYNC)) async = true;
     const { name, body, parameters } = this.functionBody();
-    return new Stmt.Function(name, parameters, body);
+    return new Stmt.Function(name, parameters, body, async);
   }
 
   JSRAWDeclaration() {
@@ -829,7 +835,13 @@ module.exports = class Parser {
 
     let methods = [];
     while (this.match(tokenTypes.FUNCTION)) {
-      methods.push(this.functionBody());
+      let async = false;
+      if (this.match(tokenTypes.ASYNC)) async = true;
+      let func = this.functionBody();
+      methods.push({
+        async,
+        func,
+      });
     }
 
     if (!this.isAtEnd())
