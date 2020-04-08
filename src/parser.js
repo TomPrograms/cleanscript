@@ -708,10 +708,10 @@ module.exports = class Parser {
 
   constDeclaration() {
     let name = this.consume(tokenTypes.IDENTIFIER, "Expect variable name.");
-    let initializer = null;
-    if (this.match(tokenTypes.EQUAL)) {
-      initializer = this.expression();
-    }
+
+    this.consume(tokenTypes.EQUAL, "Expected '=' after const declaration.");
+    
+    let initializer = this.expression();
 
     this.consume(
       tokenTypes.SEMICOLON,
