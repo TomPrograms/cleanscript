@@ -144,15 +144,23 @@ module.exports = class Compiler {
   }
 
   visitVarStmt(stmt) {
-    return `var ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`;
+    if (stmt.initializer) {
+      return `var ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`;
+    } else {
+      return `var ${stmt.name.lexeme};`
+    }
   }
 
   visitConstStmt(stmt) {
-    return `const ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`;
+    return `const ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`; 
   }
 
   visitLetStmt(stmt) {
-    return `let ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`;
+    if (stmt.initializer) {
+      return `let ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`;
+    } else {
+      return `let ${stmt.name.lexeme};`
+    }
   }
 
   visitAssignExpr(expr) {
