@@ -108,19 +108,34 @@ module.exports = class Parser {
         return new Expr.Dictionary([], []);
       }
       while (!this.match(tokenTypes.RIGHT_BRACE)) {
-        while (this.match(tokenTypes.INDENT) || this.match(tokenTypes.DEDENT)) {continue;}
+        while (this.match(tokenTypes.INDENT) || this.match(tokenTypes.DEDENT)) {
+          continue;
+        }
 
         let key = this.assignment();
+        if (this.match(tokenTypes.COMMA)) {
+          keys.push(key);
+          values.push(key);
+          continue;
+        } else if (this.match(tokenTypes.RIGHT_BRACE)) {
+          keys.push(key);
+          values.push(key);
+          break;
+        }
+
         this.consume(
           tokenTypes.COLON,
           "Expected a colon between key and value."
         );
+
         let value = this.assignment();
 
         keys.push(key);
         values.push(value);
 
-        while (this.match(tokenTypes.INDENT) || this.match(tokenTypes.DEDENT)) {continue;}
+        while (this.match(tokenTypes.INDENT) || this.match(tokenTypes.DEDENT)) {
+          continue;
+        }
         if (this.peek().type !== tokenTypes.RIGHT_BRACE) {
           this.consume(
             tokenTypes.COMMA,
@@ -694,7 +709,7 @@ module.exports = class Parser {
   varDeclaration() {
     let name = this.consume(tokenTypes.IDENTIFIER, "Expect variable name.");
     let initializer = null;
-    
+
     if (this.match(tokenTypes.EQUAL)) {
       initializer = this.expression();
     }
@@ -710,7 +725,7 @@ module.exports = class Parser {
     let name = this.consume(tokenTypes.IDENTIFIER, "Expect variable name.");
 
     this.consume(tokenTypes.EQUAL, "Expected '=' after const declaration.");
-    
+
     let initializer = this.expression();
 
     this.consume(
