@@ -2,6 +2,7 @@ const tokenTypes = require("./tokenTypes.js");
 
 var inFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || typeof obj === "string") {return obj.indexOf(val) !== -1;}return val in obj;};`;
 var createIterableCode = `function $_createIterable(object) { if (object.constructor === [].constructor || object.constructor === "".constructor){return object;}else if (Set && object.constructor === Set) {return Array.from(object);}return Object.keys(object);}`;
+var rangeFunctionCode = `function range(start, end=0, step=1) {if (arguments.length === 1) {end = start;start = 0;}let arr = [];for (;(end - start)* step > 0; start += step) arr.push(start);return arr;}`;
 
 function renderParamsString(params) {
   let paramsString = "";
@@ -169,7 +170,13 @@ module.exports = class Compiler {
       expr.args[i] = arg.accept(this);
     });
     const argsString = expr.args.join(", ");
-    return `${expr.callee.accept(this)}(${argsString})`;
+    const functionName = expr.callee.accept(this);
+
+    if (functionName === "range") {
+      this.flags.includeRangeFlag = true;
+    }
+
+    return `${functionName}(${argsString})`;
   }
 
   visitUnaryExpr(expr) {
@@ -317,6 +324,7 @@ module.exports = class Compiler {
     this.flags = {
       includeInFunctionFlag: false,
       includeCreateIterableFlag: false,
+      includeRangeFlag: false,
     };
 
     let compiled = "";
@@ -331,6 +339,10 @@ module.exports = class Compiler {
 
     if (this.flags.includeCreateIterableFlag) {
       compiled = createIterableCode + compiled;
+    }
+
+    if (this.flags.includeRangeFlag) {
+      compiled = rangeFunctionCode + compiled;
     }
 
     return compiled;
