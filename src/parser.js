@@ -466,7 +466,10 @@ module.exports = class Parser {
   }
 
   continueStatement() {
-    this.consume(tokenTypes.SEMICOLON, "Expected ';' after 'continue' statement.");
+    this.consume(
+      tokenTypes.SEMICOLON,
+      "Expected ';' after 'continue' statement."
+    );
     return new Stmt.Continue();
   }
 
@@ -476,11 +479,11 @@ module.exports = class Parser {
   }
 
   throwStatement() {
-    let keyword = this.previous(); 
+    let keyword = this.previous();
 
     let value = this.expression();
     this.consume(tokenTypes.SEMICOLON, "Expected ';' after 'throw' statement.");
-   
+
     return new Stmt.Throw(keyword, value);
   }
 
