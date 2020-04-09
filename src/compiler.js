@@ -139,6 +139,10 @@ module.exports = class Compiler {
     return `return ${value};`;
   }
 
+  visitThrowStmt(stmt) {
+    return `throw ${stmt.value.accept(this)};`;
+  }
+
   visitYieldStmt(stmt) {
     return `yield ${stmt.value.accept(this)};`;
   }

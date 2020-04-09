@@ -15,6 +15,7 @@ const reservedWords = {
   or: tokenTypes.OR,
   return: tokenTypes.RETURN,
   yield: tokenTypes.YIELD,
+  throw: tokenTypes.THROW,
   true: tokenTypes.TRUE,
   var: tokenTypes.VAR,
   let: tokenTypes.LET,

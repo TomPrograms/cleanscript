@@ -466,13 +466,22 @@ module.exports = class Parser {
   }
 
   continueStatement() {
-    this.consume(tokenTypes.SEMICOLON, "Expected ';' after 'continue'.");
+    this.consume(tokenTypes.SEMICOLON, "Expected ';' after 'continue' statement.");
     return new Stmt.Continue();
   }
 
   breakStatement() {
-    this.consume(tokenTypes.SEMICOLON, "Expected ';' after 'break'.");
+    this.consume(tokenTypes.SEMICOLON, "Expected ';' after 'break' statement.");
     return new Stmt.Break();
+  }
+
+  throwStatement() {
+    let keyword = this.previous(); 
+
+    let value = this.expression();
+    this.consume(tokenTypes.SEMICOLON, "Expected ';' after 'throw' statement.");
+   
+    return new Stmt.Throw(keyword, value);
   }
 
   returnStatement() {
@@ -685,6 +694,7 @@ module.exports = class Parser {
     if (this.match(tokenTypes.TRY)) return this.tryStatement();
     if (this.match(tokenTypes.SWITCH)) return this.switchStatement();
     if (this.match(tokenTypes.RETURN)) return this.returnStatement();
+    if (this.match(tokenTypes.THROW)) return this.throwStatement();
     if (this.match(tokenTypes.YIELD)) return this.yieldStatement();
     if (this.match(tokenTypes.CONTINUE)) return this.continueStatement();
     if (this.match(tokenTypes.BREAK)) return this.breakStatement();

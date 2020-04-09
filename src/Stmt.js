@@ -74,6 +74,18 @@ class New extends Stmt {
   }
 }
 
+class Throw extends Stmt {
+  constructor(keyword, value) {
+    super();
+    this.keyword = keyword;
+    this.value = value;
+  }
+
+  accept(visitor) {
+    return visitor.visitThrowStmt(this);
+  }
+}
+
 class Await extends Stmt {
   constructor(object) {
     super();
@@ -236,6 +248,7 @@ module.exports = {
   Function,
   Return,
   Yield,
+  Throw,
   New,
   Class,
   Block,
