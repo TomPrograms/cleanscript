@@ -30,7 +30,7 @@ npm i cleanscript
 
 ## Usage
 
-Once installed (at least globally) you can compile a file through the command line. The path provided should be relative to the command line's current execution location:
+Once installed (at least globally) you can compile a file through the command line. The path provided can be relative or absolute:
 
 ```
 cleanscript ./test.drg
@@ -45,7 +45,7 @@ cleanscript ./
 You can also provide the `--watch` option, which, while running, will recompile its target when changes (like a save) occur. This works with individual files and folders.
 
 ```
-cleanscript ./
+cleanscript ./ --watch
 ```
 
 You can also provide other flags, relevant to Cleanscript through the command line:
