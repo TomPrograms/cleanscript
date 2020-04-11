@@ -1,4 +1,6 @@
 const tokenTypes = require("./tokenTypes.js");
+const Stmt = require("./Stmt.js");
+const Expr = require("./Expr.js");
 
 var inFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || typeof obj === "string") {return obj.indexOf(val) !== -1;}return val in obj;};`;
 var createIterableCode = `function $_createIterable(object) { if (object.constructor === [].constructor || object.constructor === "".constructor){return object;}else if (Set && object.constructor === Set) {return Array.from(object);}return Object.keys(object);}`;
@@ -332,19 +334,35 @@ module.exports = class Compiler {
   }
 
   compile(ast) {
-    // reset flags
+    // set default flags
     this.flags = {
       includeInFunctionFlag: false,
       includeCreateIterableFlag: false,
       includeRangeFlag: false,
+      strictFlag: true,
     };
 
+    // check for "unstrict" flag
+    if (ast[0]) {
+      if (ast[0] instanceof Stmt.Expression) {
+        if (ast[0].expression && ast[0].expression instanceof Expr.Literal) {
+          if (ast[0].expression.value === "unstrict") {
+            this.flags.strictFlag = false;
+            delete ast[0];
+          } else if (ast[0].expression.value === "use strict") {
+            delete ast[0];
+          }
+        }
+      }
+    }
+
+    // compile statements
     let compiled = "";
     ast.forEach((stmt) => {
       compiled += stmt.accept(this);
     });
 
-    // include helper functions
+    // flag behaviour
     if (this.flags.includeInFunctionFlag) {
       compiled = inFunctionCode + compiled;
     }
@@ -355,6 +373,10 @@ module.exports = class Compiler {
 
     if (this.flags.includeRangeFlag) {
       compiled = rangeFunctionCode + compiled;
+    }
+
+    if (this.flags.strictFlag) {
+      compiled = '"use strict";' + compiled;
     }
 
     return compiled;
