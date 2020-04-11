@@ -156,7 +156,7 @@ module.exports = class Parser {
     }
 
     if (this.match(tokenTypes.STRING)) {
-      let token = this.previous()
+      let token = this.previous();
       return new Expr.Literal(token.literal, token.lexeme);
     }
 
