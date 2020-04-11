@@ -33,6 +33,7 @@
   - [Classes](#Classes)
   - [Try, Catch, Else, Finally](#Try,%20Catch,%20Else,%20Finally)
   - [Strict Mode](Strict%20Mode)
+  - [Javascript Mix-In](#Javascript%20Mix-In)
 
 ## Overview
 
@@ -350,7 +351,7 @@ range(0, 10, 2); // generates list "[ 0, 2, 4, 6, 8 ]"
 
 ### While Loops
 
-Cleanscript while loops are the same as plain Javascript, but use an indent-based syntax and does not require parentheses around the condition.
+Cleanscript while loops are the same as plain Javascript, but use an indent-based syntax and do not require parentheses around the condition.
 
 ```
 while true: console.log('a');
@@ -529,6 +530,18 @@ Cleanscript by default enables strict mode. Strict mode helps to encourage bette
 "unstrict";
 
 // program contents
+```
+
+### Javascript Mix-in
+
+In Cleanscript you can mix-in Javascript anywhere a statement (such as an if statement or a variable declaration) could also be placed. You can mix-in Javascript by using the `JSRAW` keyword and a string containing the Javascript you want to mix-in, such as:
+
+```
+JSRAW "
+
+a+b;
+
+";
 ```
 
 ## Credit
