@@ -89,6 +89,8 @@ Compiles to the following Javascript (when using the `--no-minify` and `--pretti
 ```js
 /* Compiled by Cleanscript */
 
+"use strict";
+
 function $_createIterable(object) {
   if (
     object.constructor === [].constructor ||
