@@ -293,6 +293,10 @@ module.exports = class Compiler {
     if (indexData.leftValue) indexData.leftValue = indexData.leftValue.accept(this);
     if (indexData.rightValue) indexData.rightValue = indexData.rightValue.accept(this);
 
+    if (!indexData.colon) {
+      return `${object}[${indexData.leftValue}] = ${value}`
+    }
+    
     if (indexData.leftValue) {
       // [a:b] indexes
       if (indexData.rightValue) {
