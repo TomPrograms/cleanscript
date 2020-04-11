@@ -301,7 +301,7 @@ module.exports = class Compiler {
 
       // [a:] indexes
       else {
-        return `[].splice.apply(${object}, [${indexData.leftValue}, ${object}.length - ${indexData.leftValue}].concat('a'))`;
+        return `[].splice.apply(${object}, [${indexData.leftValue}, ${object}.length - ${indexData.leftValue}].concat(${value}))`;
       }
     } else {
       // [:a] indexes
