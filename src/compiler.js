@@ -241,7 +241,7 @@ module.exports = class Compiler {
   visitLiteralExpr(expr) {
     let value = expr.value;
     if (typeof value === "string") {
-      return JSON.stringify(expr.value);
+      return expr.lexeme || JSON.parse(expr.literal);
     } else if (typeof value === "number") {
       return `${value}`;
     } else if (value === true) return true;

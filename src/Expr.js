@@ -77,9 +77,10 @@ class Grouping extends Expr {
 }
 
 class Literal extends Expr {
-  constructor(value) {
+  constructor(value, lexeme) {
     super();
     this.value = value;
+    this.lexeme = lexeme;
   }
 
   accept(visitor) {

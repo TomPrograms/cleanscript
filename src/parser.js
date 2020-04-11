@@ -151,8 +151,13 @@ module.exports = class Parser {
     if (this.match(tokenTypes.UNDEFINED)) return new Expr.Literal(undefined);
     if (this.match(tokenTypes.LAMBDA)) return this.lambdaExpression();
 
-    if (this.match(tokenTypes.NUMBER, tokenTypes.STRING)) {
+    if (this.match(tokenTypes.NUMBER)) {
       return new Expr.Literal(this.previous().literal);
+    }
+
+    if (this.match(tokenTypes.STRING)) {
+      let token = this.previous()
+      return new Expr.Literal(token.literal, token.lexeme);
     }
 
     if (this.match(tokenTypes.IDENTIFIER)) {
