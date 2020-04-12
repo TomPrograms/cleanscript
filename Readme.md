@@ -369,7 +369,7 @@ while (true) {
 
 ### Functions
 
-Functions can be synchronous or asynchronous. Cleanscript supports the usage of generators. You can use an unlimited amount of parameters, standard and wildcard, both of which can have defaults.
+Functions can be synchronous or asynchronous. Cleanscript supports the usage of generators. You can use standard and wildcard parameters, both of which can have defaults.
 
 ```
 // no parameters
@@ -524,7 +524,7 @@ catch errorVar:
 
 ### Strict Mode
 
-Cleanscript by default enables strict mode. Strict mode helps to encourage better code and prevents common issues in Javascript code. If you don't want strict mode, you can disable it. To explicitly disable strict mode, put the statement `"unstrict";` before any other statement in your program, like so:
+Cleanscript by default enables strict mode. Strict mode helps to encourage better code and prevents common issues in the code. If you don't want strict mode, you can disable it explicitly by putting the statement `"unstrict";` before any other statement in your program, like so:
 
 ```
 "unstrict";
