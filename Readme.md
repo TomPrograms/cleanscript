@@ -176,15 +176,6 @@ const b = 1;
 d = [1, 2, 3];
 ```
 
-The above compiles to:
-
-```js
-var a = "a";
-let c = {};
-const b = 1;
-d = [1, 2, 3];
-```
-
 ### Equality Checking
 
 When checking for equality, Cleanscript includes both `==` (equal to) and `!=` (not equal to) operators. These both compile to their strictly equal Javascript counterparts.
@@ -217,20 +208,6 @@ var list = [1, 2, 3];
 2 in list; // checks if 2 is in the list
 ```
 
-The above compiles to the following Javascript:
-
-```js
-function $_in(val, obj) {
-  if (obj instanceof Array || typeof obj === "string") {
-    return obj.indexOf(val) !== -1;
-  }
-  return val in obj;
-}
-
-var list = [1, 2, 3];
-$_in(2, list);
-```
-
 ### Indexing
 
 Cleanscript supports advanced indexing as well as standard indexes, such as `[1:]` and `[2:3]`. These indexes have the same functionality as they would within Python.
@@ -246,7 +223,7 @@ console.log(list[1:2]); // outputs "[ 2 ]"
 
 These indexes can also be assigned to with the same functionality as Python. For the following examples, we will presume the `list` variable resets to `[1, 2, 3, 4]` before each index assignment.
 
-```js
+```
 list[0] = 10;                   // list becomes equal to "[ 10, 2, 3, 4 ]"
 list[:2] = [100, 200];          // list becomes equal to "[ 100, 200, 3, 4 ]"
 list[:2] = 50;                  // list becomes equal to "[ 50, 3, 4 ]"
