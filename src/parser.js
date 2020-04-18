@@ -400,8 +400,25 @@ module.exports = class Parser {
     return expr;
   }
 
-  in() {
+  ternary() {
     let expr = this.equality();
+
+    while (this.match(tokenTypes.THEN)) {
+      let thenBranch = this.equality();
+
+      let elseBranch = null;
+      if (this.match(tokenTypes.ELSE)) {
+        elseBranch = this.equality();
+      }
+
+      expr = new Expr.Ternary(expr, thenBranch, elseBranch);
+    }
+
+    return expr;
+  }
+
+  in() {
+    let expr = this.ternary();
 
     while (this.match(tokenTypes.IN)) {
       let operator = this.previous();

@@ -10,6 +10,7 @@ const reservedWords = {
   function: tokenTypes.FUNCTION,
   if: tokenTypes.IF,
   elif: tokenTypes.ELIF,
+  then: tokenTypes.THEN,
   null: tokenTypes.NULL,
   undefined: tokenTypes.UNDEFINED,
   or: tokenTypes.OR,

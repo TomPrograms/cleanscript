@@ -27,6 +27,19 @@ class Binary extends Expr {
   }
 }
 
+class Ternary extends Expr {
+  constructor(condition, thenBranch, elseBranch) {
+    super();
+    this.condition = condition;
+    this.thenBranch = thenBranch;
+    this.elseBranch = elseBranch;
+  }
+
+  accept(visitor) {
+    return visitor.visitTernaryExpr(this);
+  }
+}
+
 class Lambda extends Expr {
   constructor(params, body, async) {
     super();
@@ -189,6 +202,7 @@ class Variable extends Expr {
 module.exports = {
   Assign,
   Binary,
+  Ternary,
   Function,
   Call,
   Get,

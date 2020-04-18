@@ -337,6 +337,14 @@ module.exports = class Compiler {
     return `[${expr.values.join(",")}]`;
   }
 
+  visitTernaryExpr(expr) {
+    let condition = expr.condition.accept(this);
+    let thenBranch = expr.thenBranch.accept(this);
+    let elseBranch = expr.elseBranch ? expr.elseBranch.accept(this) : "undefined";
+    
+    return `${condition} ? ${thenBranch} : ${elseBranch}`
+  }
+
   compile(ast) {
     // set default flags
     this.flags = {
