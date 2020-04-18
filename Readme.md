@@ -25,6 +25,7 @@
   - [Equality Checking](#Equality-Checking)
   - [Control Keywords](#Control-Keywords)
   - [Indexing](#Indexing)
+  - [Ternary Operators](#Ternary-Operators)
   - [If, Elif, Else](#If-Elif-Else)
   - [For Loops](#For-Loops)
   - [While Loops](#While-Loops)
@@ -231,6 +232,17 @@ list[2:] = [10, 11, 12];        // list becomes equal to "[ 1, 2, 10, 11, 12 ]"
 list[1:2] = [10, 11];           // list becomes equal to "[ 1, 10, 11, 3, 4 ]"
 ```
 
+### Ternary Operators
+
+Ternary operators in Cleanscript use the keywords `then` and `else` instead of `?` and `:` respectively. The ternary statement doesn't need to contain an else branch, and if no else branch is supplied, the compiled else branch of the ternary statement will have a value of `undefined`.
+
+```
+var a = 1 == 1 then 'yes' else 'no';
+console.log(a == 'yes' then 'correct' else 'incorrect');
+
+var b = 1 == 2 then 'yes'; // value will be undefined
+```
+
 ### If, Elif, Else
 
 If, elif and else statements work similarly to Javascript, with minor differences in syntax. In Cleanscript, the else if keyword is `elif` not `else if`. The if and elif conditions don't need to be surrounded by parentheses.
@@ -269,7 +281,7 @@ range(0, 10, 2); // generates list "[ 0, 2, 4, 6, 8 ]"
 Cleanscript while loops are the same as plain Javascript, but use an indent-based syntax and do not require parentheses around the condition.
 
 ```
-while true: 
+while true:
   console.log('a');
   console.log('b');
 ```
