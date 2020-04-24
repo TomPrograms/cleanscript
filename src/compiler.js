@@ -42,7 +42,7 @@ function renderParamsString(params) {
   }
 
   return { paramsString, wildcardDefaultCode };
-};
+}
 
 module.exports = class Compiler {
   visitWhileStmt(stmt) {
@@ -153,19 +153,19 @@ module.exports = class Compiler {
     if (stmt.initializer) {
       return `var ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`;
     } else {
-      return `var ${stmt.name.lexeme};`
+      return `var ${stmt.name.lexeme};`;
     }
   }
 
   visitConstStmt(stmt) {
-    return `const ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`; 
+    return `const ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`;
   }
 
   visitLetStmt(stmt) {
     if (stmt.initializer) {
       return `let ${stmt.name.lexeme} = ${stmt.initializer.accept(this)};`;
     } else {
-      return `let ${stmt.name.lexeme};`
+      return `let ${stmt.name.lexeme};`;
     }
   }
 
@@ -230,12 +230,22 @@ module.exports = class Compiler {
 
   visitBinaryExpr(expr) {
     let operator = expr.operator.lexeme;
+    let left = expr.left.accept(this);
+    let right = expr.right.accept(this);
 
-    // always use strictly equals
-    if (operator === "==") operator = "===";
-    if (operator === "!=") operator = "!==";
+    switch (operator) {
+      case "==":
+        return `${left}===${right}`;
 
-    return `${expr.left.accept(this)}${operator}${expr.right.accept(this)}`;
+      case "!=":
+        return `${left}!==${right}`;
+
+      case "//":
+        return `Math.floor(${left}/${right})`;
+
+      default:
+        return `${left}${operator}${right}`;
+    }
   }
 
   visitLiteralExpr(expr) {
@@ -294,9 +304,9 @@ module.exports = class Compiler {
     if (indexData.rightValue) indexData.rightValue = indexData.rightValue.accept(this);
 
     if (!indexData.colon) {
-      return `${object}[${indexData.leftValue}] = ${value}`
+      return `${object}[${indexData.leftValue}] = ${value}`;
     }
-    
+
     if (indexData.leftValue) {
       // [a:b] indexes
       if (indexData.rightValue) {
@@ -341,8 +351,8 @@ module.exports = class Compiler {
     let condition = expr.condition.accept(this);
     let thenBranch = expr.thenBranch.accept(this);
     let elseBranch = expr.elseBranch ? expr.elseBranch.accept(this) : "undefined";
-    
-    return `${condition} ? ${thenBranch} : ${elseBranch}`
+
+    return `${condition} ? ${thenBranch} : ${elseBranch}`;
   }
 
   compile(ast) {

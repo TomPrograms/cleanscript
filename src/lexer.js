@@ -280,7 +280,12 @@ module.exports = class Lexer {
         break;
 
       case "/":
-        this.addToken(tokenTypes.SLASH);
+        if (this.match("/")) {
+          this.addToken(tokenTypes.SLASH_SLASH);
+        } else {
+          this.addToken(tokenTypes.SLASH);
+        }
+
         break;
 
       case "#":
@@ -289,7 +294,7 @@ module.exports = class Lexer {
           while (!(this.peek() === "*" && this.peekNext() === "#")) {
             this.advance();
           }
-          
+
           this.advance();
           this.advance();
         }

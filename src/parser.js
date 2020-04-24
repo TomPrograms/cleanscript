@@ -317,7 +317,14 @@ module.exports = class Parser {
   multiplication() {
     let expr = this.exponent();
 
-    while (this.match(tokenTypes.SLASH, tokenTypes.STAR, tokenTypes.MODULUS)) {
+    while (
+      this.match(
+        tokenTypes.SLASH,
+        tokenTypes.SLASH_SLASH,
+        tokenTypes.STAR,
+        tokenTypes.MODULUS
+      )
+    ) {
       let operator = this.previous();
       let right = this.exponent();
       expr = new Expr.Binary(expr, operator, right);
