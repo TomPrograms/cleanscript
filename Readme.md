@@ -24,6 +24,7 @@
   - [Variable Assignment](#Variable-Assignment)
   - [Equality Checking](#Equality-Checking)
   - [Control Keywords](#Control-Keywords)
+  - [Comments](#Comments)
   - [Indexing](#Indexing)
   - [Ternary Operators](#Ternary-Operators)
   - [If, Elif, Else](#If-Elif-Else)
@@ -207,6 +208,22 @@ Cleanscript also includes an `in` control keywords, which checks in an element i
 ```
 var list = [1, 2, 3];
 2 in list; // checks if 2 is in the list
+```
+
+### Comments
+
+Cleanscript uses `#` as syntax for single-line comments and `#*` as syntax for block comments.
+
+```
+# Commented Line
+
+#*
+
+Commented
+Out
+Block
+
+*#
 ```
 
 ### Indexing
