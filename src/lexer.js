@@ -280,11 +280,25 @@ module.exports = class Lexer {
         break;
 
       case "/":
-        if (this.match("/")) {
-          while (this.peek() != "\n" && !this.endOfCode()) this.advance();
-        } else {
-          this.addToken(tokenTypes.SLASH);
+        this.addToken(tokenTypes.SLASH);
+        break;
+
+      case "#":
+        // block comment
+        if (this.match("*")) {
+          while (!(this.peek() === "*" && this.peekNext() === "#")) {
+            this.advance();
+          }
+          
+          this.advance();
+          this.advance();
         }
+
+        // single comment
+        else {
+          while (this.peek() !== "\n" && !this.endOfCode()) this.advance();
+        }
+
         break;
 
       case "\n":
