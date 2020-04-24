@@ -91,7 +91,7 @@ For example, the following Cleanscript code:
 
 ```
 function checkValInVals(flag=false, *vals=[3]):
-  // python style for loops
+  # python style for loops
   for val in vals:
     if val == 3 and flag == true:
       return true;
@@ -100,15 +100,15 @@ function checkValInVals(flag=false, *vals=[3]):
 var print = lambda (val) : console.log(val);
 
 try:
-  print(checkValInVals()); // false
-  print(checkValInVals(true)); // true
-  print(checkValInVals(true, 2)); // false
-  print(checkValInVals(true, 2, 3)); // true
-  print(checkValInVals(false, 2, 3)); // false
+  print(checkValInVals()); # false
+  print(checkValInVals(true)); # true
+  print(checkValInVals(true, 2)); # false
+  print(checkValInVals(true, 2, 3)); # true
+  print(checkValInVals(false, 2, 3)); # false
 catch error:
   console.error(error);
 else:
-  // only runs if catch doesn't
+  # only runs if catch doesn't
   console.log('No errors!');
 ```
 
@@ -215,15 +215,15 @@ false !== false
 Cleanscript uses semantic, English control keywords instead of punctuation, as well as adding additional control keywords. `and` and `or` keywords are supported within Cleanscript:
 
 ```
-true and true; // check if both are true
-true or false; // check if at least one is true
+true and true; # check if both are true
+true or false; # check if at least one is true
 ```
 
 Cleanscript also includes an `in` control keywords, which checks in an element is within a target, with similar functionality to Python. The `in` keyword can check if an element is within a list, a string or an object.
 
 ```
 var list = [1, 2, 3];
-2 in list; // checks if 2 is in the list
+2 in list; # checks if 2 is in the list
 ```
 
 ### Comments
@@ -249,20 +249,20 @@ Cleanscript supports advanced indexing as well as standard indexes, such as `[1:
 ```
 var list = [1, 2, 3, 4];
 
-console.log(list[0]); // outputs "1"
-console.log(list[1:]); // outputs "[ 2, 3, 4 ]"
-console.log(list[:3]); // outputs "[ 1, 2, 3 ]"
-console.log(list[1:2]); // outputs "[ 2 ]"
+console.log(list[0]); # outputs "1"
+console.log(list[1:]); # outputs "[ 2, 3, 4 ]"
+console.log(list[:3]); # outputs "[ 1, 2, 3 ]"
+console.log(list[1:2]); # outputs "[ 2 ]"
 ```
 
 These indexes can also be assigned to with the same functionality as Python. For the following examples, we will presume the `list` variable resets to `[1, 2, 3, 4]` before each index assignment.
 
 ```
-list[0] = 10;                   // list becomes equal to "[ 10, 2, 3, 4 ]"
-list[:2] = [100, 200];          // list becomes equal to "[ 100, 200, 3, 4 ]"
-list[:2] = 50;                  // list becomes equal to "[ 50, 3, 4 ]"
-list[2:] = [10, 11, 12];        // list becomes equal to "[ 1, 2, 10, 11, 12 ]"
-list[1:2] = [10, 11];           // list becomes equal to "[ 1, 10, 11, 3, 4 ]"
+list[0] = 10;                   # list becomes equal to "[ 10, 2, 3, 4 ]"
+list[:2] = [100, 200];          # list becomes equal to "[ 100, 200, 3, 4 ]"
+list[:2] = 50;                  # list becomes equal to "[ 50, 3, 4 ]"
+list[2:] = [10, 11, 12];        # list becomes equal to "[ 1, 2, 10, 11, 12 ]"
+list[1:2] = [10, 11];           # list becomes equal to "[ 1, 10, 11, 3, 4 ]"
 ```
 
 ### Ternary Operators
@@ -273,7 +273,7 @@ Ternary operators in Cleanscript use the keywords `then` and `else` instead of `
 var a = 1 == 1 then 'yes' else 'no';
 console.log(a == 'yes' then 'correct' else 'incorrect');
 
-var b = 1 == 2 then 'yes'; // value will be undefined
+var b = 1 == 2 then 'yes'; # value will be undefined
 ```
 
 ### If, Elif, Else
@@ -306,7 +306,7 @@ var names = ["jeff", "tom", "john"];
 for i in range(0, names.length):
   console.log(names[i]);
 
-range(0, 10, 2); // generates list "[ 0, 2, 4, 6, 8 ]"
+range(0, 10, 2); # generates list "[ 0, 2, 4, 6, 8 ]"
 ```
 
 ### While Loops
@@ -324,23 +324,23 @@ while true:
 Functions can be synchronous or asynchronous. Cleanscript supports the usage of generators. You can use standard and wildcard parameters, both of which can have defaults.
 
 ```
-// no parameters
+# no parameters
 function main:
   console.log('function main');
 
-// parameters
+# parameters
 function params(a, b, *c):
   return a + b + c[0];
 
-// default parameters
+# default parameters
 function defaults(a=1, *b=[1]):
   return a + b[0];
 
-// asynchronous function
+# asynchronous function
 function async nonSyncFunction:
   return;
 
-// generator
+# generator
 function* generatorFunction:
   yield 1;
 ```
@@ -350,14 +350,14 @@ function* generatorFunction:
 Lambda functions are a clean, expressive way to create one-line functions with implicit returns. Lambda functions can have an unlimited amount of arguments or no arguments, however can only contain a one-line body. Lambda functions can be synchronous or asynchronous.
 
 ```
-// lambda functions with no arguments
+# lambda functions with no arguments
 var randomUpto10 = lambda : Math.floor(Math.random() * 10);
 var randomUpto20 = lambda () : Math.floor(Math.random() * 20);
 
-// lambda function to double
+# lambda function to double
 var double = lambda (x) : x * 2;
 
-// async lambda function with default parameter
+# async lambda function with default parameter
 var asyncLambda = lambda async (x=2) : x ** 3;
 ```
 
@@ -392,7 +392,7 @@ try:
 catch:
   console.error("An error occurred.");
 else:
-  // only run if catch isn't
+  # only run if catch isn't
   console.log("No catch required.");
 finally:
   console.log('All Finished');
@@ -412,7 +412,7 @@ Cleanscript by default enables strict mode. Strict mode helps to encourage bette
 ```
 "unstrict";
 
-// program contents
+# program contents
 ```
 
 ### Javascript Mix-in
