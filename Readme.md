@@ -174,11 +174,9 @@ Cleanscript supports all the operators in Javascript (including the ES6 exponent
 
 ```
 # some of the standard operators in Javascript
-
 ((1 + 3) ** 2) / 2; # equal to 8
 
 # floor division operator
-
 10 // 3; # equal to 3
 11 // 4; # equal to 2
 ```
@@ -189,9 +187,9 @@ Variable assignment works the same as pure Javascript, with `const`, `let` and `
 
 ```
 var a = "a";
-let c = {};
-const b = 1;
-d = [1, 2, 3];
+const b = {};
+let c = 1;
+c = [1, 2, 3];
 ```
 
 ### Equality Checking
