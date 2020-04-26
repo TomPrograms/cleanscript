@@ -194,9 +194,10 @@ module.exports = class Compiler {
   }
 
   visitUnaryExpr(expr) {
+    let operator = expr.operator.type;
     let right = expr.right.accept(this);
 
-    switch (expr.operator.type) {
+    switch (operator) {
       case tokenTypes.MINUS:
         return `-${right}`;
       case tokenTypes.BANG:
@@ -215,12 +216,18 @@ module.exports = class Compiler {
           return "&&";
       }
     }
+    
+    let left = expr.left.accept(this);
+    let right = expr.right.accept(this);
     let operator = expr.operator.type;
-    if (operator === "OR" || operator === "AND") {
-      return `${expr.left.accept(this)}${convertOperator(operator)}${expr.right.accept(this)}`;
-    } else if (operator === "IN") {
-      this.flags.includeInFunctionFlag = true;
-      return `$_in(${expr.left.accept(this)},${expr.right.accept(this)})`;
+    switch (operator) {
+      case "OR":
+      case "AND":
+        return `${left}${convertOperator(operator)}${right}`;
+
+      case "IN":
+        this.flags.includeInFunctionFlag = true;
+        return `$_in(${left},${right})`;
     }
   }
 
