@@ -892,13 +892,19 @@ module.exports = class Parser {
     this.consume(tokenTypes.INDENT, "Expected indent after class declaration.");
 
     let methods = [];
-    while (this.match(tokenTypes.FUNCTION)) {
-      let async = false;
-      if (this.match(tokenTypes.ASYNC)) async = true;
-      let func = this.functionBody();
+    while (this.check(tokenTypes.ASYNC) || this.check(tokenTypes.FUNCTION)) {
+      let asyncFlag = false;
+      if (this.match(tokenTypes.ASYNC)) {
+        asyncFlag = true;
+      }
+
+      this.consume(tokenTypes.FUNCTION, "Expected 'function' keyword.");
+
+      let functionBody = this.functionDeclaration(); 
+
       methods.push({
-        async,
-        func,
+        asyncFlag,
+        functionBody,
       });
     }
 
