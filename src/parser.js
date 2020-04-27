@@ -894,18 +894,11 @@ module.exports = class Parser {
     let methods = [];
     while (this.check(tokenTypes.ASYNC) || this.check(tokenTypes.FUNCTION)) {
       let asyncFlag = false;
-      if (this.match(tokenTypes.ASYNC)) {
-        asyncFlag = true;
-      }
+      if (this.match(tokenTypes.ASYNC)) asyncFlag = true;
 
       this.consume(tokenTypes.FUNCTION, "Expected 'function' keyword.");
 
-      let functionBody = this.functionDeclaration(); 
-
-      methods.push({
-        asyncFlag,
-        functionBody,
-      });
+      methods.push(this.functionDeclaration(asyncFlag));
     }
 
     if (!this.isAtEnd())

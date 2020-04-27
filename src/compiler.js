@@ -90,9 +90,10 @@ module.exports = class Compiler {
   visitClassStmt(stmt) {
     let methods = "";
     stmt.methods.forEach((method) => {
-      const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(method.functionBody.params);
-      const asyncDeclaration = method.asyncFlag ? "async" : "";
-      methods += `${asyncDeclaration} ${method.functionBody.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${method.functionBody.body.accept(this)}};`;
+      const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(method.params);
+      const generatorDeclaration = method.generator ? "*" : "";
+      const asyncDeclaration = method.async ? "async" : "";
+      methods += `${asyncDeclaration} ${generatorDeclaration}${method.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${method.body.accept(this)}};`;
     });
 
     const extendString = stmt.superclass ? `extends ${stmt.superclass.lexeme}` : "";
