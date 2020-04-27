@@ -149,6 +149,12 @@ module.exports = class Parser {
     if (this.match(tokenTypes.TRUE)) return new Expr.Literal(true);
     if (this.match(tokenTypes.NULL)) return new Expr.Literal(null);
     if (this.match(tokenTypes.UNDEFINED)) return new Expr.Literal(undefined);
+
+    // async and sync lambda expressions
+    if (this.match(tokenTypes.ASYNC)) {
+      if (this.match(tokenTypes.LAMBDA)) return this.lambdaExpression(true);
+      throw new Error("Expected 'lambda' keyword after 'async' keyword.");
+    }
     if (this.match(tokenTypes.LAMBDA)) return this.lambdaExpression();
 
     if (this.match(tokenTypes.NUMBER)) {
@@ -173,10 +179,7 @@ module.exports = class Parser {
     this.error(this.peek(), "Expect expression.");
   }
 
-  lambdaExpression() {
-    let async = false;
-    if (this.match(tokenTypes.ASYNC)) async = true;
-
+  lambdaExpression(asyncFlag = false) {
     // parse parameters
     let parameters = [];
     if (this.match(tokenTypes.LEFT_PAREN)) {
@@ -221,7 +224,7 @@ module.exports = class Parser {
     // parse body
     let body = this.expression();
 
-    return new Expr.Lambda(parameters, body, async);
+    return new Expr.Lambda(parameters, body, asyncFlag);
   }
 
   finishCall(callee) {
@@ -857,15 +860,12 @@ module.exports = class Parser {
     return { name, body, parameters };
   }
 
-  functionDeclaration() {
+  functionDeclaration(asyncFlag = false) {
     let generator = false;
     if (this.match(tokenTypes.STAR)) generator = true;
 
-    let async = false;
-    if (this.match(tokenTypes.ASYNC)) async = true;
-
     const { name, body, parameters } = this.functionBody();
-    return new Stmt.Function(name, parameters, body, async, generator);
+    return new Stmt.Function(name, parameters, body, asyncFlag, generator);
   }
 
   JSRAWDeclaration() {
@@ -909,6 +909,10 @@ module.exports = class Parser {
   }
 
   declaration() {
+    if (this.match(tokenTypes.ASYNC)) {
+      if (this.match(tokenTypes.FUNCTION))
+        return this.functionDeclaration(true);
+    }
     if (this.match(tokenTypes.FUNCTION)) return this.functionDeclaration();
     if (this.match(tokenTypes.CLASS)) return this.classDeclaration();
     if (this.match(tokenTypes.VAR)) return this.varDeclaration();
