@@ -335,7 +335,7 @@ function defaults(a=1, *b=[1]):
   return a + b[0];
 
 # asynchronous function
-function async nonSyncFunction:
+async function nonSyncFunction:
   return;
 
 # generator
@@ -356,20 +356,34 @@ var randomUpto20 = lambda () : Math.floor(Math.random() * 20);
 var double = lambda (x) : x * 2;
 
 # async lambda function with default parameter
-var asyncLambda = lambda async (x=2) : x ** 3;
+var asyncLambda = async lambda (x=2) : x ** 3;
 ```
 
 ### Classes
 
-In cleanscript, you can declare a class like the following. The class' methods use the same syntax as regular functions, and have all the same features. The method with the name constructor will be used as the class' constructor, same as regular Javascript.
+In cleanscript, you can declare a class like the following. The class' methods use the same syntax as regular functions, and have all the same features. The method with the name `constructor` will be used as the class' constructor, same as regular Javascript.
 
 ```
 class Test:
+  # synchronous method
   function constructor:
     this.name = 1;
 
+  # method with default parameters
   function greeting(word="hello"):
     console.log(word + " " + this.name);
+
+  # asynchronous method
+  async function sayHi:
+    console.log('hi');
+
+  # generator method
+  function* generator:
+    yield 'hi';
+
+  # asynchronous generator method
+  async function* asyncGenerator:
+    yield 'async hi'; 
 ```
 
 In Cleanscript, you can define class inheritance with similar syntax to Python's inheritance:
