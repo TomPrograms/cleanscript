@@ -341,6 +341,10 @@ async function nonSyncFunction:
 # generator
 function* generatorFunction:
   yield 1;
+
+# asynchronous generator function
+async function* generatorFunction:
+  yield 2;
 ```
 
 ### Lambda Functions
@@ -383,7 +387,7 @@ class Test:
 
   # asynchronous generator method
   async function* asyncGenerator:
-    yield 'async hi'; 
+    yield 'async hi';
 ```
 
 In Cleanscript, you can define class inheritance with similar syntax to Python's inheritance:

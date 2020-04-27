@@ -217,7 +217,7 @@ module.exports = class Compiler {
           return "&&";
       }
     }
-    
+
     let left = expr.left.accept(this);
     let right = expr.right.accept(this);
     let operator = expr.operator.type;
