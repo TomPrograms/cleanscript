@@ -184,10 +184,6 @@ module.exports = class Parser {
     let parameters = [];
     if (!this.match(tokenTypes.COLON)) {
       do {
-        if (parameters.length >= 255) {
-          this.error(this.peek(), "Cannot have more than 255 parameters.");
-        }
-
         let paramObj = {};
 
         if (this.peek().type === tokenTypes.STAR) {
@@ -225,9 +221,6 @@ module.exports = class Parser {
     let args = [];
     if (!this.check(tokenTypes.RIGHT_PAREN)) {
       do {
-        if (args.length >= 255) {
-          error(this.peek(), "Cannot have more than 255 arguments.");
-        }
         args.push(this.expression());
       } while (this.match(tokenTypes.COMMA));
     }
@@ -801,10 +794,6 @@ module.exports = class Parser {
     if (this.match(tokenTypes.LEFT_PAREN)) {
       if (!this.check(tokenTypes.RIGHT_PAREN)) {
         do {
-          if (parameters.length >= 255) {
-            this.error(this.peek(), "Cannot have more than 255 parameters.");
-          }
-
           let paramObj = {};
 
           if (this.peek().type === tokenTypes.STAR) {
