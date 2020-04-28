@@ -355,8 +355,9 @@ Lambda functions are a clean, expressive way to create one-line functions with i
 # lambda functions with no arguments
 var randomUpto10 = lambda : Math.floor(Math.random() * 10);
 
-# lambda function to double
+# lambda functions with parameters
 var double = lambda x : x * 2;
+var getIndex = lambda x, *y: y[x];
 
 # async lambda function with default parameter
 var asyncLambda = async lambda x=2 : x ** 3;
