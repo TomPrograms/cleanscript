@@ -182,44 +182,38 @@ module.exports = class Parser {
   lambdaExpression(asyncFlag = false) {
     // parse parameters
     let parameters = [];
-    if (this.match(tokenTypes.LEFT_PAREN)) {
-      if (!this.check(tokenTypes.RIGHT_PAREN)) {
-        do {
-          if (parameters.length >= 255) {
-            this.error(this.peek(), "Cannot have more than 255 parameters.");
-          }
+    if (!this.match(tokenTypes.COLON)) {
+      do {
+        if (parameters.length >= 255) {
+          this.error(this.peek(), "Cannot have more than 255 parameters.");
+        }
 
-          let paramObj = {};
+        let paramObj = {};
 
-          if (this.peek().type === tokenTypes.STAR) {
-            this.consume(tokenTypes.STAR, null);
-            paramObj["type"] = "wildcard";
-          } else {
-            paramObj["type"] = "standard";
-          }
+        if (this.peek().type === tokenTypes.STAR) {
+          this.consume(tokenTypes.STAR, null);
+          paramObj["type"] = "wildcard";
+        } else {
+          paramObj["type"] = "standard";
+        }
 
-          paramObj["name"] = this.consume(
-            tokenTypes.IDENTIFIER,
-            "Expect parameter name."
-          );
+        paramObj["name"] = this.consume(
+          tokenTypes.IDENTIFIER,
+          "Expect parameter name."
+        );
 
-          if (this.match(tokenTypes.EQUAL)) {
-            paramObj["default"] = this.primary();
-          }
+        if (this.match(tokenTypes.EQUAL)) {
+          paramObj["default"] = this.primary();
+        }
 
-          parameters.push(paramObj);
+        parameters.push(paramObj);
 
-          // wildcards should be the last parameter
-          if (paramObj["type"] === "wildcard") break;
-        } while (this.match(tokenTypes.COMMA));
-      }
-      this.match(tokenTypes.RIGHT_PAREN, "Expected ')' after arguments.");
+        // wildcards should be the last parameter
+        if (paramObj["type"] === "wildcard") break;
+      } while (this.match(tokenTypes.COMMA));
+
+      this.match(tokenTypes.COLON, "Expected ':' after lambda arguments.");
     }
-
-    this.consume(
-      tokenTypes.COLON,
-      "Expected colon after function name or parameters."
-    );
 
     // parse body
     let body = this.expression();
