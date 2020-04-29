@@ -173,9 +173,6 @@ try {
 Cleanscript supports all the operators in Javascript (including the ES6 exponent operator `**`). Cleanscript also contains a floor division operator, `//`, which works the same as the floor division operator in Python.
 
 ```
-# some of the standard operators in Javascript
-((1 + 3) ** 2) / 2; # equal to 8
-
 # floor division operator
 10 // 3; # equal to 3
 11 // 4; # equal to 2
