@@ -151,19 +151,37 @@ module.exports = class Lexer {
   }
 
   parseNumber() {
-    while (this.isDigit(this.peek())) {
-      this.advance();
-    }
-
-    if (this.peek() == "." && this.isDigit(this.peekNext())) {
-      this.advance();
-
-      while (this.isDigit(this.peek())) {
+    function parseNumberString() {
+      while (this.isDigit(this.peek()) || this.peek() === "_") {
+        // skip over underscores for numeric separators
+        if (this.peek() === "_") {
+          this.advance();
+  
+          // throw error if two underscores are used in a row
+          if (this.peek() === "_") {
+            this.errorMessage(
+              this.line,
+              ` at ${this.previous()}`,
+              "Only one underscore is allowed as numeric separator."
+            );
+          }
+        }
+  
         this.advance();
       }
     }
 
-    const fullNumber = this.code.substring(this.start, this.current);
+    // parse numbers before '.'
+    parseNumberString.call(this);
+
+    // parse numbers after '.'
+    if (this.peek() == "." && (this.isDigit(this.peekNext()) || this.peekNext() === "_")) {
+      this.advance();
+      parseNumberString.call(this);
+    }
+
+    // get full number parsed and remove numeric separators    
+    let fullNumber = this.code.substring(this.start, this.current).split("_").join("");
     this.addToken(tokenTypes.NUMBER, parseFloat(fullNumber));
   }
 
@@ -188,42 +206,55 @@ module.exports = class Lexer {
       case "[":
         this.addToken(tokenTypes.LEFT_SQUARE_BRACKET);
         break;
+
       case "]":
         this.addToken(tokenTypes.RIGHT_SQUARE_BRACKET);
         break;
+
       case "(":
         this.addToken(tokenTypes.LEFT_PAREN);
         break;
+
       case ")":
         this.addToken(tokenTypes.RIGHT_PAREN);
         break;
+
       case "{":
         this.addToken(tokenTypes.LEFT_BRACE);
         break;
+
       case "}":
         this.addToken(tokenTypes.RIGHT_BRACE);
         break;
+
       case ",":
         this.addToken(tokenTypes.COMMA);
         break;
+
       case ".":
         this.addToken(tokenTypes.DOT);
         break;
+
       case "-":
         this.addToken(tokenTypes.MINUS);
         break;
+
       case "+":
         this.addToken(tokenTypes.PLUS);
         break;
+
       case ":":
         this.addToken(tokenTypes.COLON);
         break;
+
       case ";":
         this.addToken(tokenTypes.SEMICOLON);
         break;
+
       case "%":
         this.addToken(tokenTypes.MODULUS);
         break;
+
       case "*":
         if (this.peek() === "*") {
           this.advance();
@@ -232,11 +263,13 @@ module.exports = class Lexer {
         }
         this.addToken(tokenTypes.STAR);
         break;
+
       case "!":
         this.addToken(
           this.match("=") ? tokenTypes.BANG_EQUAL : tokenTypes.BANG
         );
         break;
+
       case "=":
         this.addToken(
           this.match("=") ? tokenTypes.EQUAL_EQUAL : tokenTypes.EQUAL
