@@ -79,9 +79,9 @@ cleanscript ./ --watch
 You can also provide other flags, relevant to Cleanscript through the command line:
 
 ```
---no-minify       This will stop Cleanscript from minifying the output.
---no-mangle       If minifying, this will stop variable names from being mangled.
---prettify        This will prettify the Cleanscript output.
+--no-minify       Stops output being minified.
+--no-mangle       If minifying, stops variable names from being mangled.
+--prettify        Prettifies the Cleanscript output.
 --no-recursion    Stops the recursive compilation of folders.
 ```
 
