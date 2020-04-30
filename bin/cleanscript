@@ -18,7 +18,7 @@ args.forEach((arg, i) => {
   else if (arg === "--no-minify") minify = false;
   else if (arg === "--prettify") prettify = true;
   else if (arg === "--no-mangle") mangle = false;
-  else if (arg === "--no-recursive") recursive = false;
+  else if (arg === "--no-recursion") recursive = false;
 });
 
 if (!path.isAbsolute(target)) target = path.resolve(target);

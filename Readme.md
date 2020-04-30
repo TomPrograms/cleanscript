@@ -82,7 +82,7 @@ You can also provide other flags, relevant to Cleanscript through the command li
 --no-minify       This will stop Cleanscript from minifying the output.
 --no-mangle       If minifying, this will stop variable names from being mangled.
 --prettify        This will prettify the Cleanscript output.
---no-recursive    This stops recursive compilation of folders.
+--no-recursion    Stops the recursive compilation of folders.
 ```
 
 ## Example
