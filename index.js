@@ -19,7 +19,7 @@ function findFilesInDir(base, ext, recursive = true) {
       if (fs.statSync(newbase).isDirectory()) {
         result = recursiveFind(newbase, fs.readdirSync(newbase), result);
       } else {
-        if (file.substr(-1 * (ext.length + 1)) == "." + ext) {
+        if (file.substr(-1 * (ext.length + 1)) === "." + ext) {
           result.push(newbase);
         }
       }
@@ -31,7 +31,7 @@ function findFilesInDir(base, ext, recursive = true) {
     let files = fs.readdirSync(base);
     let result = [];
     files.forEach((file) => {
-      if (file.substr(-1 * (ext.length + 1)) == "." + ext) {
+      if (file.substr(-1 * (ext.length + 1)) === "." + ext) {
         result.push(file);
       }
     });
