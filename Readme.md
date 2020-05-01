@@ -21,6 +21,7 @@
 - [Usage](#Usage)
 - [Example](#Example)
 - [Documentation](#Documentation)
+  - [Literals](#Literals)
   - [Operators](#Operators)
   - [Variable Assignment](#Variable-Assignment)
   - [Equality Checking](#Equality-Checking)
@@ -167,6 +168,25 @@ try {
 ```
 
 ## Documentation
+
+### Literals
+
+Most literals have the same familiar syntax as Javascript, apart from regular expressions which use a Pythonic syntax.
+
+```
+# numbers
+1;
+1.1;
+1_000_000;
+
+# strings
+"a";
+'a';
+`a`;
+
+# regular expressions
+r"/search/g";
+```
 
 ### Operators
 
