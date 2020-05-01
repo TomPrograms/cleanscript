@@ -98,7 +98,7 @@ function checkValInVals(flag=false, *vals=[3]):
       return true;
   return false;
 
-var print = lambda (val) : console.log(val);
+var print = lambda val : console.log(val);
 
 try:
   print(checkValInVals()); # false
