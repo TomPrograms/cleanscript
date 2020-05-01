@@ -186,6 +186,15 @@ Most literals have the same familiar syntax as Javascript, apart from regular ex
 
 # regular expressions
 r"/search/g";
+
+# arrays
+[1, 2, '3'];
+
+# dictionaries
+{
+  "key1": 'value1',
+  "key2": 'value2'
+};
 ```
 
 ### Operators
