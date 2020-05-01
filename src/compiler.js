@@ -1,10 +1,11 @@
 const tokenTypes = require("./tokenTypes.js");
 const Stmt = require("./Stmt.js");
 const Expr = require("./Expr.js");
+const includedFunctions = require("./includedFunctions.js");
 
-var inFunctionCode = `function $_in(val, obj) {if (obj instanceof Array || typeof obj === "string") {return obj.indexOf(val) !== -1;}return val in obj;};`;
-var createIterableCode = `function $_createIterable(object) { if (object.constructor === [].constructor || object.constructor === "".constructor){return object;}else if (Set && object.constructor === Set) {return Array.from(object);}return Object.keys(object);}`;
-var rangeFunctionCode = `function range(start, end=0, step=1) {if (arguments.length === 1) {end = start;start = 0;}let arr = [];for (;(end - start)* step > 0; start += step) arr.push(start);return arr;}`;
+function getIncludedFunction(key) {
+  return includedFunctions[key].toString(); 
+}
 
 function renderParamsString(params) {
   let paramsString = "";
@@ -396,15 +397,15 @@ module.exports = class Compiler {
 
     // flag behaviour
     if (this.flags.includeInFunctionFlag) {
-      compiled = inFunctionCode + compiled;
+      compiled = getIncludedFunction("inFunction") + compiled;
     }
 
     if (this.flags.includeCreateIterableFlag) {
-      compiled = createIterableCode + compiled;
+      compiled = getIncludedFunction("createIterable") + compiled;
     }
 
     if (this.flags.includeRangeFlag) {
-      compiled = rangeFunctionCode + compiled;
+      compiled = getIncludedFunction("rangeFunction") + compiled;
     }
 
     if (this.flags.strictFlag) {
