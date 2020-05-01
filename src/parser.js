@@ -182,7 +182,11 @@ module.exports = class Parser {
     // async and sync lambda expressions
     if (this.match(tokenTypes.ASYNC)) {
       if (this.match(tokenTypes.LAMBDA)) return this.lambdaExpression(true);
-      throw new Error("Expected 'lambda' keyword after 'async' keyword.");
+      this.error(
+        this.peek(),
+        "Expected 'lambda' keyword after 'async' keyword."
+      );
+      return;
     }
     if (this.match(tokenTypes.LAMBDA)) return this.lambdaExpression();
 
