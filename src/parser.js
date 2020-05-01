@@ -548,7 +548,7 @@ module.exports = class Parser {
     let keyword = this.previous();
     let value = null;
 
-    if (!this.check(tokenTypes.SEMICOLON)) {
+    if (!this.check(tokenTypes.SEMICOLON) && !this.isAtEnd()) {
       value = this.expression();
     }
 
@@ -560,7 +560,7 @@ module.exports = class Parser {
     let keyword = this.previous();
     let value = null;
 
-    if (!this.check(tokenTypes.SEMICOLON)) {
+    if (!this.check(tokenTypes.SEMICOLON) && !this.isAtEnd()) {
       value = this.expression();
     }
 
