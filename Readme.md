@@ -200,7 +200,7 @@ Cleanscript supports all the operators in Javascript (including the ES6 exponent
 
 ### Variable Assignment
 
-Variable assignment works the same as pure Javascript, with `const`, `let` and `var` types, and no type supported.
+Variable assignment works the same as Javascript, with `const`, `let` and `var` variable declarations supported as well as variable reassignments.
 
 ```
 var a = "a";
@@ -216,13 +216,6 @@ When checking for equality, Cleanscript includes both `==` (equal to) and `!=` (
 ```
 true == true
 false != false
-```
-
-The above statements compile to:
-
-```
-true === true
-false !== false
 ```
 
 ### Control Keywords
