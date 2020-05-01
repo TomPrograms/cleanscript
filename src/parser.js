@@ -493,7 +493,7 @@ module.exports = class Parser {
 
     if (this.match(tokenTypes.EQUAL)) {
       let equals = this.previous();
-      let value = this.assignment();
+      let value = this.expression();
 
       if (expr instanceof Expr.Variable) {
         let name = expr.name;
