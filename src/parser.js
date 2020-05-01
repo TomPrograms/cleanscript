@@ -150,6 +150,29 @@ module.exports = class Parser {
     if (this.match(tokenTypes.NULL)) return new Expr.Literal(null);
     if (this.match(tokenTypes.UNDEFINED)) return new Expr.Literal(undefined);
 
+    // parse regex and bytes declarations
+    if (
+      this.check(tokenTypes.IDENTIFIER) &&
+      this.checkNext(tokenTypes.STRING)
+    ) {
+      if (this.peek().lexeme === "r") {
+        this.consume(tokenTypes.IDENTIFIER, null);
+        let value = this.consume(tokenTypes.STRING, null).literal;
+        
+        // parse regex
+        let flags, pattern, regex;
+        try {
+          flags = value.replace(/.*\/([gimy]*)$/, '$1');
+          pattern = value.replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
+          regex = new RegExp(pattern, flags);
+        } catch (error) {
+          this.error(this.peek(), `Invalid regex pattern provided - ${error.message}.`);
+        }
+        
+        return new Expr.Literal(regex);
+      }
+    }
+
     // async and sync lambda expressions
     if (this.match(tokenTypes.ASYNC)) {
       if (this.match(tokenTypes.LAMBDA)) return this.lambdaExpression(true);

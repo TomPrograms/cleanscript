@@ -262,6 +262,8 @@ module.exports = class Compiler {
       return expr.lexeme || JSON.parse(expr.literal);
     } else if (typeof value === "number") {
       return `${value}`;
+    } else if (value.constructor === RegExp) {
+      return value;
     } else if (value === true) return true;
     else if (value === false) return false;
     else if (value === null) return null;

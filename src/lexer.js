@@ -156,7 +156,7 @@ module.exports = class Lexer {
         // skip over underscores for numeric separators
         if (this.peek() === "_") {
           this.advance();
-  
+
           // throw error if two underscores are used in a row
           if (this.peek() === "_") {
             this.errorMessage(
@@ -166,7 +166,7 @@ module.exports = class Lexer {
             );
           }
         }
-  
+
         this.advance();
       }
     }
@@ -175,13 +175,19 @@ module.exports = class Lexer {
     parseNumberString.call(this);
 
     // parse numbers after '.'
-    if (this.peek() == "." && (this.isDigit(this.peekNext()) || this.peekNext() === "_")) {
+    if (
+      this.peek() == "." &&
+      (this.isDigit(this.peekNext()) || this.peekNext() === "_")
+    ) {
       this.advance();
       parseNumberString.call(this);
     }
 
-    // get full number parsed and remove numeric separators    
-    let fullNumber = this.code.substring(this.start, this.current).split("_").join("");
+    // get full number parsed and remove numeric separators
+    let fullNumber = this.code
+      .substring(this.start, this.current)
+      .split("_")
+      .join("");
     this.addToken(tokenTypes.NUMBER, parseFloat(fullNumber));
   }
 
