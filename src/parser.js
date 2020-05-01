@@ -4,10 +4,12 @@ const Stmt = require("./Stmt.js");
 
 module.exports = class Parser {
   synchronize() {
+    if (this.peek().type === tokenTypes.SEMICOLON) return;
+
     this.advance();
 
     while (!this.isAtEnd()) {
-      if (this.previous().type == tokenTypes.SEMICOLON) return;
+      if (this.previous().type === tokenTypes.SEMICOLON) return;
 
       switch (this.peek().type) {
         case tokenTypes.CLASS:
@@ -158,17 +160,21 @@ module.exports = class Parser {
       if (this.peek().lexeme === "r") {
         this.consume(tokenTypes.IDENTIFIER, null);
         let value = this.consume(tokenTypes.STRING, null).literal;
-        
+
         // parse regex
         let flags, pattern, regex;
         try {
-          flags = value.replace(/.*\/([gimy]*)$/, '$1');
-          pattern = value.replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
+          flags = value.replace(/.*\/([gimy]*)$/, "$1");
+          pattern = value.replace(new RegExp("^/(.*?)/" + flags + "$"), "$1");
           regex = new RegExp(pattern, flags);
         } catch (error) {
-          this.error(this.peek(), `Invalid regex pattern provided - ${error.message}.`);
+          this.error(
+            this.peek(),
+            `Invalid regex pattern provided - ${error.message}.`
+          );
+          return;
         }
-        
+
         return new Expr.Literal(regex);
       }
     }
