@@ -4,7 +4,7 @@ const Expr = require("./Expr.js");
 const includedFunctions = require("./includedFunctions.js");
 
 function getIncludedFunction(key) {
-  return includedFunctions[key].toString(); 
+  return includedFunctions[key].toString();
 }
 
 function renderParamsString(params) {
@@ -242,12 +242,24 @@ module.exports = class Compiler {
     let left = expr.left.accept(this);
     let right = expr.right.accept(this);
 
+    const renderEqualsStatement = (negate) => {
+      const isObject = (expr) => !(expr instanceof Expr.Literal);
+
+      let needsDeepEquals = isObject(expr.left) && isObject(expr.right);
+      if (needsDeepEquals) {
+        this.flags.includeDeepEqualsFlag = true;
+        return `${negate ? "!" : ""}$_deepEquals(${left}, ${right})`;
+      } else {
+        return negate ? `${left}!==${right}` : `${left}===${right}`;
+      }
+    };
+
     switch (operator) {
       case "==":
-        return `${left}===${right}`;
+        return renderEqualsStatement(false);
 
       case "!=":
-        return `${left}!==${right}`;
+        return renderEqualsStatement(true);
 
       case "//":
         return `Math.floor(${left}/${right})`;
@@ -372,6 +384,7 @@ module.exports = class Compiler {
       includeInFunctionFlag: false,
       includeCreateIterableFlag: false,
       includeRangeFlag: false,
+      includeDeepEqualsFlag: false,
       strictFlag: true,
     };
 
@@ -406,6 +419,10 @@ module.exports = class Compiler {
 
     if (this.flags.includeRangeFlag) {
       compiled = getIncludedFunction("rangeFunction") + compiled;
+    }
+
+    if (this.flags.includeDeepEqualsFlag) {
+      compiled = getIncludedFunction("deepEqualsFunction") + compiled;
     }
 
     if (this.flags.strictFlag) {
