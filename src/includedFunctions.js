@@ -49,10 +49,22 @@ module.exports.deepEqualsFunction = function $_deepEquals(x, y) {
     }
 
     return true;
-  } else if ((Set && x.constructor === Set) || (Map && x.constructor === Map)) {
+  } else if (Set && x.constructor === Set) {
     if (x.size !== y.size) return false;
     for (let property of x) {
       if (!y.has(property)) return false;
+    }
+    return true;
+  } else if (Map && x.constructor === Map) {
+    if (x.size !== y.size) return false;
+    for (let [key, value] of x) {
+      let otherValue = y.get(key);
+      if (
+        !$_deepEquals(value, otherValue) ||
+        (otherValue === undefined && !y.has(key))
+      ) {
+        return false;
+      }
     }
     return true;
   } else if (x.constructor === Date) {
