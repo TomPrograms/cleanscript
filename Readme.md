@@ -5,10 +5,9 @@
 > Cleanscript is an small, indent-based language that compiles to Javascript.
 
 - Clean, indent-based grammar.
-- Cleanscripts includes useful features such as advanced Pythonic indexes and Pythonic for loops.
+- Useful features such as advanced Pythonic indexes, Pythonic for loops and effortless deep equality.
+- Still utilise all the powerful built-in Javascript libraries, objects and prototypes.
 - Compiles to Javascript for compatibility with browsers, NodeJS and Electron.
-- Merges familiar syntax from Python and Javascript for an easy-to-learn, clean syntax.
-- Cleanscript still allows you to utilise all the powerful built-in Javascript libraries, objects and prototypes.
 - Mix-in Javascript at-will to access the maturity and power of pure Javascript.
 
 [![Cleanscript NPM Version](https://img.shields.io/npm/v/cleanscript?color=green)](https://npmjs.com/package/cleanscript)
@@ -24,7 +23,7 @@
   - [Literals](#Literals)
   - [Operators](#Operators)
   - [Variable Assignment](#Variable-Assignment)
-  - [Equality Checking](#Equality-Checking)
+  - [Equality](#Equality)
   - [Control Keywords](#Control-Keywords)
   - [Comments](#Comments)
   - [Indexing](#Indexing)
@@ -218,13 +217,20 @@ let c = 1;
 c = [1, 2, 3];
 ```
 
-### Equality Checking
+### Equality
 
-When checking for equality, Cleanscript includes both `==` (equal to) and `!=` (not equal to) operators. These both compile to their strictly equal Javascript counterparts.
+Cleanscript supports deep equality checking with the operators `==` and `!=`. Deep equality checking can test whether the contents of lists, objects, sets, maps, dates and functions are the same, as well as the standard Javascript equality checking. Cleanscript is type-strict when checking equalities, using the operators `===` and `!==` respectively.
 
 ```
-true == true
-false != false
+# standard, type-strict, equality checking
+1 == 1; # true
+1 == 2; # false
+1 != 1; # false
+
+# deep equality checking
+[1, 2, 3] == [1, 2, 3]; # true
+[1, 2] == [1, 2, 3]; # false
+console.log(new Set([1,2]) == new Set([1,2,3])); # false
 ```
 
 ### Control Keywords
