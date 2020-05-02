@@ -267,8 +267,8 @@ module.exports = class Parser {
   }
 
   keywords() {
-    if (this.match(tokenTypes.NEW)) return this.newStatement();
-    if (this.match(tokenTypes.AWAIT)) return this.awaitStatement();
+    if (this.match(tokenTypes.NEW)) return new Stmt.New(this.keywords());
+    if (this.match(tokenTypes.AWAIT)) return new Stmt.Await(this.keywords());
     return this.primary();
   }
 
@@ -609,14 +609,6 @@ module.exports = class Parser {
     }
 
     return new Stmt.If(condition, thenBranch, elifBranches, elseBranch);
-  }
-
-  newStatement() {
-    return new Stmt.New(this.expression());
-  }
-
-  awaitStatement() {
-    return new Stmt.Await(this.expression());
   }
 
   forStatement() {
