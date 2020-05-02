@@ -26,4 +26,3 @@ module.exports.rangeFunction = function range(start, end = 0, step = 1) {
   for (; (end - start) * step > 0; start += step) arr.push(start);
   return arr;
 };
-

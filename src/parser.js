@@ -266,8 +266,14 @@ module.exports = class Parser {
     return new Expr.Call(callee, paren, args);
   }
 
+  keywords() {
+    if (this.match(tokenTypes.NEW)) return this.newStatement();
+    if (this.match(tokenTypes.AWAIT)) return this.awaitStatement();
+    return this.primary();
+  }
+
   call() {
-    let expr = this.primary();
+    let expr = this.keywords();
 
     while (true) {
       if (this.match(tokenTypes.LEFT_PAREN)) {
@@ -493,7 +499,7 @@ module.exports = class Parser {
 
     if (this.match(tokenTypes.EQUAL)) {
       let equals = this.previous();
-      let value = this.expression();
+      let value = this.assignment();
 
       if (expr instanceof Expr.Variable) {
         let name = expr.name;
@@ -511,8 +517,6 @@ module.exports = class Parser {
   }
 
   expression() {
-    if (this.match(tokenTypes.NEW)) return this.newStatement();
-    if (this.match(tokenTypes.AWAIT)) return this.awaitStatement();
     return this.assignment();
   }
 
