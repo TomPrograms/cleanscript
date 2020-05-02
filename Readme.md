@@ -224,6 +224,7 @@ Cleanscript supports deep equality checking with the operators `==` and `!=`. De
 ```
 # standard, type-strict, equality checking
 1 == 1; # true
+1 == '1'; # false
 1 == 2; # false
 1 != 1; # false
 
