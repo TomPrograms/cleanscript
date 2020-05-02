@@ -5,7 +5,7 @@
 > Cleanscript is an small, indent-based language that compiles to Javascript.
 
 - Clean, indent-based grammar.
-- Useful features such as advanced Pythonic indexes, Pythonic for loops and effortless deep equality.
+- Useful features such as Pythonic indexes, Pythonic for loops and effortless deep equality.
 - Still utilise all the powerful built-in Javascript libraries, objects and prototypes.
 - Compiles to Javascript for compatibility with browsers, NodeJS and Electron.
 - Mix-in Javascript at-will to access the maturity and power of pure Javascript.
@@ -230,7 +230,7 @@ Cleanscript supports deep equality checking with the operators `==` and `!=`. De
 # deep equality checking
 [1, 2, 3] == [1, 2, 3]; # true
 [1, 2] == [1, 2, 3]; # false
-console.log(new Set([1,2]) == new Set([1,2,3])); # false
+new Set([1,2]) == new Set([1,2,3]); # false
 ```
 
 ### Control Keywords
