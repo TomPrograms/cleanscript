@@ -51,9 +51,13 @@ module.exports.deepEqualsFunction = function $_deepEquals(x, y) {
     return true;
   } else if (Set && x.constructor === Set) {
     if (x.size !== y.size) return false;
-    for (let property of x) {
-      if (!y.has(property)) return false;
+
+    let xList = Array.from(x);
+    let yList = Array.from(y);
+    for (let i = 0; i < xList.length; i++) {
+      if (!$_deepEquals(xList[i], yList[i])) return false;
     }
+
     return true;
   } else if (Map && x.constructor === Map) {
     if (x.size !== y.size) return false;
