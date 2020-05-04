@@ -242,7 +242,11 @@ module.exports = class Lexer {
         break;
 
       case "-":
-        this.addToken(tokenTypes.MINUS);
+        if (this.match(">")) {
+          this.addToken(tokenTypes.ARROW);
+        } else {
+          this.addToken(tokenTypes.MINUS);
+        }
         break;
 
       case "+":

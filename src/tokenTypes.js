@@ -71,4 +71,5 @@ module.exports = {
   INDENT: "INDENT",
   DEDENT: "DEDENT",
   LAMBDA: "LAMBDA",
+  ARROW: "ARROW",
 };

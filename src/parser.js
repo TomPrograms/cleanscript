@@ -212,35 +212,55 @@ module.exports = class Parser {
     this.error(this.peek(), "Expect expression.");
   }
 
+  parseParameters() {
+    let parameters = [];
+
+    do {
+      let paramObj = {
+        type: null,
+        castFunc: null,
+        name: null,
+        default: null,
+      };
+
+      if (this.checkNext(tokenTypes.ARROW)) {
+        paramObj["castFunc"] = this.consume(
+          tokenTypes.IDENTIFIER,
+          "Expected identifier for function to cast parameter to."
+        );
+        this.consume(tokenTypes.ARROW, null);
+      }
+
+      if (this.peek().type === tokenTypes.STAR) {
+        this.consume(tokenTypes.STAR, null);
+        paramObj["type"] = "wildcard";
+      } else {
+        paramObj["type"] = "standard";
+      }
+
+      paramObj["name"] = this.consume(
+        tokenTypes.IDENTIFIER,
+        "Expect parameter name."
+      );
+
+      if (this.match(tokenTypes.EQUAL)) {
+        paramObj["default"] = this.primary();
+      }
+
+      parameters.push(paramObj);
+
+      // wildcards should be the last parameter
+      if (paramObj["type"] === "wildcard") break;
+    } while (this.match(tokenTypes.COMMA));
+
+    return parameters;
+  }
+
   lambdaExpression(asyncFlag = false) {
     // parse parameters
     let parameters = [];
     if (!this.match(tokenTypes.COLON)) {
-      do {
-        let paramObj = {};
-
-        if (this.peek().type === tokenTypes.STAR) {
-          this.consume(tokenTypes.STAR, null);
-          paramObj["type"] = "wildcard";
-        } else {
-          paramObj["type"] = "standard";
-        }
-
-        paramObj["name"] = this.consume(
-          tokenTypes.IDENTIFIER,
-          "Expect parameter name."
-        );
-
-        if (this.match(tokenTypes.EQUAL)) {
-          paramObj["default"] = this.primary();
-        }
-
-        parameters.push(paramObj);
-
-        // wildcards should be the last parameter
-        if (paramObj["type"] === "wildcard") break;
-      } while (this.match(tokenTypes.COMMA));
-
+      parameters = this.parseParameters();
       this.match(tokenTypes.COLON, "Expected ':' after lambda arguments.");
     }
 
@@ -822,30 +842,7 @@ module.exports = class Parser {
     let parameters = [];
     if (this.match(tokenTypes.LEFT_PAREN)) {
       if (!this.check(tokenTypes.RIGHT_PAREN)) {
-        do {
-          let paramObj = {};
-
-          if (this.peek().type === tokenTypes.STAR) {
-            this.consume(tokenTypes.STAR, null);
-            paramObj["type"] = "wildcard";
-          } else {
-            paramObj["type"] = "standard";
-          }
-
-          paramObj["name"] = this.consume(
-            tokenTypes.IDENTIFIER,
-            "Expect parameter name."
-          );
-
-          if (this.match(tokenTypes.EQUAL)) {
-            paramObj["default"] = this.primary();
-          }
-
-          parameters.push(paramObj);
-
-          // wildcards should be the last parameter
-          if (paramObj["type"] === "wildcard") break;
-        } while (this.match(tokenTypes.COMMA));
+        parameters = this.parseParameters();
       }
       this.match(tokenTypes.RIGHT_PAREN, "Expected ')' after arguments.");
     }

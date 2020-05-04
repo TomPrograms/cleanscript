@@ -7,45 +7,58 @@ function getIncludedFunction(key) {
   return includedFunctions[key].toString();
 }
 
-function renderParamsString(params) {
-  let paramsString = "";
-  let wildcardDefault = null;
-  params.forEach((param, i) => {
-    let { name, type } = param;
-    let defaultValue = param.default;
-    let currentParamString = "";
+module.exports = class Compiler {
+  renderParams(params) {
+    let renderedParams = [];
+    let castParams = [];
+    let wildcardDefault = null;
+    params.forEach((param) => {
+      let { name, type } = param;
+      let defaultValue = param.default;
+      let currentParam = "";
 
-    currentParamString += name.lexeme;
+      currentParam += name.lexeme;
 
-    if (type === "wildcard") {
-      currentParamString = "..." + currentParamString;
-      if (defaultValue) {
-        // a wildcard default requires code in body, so save it for later
-        wildcardDefault = {
-          name: name.lexeme,
-          value: defaultValue.accept(this),
-        };
+      if (param.castFunc) {
+        castParams.push({
+          paramName: name.lexeme,
+          castFuncName: param.castFunc.lexeme,
+        });
       }
-    } else {
-      if (defaultValue) {
-        currentParamString += `=${defaultValue.accept(this)}`;
+
+      if (type === "wildcard") {
+        currentParam = "..." + currentParam;
+        if (defaultValue) {
+          wildcardDefault = {
+            name: name.lexeme,
+            value: defaultValue.accept(this),
+          };
+        }
+      } else {
+        if (defaultValue) currentParam += `=${defaultValue.accept(this)}`;
       }
+
+      renderedParams.push(currentParam);
+    });
+
+    let integratedCode = [];
+
+    // render code for default wildcard parameters
+    if (wildcardDefault) {
+      integratedCode.push(`${wildcardDefault.name} = ${wildcardDefault.name}.length > 0 ? ${wildcardDefault.name} : ${wildcardDefault.value};`);
     }
 
-    if (i < params.length - 1) currentParamString += ",";
-    paramsString += currentParamString;
-  });
+    // render code for casting parameters
+    castParams.forEach((castParam) => {
+      integratedCode.push(`${castParam.paramName} = ${castParam.castFuncName}(${castParam.paramName});`);
+    });
 
-  // support wildcard defaults
-  let wildcardDefaultCode = "";
-  if (wildcardDefault) {
-    wildcardDefaultCode = `${wildcardDefault.name} = ${wildcardDefault.name}.length > 0 ? ${wildcardDefault.name} : ${wildcardDefault.value};`;
+    return {
+      paramsString: renderedParams.join(","),
+      integratedCode: integratedCode.join(""),
+    };
   }
 
-  return { paramsString, wildcardDefaultCode };
-}
-
-module.exports = class Compiler {
   visitWhileStmt(stmt) {
     return `while(${stmt.condition.accept(this)}){${stmt.body.accept(this)}};`;
   }
@@ -84,17 +97,17 @@ module.exports = class Compiler {
   visitFunctionStmt(stmt) {
     const asyncDeclaration = stmt.async ? "async" : "";
     const functionKeyword = stmt.generator ? "function*" : "function";
-    const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(stmt.params);
-    return `${asyncDeclaration} ${functionKeyword} ${stmt.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${stmt.body.accept(this)}};`;
+    const { paramsString, integratedCode } = this.renderParams(stmt.params);
+    return `${asyncDeclaration} ${functionKeyword} ${stmt.name.lexeme}(${paramsString}) {${integratedCode}${stmt.body.accept(this)}};`;
   }
 
   visitClassStmt(stmt) {
     let methods = "";
     stmt.methods.forEach((method) => {
-      const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(method.params);
+      const { paramsString, integratedCode } = this.renderParams(method.params);
       const generatorDeclaration = method.generator ? "*" : "";
       const asyncDeclaration = method.async ? "async" : "";
-      methods += `${asyncDeclaration} ${generatorDeclaration}${method.name.lexeme}(${paramsString}) {${wildcardDefaultCode}${method.body.accept(this)}};`;
+      methods += `${asyncDeclaration} ${generatorDeclaration}${method.name.lexeme}(${paramsString}) {${integratedCode}${method.body.accept(this)}};`;
     });
 
     const extendString = stmt.superclass ? `extends ${stmt.superclass.lexeme}` : "";
@@ -177,8 +190,8 @@ module.exports = class Compiler {
 
   visitLambdaExpr(expr) {
     const asyncDeclaration = expr.async ? "async" : "";
-    const { paramsString, wildcardDefaultCode } = renderParamsString.bind(this)(expr.params);
-    return `${asyncDeclaration} function (${paramsString}) {${wildcardDefaultCode}return ${expr.body.accept(this)}}`;
+    const { paramsString, integratedCode } = this.renderParams(expr.params);
+    return `${asyncDeclaration} function (${paramsString}) {${integratedCode}return ${expr.body.accept(this)}}`;
   }
 
   visitCallExpr(expr) {
