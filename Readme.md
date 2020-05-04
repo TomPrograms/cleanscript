@@ -345,20 +345,12 @@ while true:
 
 ### Functions
 
-Functions can be synchronous or asynchronous. Cleanscript supports the usage of generators. You can use standard and wildcard parameters, both of which can have defaults.
+Functions can be declared as regular functions, asynchronous functions or generators.
 
 ```
 # no parameters
 function main:
   console.log('function main');
-
-# parameters
-function params(a, b, *c):
-  return a + b + c[0];
-
-# default parameters
-function defaults(a=1, *b=[1]):
-  return a + b[0];
 
 # asynchronous function
 async function nonSyncFunction:
@@ -367,10 +359,44 @@ async function nonSyncFunction:
 # generator
 function* generatorFunction:
   yield 1;
+```
 
-# asynchronous generator function
-async function* generatorFunction:
-  yield 2;
+Functions can contain an unlimited number of parameters. Wildcard parameters are also supported, but must be the last parameter of the function.
+
+```
+# three parameters
+function main(a, b, c):
+  console.log(a);
+  console.log(b);
+  console.log(c);
+
+# one parameter and a wildcard parameter
+function wildcard(a, *b):
+  console.log(a);
+  console.log(b);
+```
+
+Both standard and wildcard parameters can have a default value, which will replace the parameters value if no value is provided for it in the function call.
+
+```
+# two parameters with default values
+function main(a=1, b=2):
+  console.log(a);
+  console.log(b);
+
+# a wildcard parameter with a default value
+function wildcard(*a=[1,2,3]):
+  console.log(a);
+```
+
+Cleanscript also has a feature for casting parameters to functions before the main body of the function. This is useful for performing operations on a parameter before the function, such as converting the type of the parameter. The name of provided function before the `->` statement is the name of the function that will be called with the parameter, and the returned value will be reassigned as the parameter variables value.
+
+```
+var timesTwo = lambda x : x * 2;
+
+# call the timesTwo function with a and reassign a as the returned value
+function print(timesTwo -> a):
+  console.log(a);
 ```
 
 ### Lambda Functions
@@ -397,23 +423,11 @@ In cleanscript, you can declare a class like the following. The class' methods u
 class Test:
   # synchronous method
   function constructor:
-    this.name = 1;
-
-  # method with default parameters
-  function greeting(word="hello"):
-    console.log(word + " " + this.name);
+    this.name = "tom";
 
   # asynchronous method
-  async function sayHi:
-    console.log('hi');
-
-  # generator method
-  function* generator:
-    yield 'hi';
-
-  # asynchronous generator method
-  async function* asyncGenerator:
-    yield 'async hi';
+  async function sayYourName:
+    console.log(this.name);
 ```
 
 In Cleanscript, you can define class inheritance with similar syntax to Python's inheritance:
