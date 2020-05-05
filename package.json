@@ -26,4 +26,12 @@
     "Changelog.md",
     "LICENSE"
   ],
+  "keywords": [
+    "Cleanscript",
+    "compiler",
+    "transpiler",
+    "language",
+    "programming-language",
+    "Javascript"
+  ]
 }
