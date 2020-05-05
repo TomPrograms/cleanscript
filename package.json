@@ -17,5 +17,13 @@
     "chokidar": "^3.3.1",
     "prettier": "^2.0.2",
     "terser": "^4.6.10"
-  }
+  },
+  "files": [
+    "index.js",
+    "src/",
+    "bin/",
+    "Readme.md",
+    "Changelog.md",
+    "LICENSE"
+  ],
 }
