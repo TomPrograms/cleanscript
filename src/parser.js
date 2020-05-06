@@ -598,7 +598,7 @@ module.exports = class Parser {
       if (this.match(tokenTypes.INDENT)) {
         body = this.block();
       } else {
-        body.push(this.statement());
+        body.push(this.declaration());
         if (this.match(tokenTypes.INDENT)) {
           body = body.concat(this.block());
         }
@@ -647,7 +647,7 @@ module.exports = class Parser {
     if (this.match(tokenTypes.INDENT)) {
       body = this.block();
     } else {
-      body.push(this.statement());
+      body.push(this.declaration());
       if (this.match(tokenTypes.INDENT)) {
         body = body.concat(this.block());
       }
@@ -665,7 +665,7 @@ module.exports = class Parser {
     if (this.match(tokenTypes.INDENT)) {
       body = this.block();
     } else {
-      body.push(this.statement());
+      body.push(this.declaration());
       if (this.match(tokenTypes.INDENT)) {
         body = body.concat(this.block());
       }
@@ -682,7 +682,7 @@ module.exports = class Parser {
     if (this.match(tokenTypes.INDENT)) {
       body = this.block();
     } else {
-      body.push(this.statement());
+      body.push(this.declaration());
       if (this.match(tokenTypes.INDENT)) {
         body = body.concat(this.block());
       }
@@ -710,7 +710,7 @@ module.exports = class Parser {
       if (this.match(tokenTypes.INDENT)) {
         body = this.block();
       } else {
-        body.push(this.statement());
+        body.push(this.declaration());
         if (this.match(tokenTypes.INDENT)) {
           body = body.concat(this.block());
         }
@@ -746,7 +746,7 @@ module.exports = class Parser {
       if (this.match(tokenTypes.INDENT)) {
         body = this.block();
       } else {
-        body.push(this.statement());
+        body.push(this.declaration());
         if (this.match(tokenTypes.INDENT)) {
           body = body.concat(this.block());
         }
@@ -885,7 +885,7 @@ module.exports = class Parser {
     if (this.match(tokenTypes.INDENT)) {
       body = this.block();
     } else {
-      body.push(this.statement());
+      body.push(this.declaration());
       if (this.match(tokenTypes.INDENT)) {
         body = body.concat(this.block());
       }
