@@ -133,6 +133,18 @@ class While extends Stmt {
   }
 }
 
+class Do extends Stmt {
+  constructor(body, condition) {
+    super();
+    this.body = body;
+    this.condition = condition;
+  }
+
+  accept(visitor) {
+    return visitor.visitDoStatement(this);
+  }
+}
+
 class For extends Stmt {
   constructor(iterator, variable, body) {
     super();
@@ -253,6 +265,7 @@ module.exports = {
   Class,
   Block,
   While,
+  Do,
   For,
   JSRAW,
   Try,

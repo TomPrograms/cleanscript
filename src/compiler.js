@@ -63,6 +63,12 @@ module.exports = class Compiler {
     return `while(${stmt.condition.accept(this)}){${stmt.body.accept(this)}};`;
   }
 
+  visitDoStatement(stmt) {
+    const body = stmt.body.accept(this);
+    const condition = stmt.condition ? stmt.condition.accept(this) : "false";
+    return `do {${body}} while (${condition})`;
+  }
+
   visitForStmt(stmt) {
     this.flags.includeCreateIterableFlag = true;
     let varName = stmt.variable.lexeme;

@@ -675,6 +675,32 @@ module.exports = class Parser {
     return new Stmt.While(condition, body);
   }
 
+  doStatement() {
+    this.consume(tokenTypes.COLON, "Expected ':' after do statement.");
+
+    let body = [];
+    if (this.match(tokenTypes.INDENT)) {
+      body = this.block();
+    } else {
+      body.push(this.statement());
+      if (this.match(tokenTypes.INDENT)) {
+        body = body.concat(this.block());
+      }
+    }
+    body = new Stmt.Block(body);
+
+    let condition;
+    if (this.match(tokenTypes.WHILE)) {
+      condition = this.expression();
+      this.consume(
+        tokenTypes.SEMICOLON,
+        "Expected semi-colon after while condition."
+      );
+    }
+
+    return new Stmt.Do(body, condition);
+  }
+
   switchStatement() {
     let condition = this.expression();
     this.consume(tokenTypes.COLON, "Expected ':' after switch statement.");
@@ -776,6 +802,7 @@ module.exports = class Parser {
     if (this.match(tokenTypes.BREAK)) return this.breakStatement();
     if (this.match(tokenTypes.FOR)) return this.forStatement();
     if (this.match(tokenTypes.WHILE)) return this.whileStatement();
+    if (this.match(tokenTypes.DO)) return this.doStatement();
     if (this.match(tokenTypes.IF)) return this.ifStatement();
 
     return this.expressionStatement();
