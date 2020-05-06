@@ -31,6 +31,7 @@
   - [If, Elif, Else](#If-Elif-Else)
   - [For Loops](#For-Loops)
   - [While Loops](#While-Loops)
+  - [Do Loops](#Do-Loops)
   - [Functions](#Functions)
   - [Lambda Functions](#Lambda-Functions)
   - [Classes](#Classes)
@@ -341,6 +342,23 @@ Cleanscript while loops are the same as plain Javascript, but use an indent-base
 while true:
   console.log('a');
   console.log('b');
+```
+
+### Do Loops
+
+Cleanscript also supports do-while loops.
+
+```
+do:
+  console.log('a');
+while true;
+```
+
+Cleanscript doesn't require a while condition, and if no while condition is provided, the do block is only ran once.
+
+```
+do:
+  console.log('a');
 ```
 
 ### Functions
