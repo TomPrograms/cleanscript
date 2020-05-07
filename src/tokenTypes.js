@@ -68,6 +68,7 @@ module.exports = {
   FINALLY: "FINALLY",
   LAMBDA: "LAMBDA",
   ARROW: "ARROW",
+  TYPEOF: "TYPEOF",
   JSRAW: "JSRAW",
   INDENT: "INDENT",
   DEDENT: "DEDENT",

@@ -206,7 +206,7 @@ class Await extends Expr {
   }
 
   accept(visitor) {
-    return visitor.visitAwaitStmt(this);
+    return visitor.visitAwaitExpr(this);
   }
 }
 
@@ -217,7 +217,18 @@ class New extends Expr {
   }
 
   accept(visitor) {
-    return visitor.visitNewStmt(this);
+    return visitor.visitNewExpr(this);
+  }
+}
+
+class Typeof extends Expr {
+  constructor(object) {
+    super();
+    this.object = object;
+  }
+
+  accept(visitor) {
+    return visitor.visitTypeofExpr(this);
   }
 }
 
@@ -241,4 +252,5 @@ module.exports = {
   Lambda,
   New,
   Await,
+  Typeof,
 };

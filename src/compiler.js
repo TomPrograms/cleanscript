@@ -127,12 +127,16 @@ module.exports = class Compiler {
     return stmt.statements.join("");
   }
 
-  visitNewStmt(stmt) {
-    return `new ${stmt.object.accept(this)}`;
+  visitNewExpr(expr) {
+    return `new ${expr.object.accept(this)}`;
   }
 
-  visitAwaitStmt(stmt) {
-    return `await ${stmt.object.accept(this)}`;
+  visitAwaitExpr(expr) {
+    return `await ${expr.object.accept(this)}`;
+  }
+
+  visitTypeofExpr(expr) {
+    return `typeof ${expr.object.accept(this)}`;
   }
 
   visitIfStmt(stmt) {

@@ -289,6 +289,7 @@ module.exports = class Parser {
   keywords() {
     if (this.match(tokenTypes.NEW)) return new Expr.New(this.keywords());
     if (this.match(tokenTypes.AWAIT)) return new Expr.Await(this.keywords());
+    if (this.match(tokenTypes.TYPEOF)) return new Expr.Typeof(this.keywords());
     return this.primary();
   }
 
