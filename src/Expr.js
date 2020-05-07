@@ -199,6 +199,28 @@ class Variable extends Expr {
   }
 }
 
+class Await extends Expr {
+  constructor(object) {
+    super();
+    this.object = object;
+  }
+
+  accept(visitor) {
+    return visitor.visitAwaitStmt(this);
+  }
+}
+
+class New extends Expr {
+  constructor(object) {
+    super();
+    this.object = object;
+  }
+
+  accept(visitor) {
+    return visitor.visitNewStmt(this);
+  }
+}
+
 module.exports = {
   Assign,
   Binary,
@@ -217,4 +239,6 @@ module.exports = {
   Unary,
   Variable,
   Lambda,
+  New,
+  Await,
 };

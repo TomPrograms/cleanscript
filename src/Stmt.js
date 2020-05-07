@@ -63,17 +63,6 @@ class Yield extends Stmt {
   }
 }
 
-class New extends Stmt {
-  constructor(object) {
-    super();
-    this.object = object;
-  }
-
-  accept(visitor) {
-    return visitor.visitNewStmt(this);
-  }
-}
-
 class Throw extends Stmt {
   constructor(keyword, value) {
     super();
@@ -83,17 +72,6 @@ class Throw extends Stmt {
 
   accept(visitor) {
     return visitor.visitThrowStmt(this);
-  }
-}
-
-class Await extends Stmt {
-  constructor(object) {
-    super();
-    this.object = object;
-  }
-
-  accept(visitor) {
-    return visitor.visitAwaitStmt(this);
   }
 }
 
@@ -261,7 +239,6 @@ module.exports = {
   Return,
   Yield,
   Throw,
-  New,
   Class,
   Block,
   While,
@@ -273,7 +250,6 @@ module.exports = {
   Switch,
   Break,
   Continue,
-  Await,
   Var,
   Let,
   Const,
