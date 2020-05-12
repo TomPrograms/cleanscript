@@ -1,0 +1,10 @@
+{
+  "overrides": [
+    {
+      "files": "src/compiler.js",
+      "options": {
+        "printWidth": 2000
+      }
+    }
+  ]
+}
