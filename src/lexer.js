@@ -4,6 +4,7 @@ const reservedWords = {
   and: tokenTypes.AND,
   in: tokenTypes.IN,
   or: tokenTypes.OR,
+  not: tokenTypes.NOT,
   class: tokenTypes.CLASS,
   true: tokenTypes.TRUE,
   false: tokenTypes.FALSE,

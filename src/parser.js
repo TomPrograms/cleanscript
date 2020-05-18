@@ -343,7 +343,14 @@ module.exports = class Parser {
   }
 
   unary() {
-    if (this.match(tokenTypes.BANG, tokenTypes.MINUS, tokenTypes.BIT_NOT)) {
+    if (
+      this.match(
+        tokenTypes.NOT,
+        tokenTypes.BANG,
+        tokenTypes.MINUS,
+        tokenTypes.BIT_NOT
+      )
+    ) {
       let operator = this.previous();
       let right = this.unary();
       return new Expr.Unary(operator, right);

@@ -226,6 +226,7 @@ module.exports = class Compiler {
       case tokenTypes.MINUS:
         return `-${right}`;
       case tokenTypes.BANG:
+      case tokenTypes.NOT:
         return `!${right}`;
       case tokenTypes.BIT_NOT:
         return `~${right}`;
