@@ -237,14 +237,14 @@ new Set([1,2]) == new Set([1,2,3]); # false
 
 ### Control Keywords
 
-Cleanscript uses semantic, English control keywords instead of punctuation, as well as adding additional control keywords. `and` and `or` keywords are supported within Cleanscript:
+Cleanscript uses semantic, Pythonic, English control keywords instead of punctuation, as well as adding additional control keywords. `and` and `or` keywords are supported within Cleanscript:
 
 ```
 true and true; # check if both are true
 true or false; # check if at least one is true
 ```
 
-Cleanscript also includes an `in` control keywords, which checks in an element is within a target, with similar functionality to Python. The `in` keyword can check if an element is within a list, a string or an object.
+Cleanscript also includes `in` and `not` control keywords. The `in` keyword checks in an element is within a target, with similar functionality to Python. The `in` keyword can check if an element is within a list, a string or an object. The `not` keyword has identical functionality to negating a statement with `!` (both are supported in Cleanscript).
 
 ```
 var list = [1, 2, 3];
