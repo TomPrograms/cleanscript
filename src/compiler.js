@@ -234,22 +234,15 @@ module.exports = class Compiler {
   }
 
   visitLogicalExpr(expr) {
-    function convertOperator(operator) {
-      switch (operator) {
-        case "OR":
-          return "||";
-        case "AND":
-          return "&&";
-      }
-    }
-
     let left = expr.left.accept(this);
     let right = expr.right.accept(this);
     let operator = expr.operator.type;
     switch (operator) {
       case "OR":
+        return `${left}||${right}`;
+
       case "AND":
-        return `${left}${convertOperator(operator)}${right}`;
+        return `${left}&&${right}`;
 
       case "IN":
         this.flags.includeInFunctionFlag = true;
