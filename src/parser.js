@@ -301,14 +301,10 @@ module.exports = class Parser {
         expr = this.finishCall(expr);
       } else if (this.match(tokenTypes.DOT)) {
         let name;
-        if (this.check(tokenTypes.THEN)) {
-          name = this.consume(tokenTypes.THEN, null);
-        } else {
-          name = this.consume(
-            tokenTypes.IDENTIFIER,
-            "Expected property name after '.'."
-          );
-        }
+        name = this.consume(
+          tokenTypes.IDENTIFIER,
+          "Expected property name after '.'."
+        );
         expr = new Expr.Get(expr, name);
       } else if (this.match(tokenTypes.LEFT_SQUARE_BRACKET)) {
         let index = {
