@@ -292,13 +292,13 @@ list[1:2] = [10, 11];           # list becomes equal to "[ 1, 10, 11, 3, 4 ]"
 
 ### Ternary Operators
 
-Ternary operators in Cleanscript use the keywords `then` and `else` instead of `?` and `:` respectively. The ternary statement doesn't need to contain an else branch, and if no else branch is supplied, the compiled else branch of the ternary statement will have a value of `undefined`.
+Cleanscript uses the Pythonic style of ternary statements following the pattern `thenBranch if condition else elseBranch` as opposed to the Javascript format `condition ? thenBranch : elseBranch`. Ternary statements don't need to contain an else branch, and if no else branch is supplied, the compiled else branch of the ternary statement will have a value of `undefined`.
 
 ```
-var a = 1 == 1 then 'yes' else 'no';
-console.log(a == 'yes' then 'correct' else 'incorrect');
+var a = 'yes' if 1 == 1 else 'no';
+console.log('correct' if a == 'yes' else 'incorrect');
 
-var b = 1 == 2 then 'yes'; # value will be undefined
+var b = 'yes' if 1 == 2; # value will be undefined
 ```
 
 ### If, Elif, Else
