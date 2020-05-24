@@ -472,15 +472,15 @@ module.exports = class Parser {
   ternary() {
     let expr = this.equality();
 
-    while (this.match(tokenTypes.THEN)) {
-      let thenBranch = this.equality();
+    while (this.match(tokenTypes.IF)) {
+      let condition = this.equality();
 
       let elseBranch = null;
       if (this.match(tokenTypes.ELSE)) {
         elseBranch = this.equality();
       }
 
-      expr = new Expr.Ternary(expr, thenBranch, elseBranch);
+      expr = new Expr.Ternary(condition, expr, elseBranch);
     }
 
     return expr;
