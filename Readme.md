@@ -48,13 +48,13 @@ The syntax of Cleanscript is desgined to be a blend of syntax from Javascript an
 For global installation to compile from the command line:
 
 ```
-npm i -g cleanscript
+npm i -g cleanscript-lang
 ```
 
 For programmatic compilation within projects:
 
 ```
-npm i cleanscript
+npm i cleanscript-lang
 ```
 
 ## Usage
