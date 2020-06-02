@@ -1,5 +1,5 @@
 {
-  "name": "cleanscript",
+  "name": "cleanscript-lang",
   "version": "1.0.0",
   "description": "Cleanscript is an indent-based language that compiles to Javascript.",
   "main": "index.js",
