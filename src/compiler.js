@@ -139,6 +139,10 @@ module.exports = class Compiler {
     return `typeof ${expr.object.accept(this)}`;
   }
 
+  visitVoidExpr(expr) {
+    return `void ${expr.object.accept(this)}`;
+  }
+
   visitIfStmt(stmt) {
     let mainBranch = `if(${stmt.condition.accept(this)}){${stmt.thenBranch.accept(this)}}`;
     let elifBranches = "";

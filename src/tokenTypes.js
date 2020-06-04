@@ -60,6 +60,7 @@ module.exports = {
   NEW: "NEW",
   ASYNC: "ASYNC",
   AWAIT: "AWAIT",
+  VOID: "VOID",
   WHILE: "WHILE",
   BREAK: "BREAK",
   CONTINUE: "CONTINUE",

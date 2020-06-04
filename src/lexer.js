@@ -38,6 +38,7 @@ const reservedWords = {
   lambda: tokenTypes.LAMBDA,
   await: tokenTypes.AWAIT,
   typeof: tokenTypes.TYPEOF,
+  void: tokenTypes.VOID,
 };
 
 class Stack {

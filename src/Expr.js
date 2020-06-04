@@ -232,6 +232,17 @@ class Typeof extends Expr {
   }
 }
 
+class Void extends Expr {
+  constructor(object) {
+    super();
+    this.object = object;
+  }
+
+  accept(visitor) {
+    return visitor.visitVoidExpr(this);
+  }
+}
+
 module.exports = {
   Assign,
   Binary,
@@ -253,4 +264,5 @@ module.exports = {
   New,
   Await,
   Typeof,
+  Void,
 };
