@@ -243,6 +243,17 @@ class Void extends Expr {
   }
 }
 
+class Delete extends Expr {
+  constructor(object) {
+    super();
+    this.object = object;
+  }
+
+  accept(visitor) {
+    return visitor.visitDeleteExpr(this);
+  }
+}
+
 module.exports = {
   Assign,
   Binary,
@@ -265,4 +276,5 @@ module.exports = {
   Await,
   Typeof,
   Void,
+  Delete,
 };

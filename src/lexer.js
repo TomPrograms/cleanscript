@@ -39,6 +39,7 @@ const reservedWords = {
   await: tokenTypes.AWAIT,
   typeof: tokenTypes.TYPEOF,
   void: tokenTypes.VOID,
+  delete: tokenTypes.DELETE,
 };
 
 class Stack {

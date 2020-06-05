@@ -143,6 +143,10 @@ module.exports = class Compiler {
     return `void ${expr.object.accept(this)}`;
   }
 
+  visitDeleteExpr(expr) {
+    return `delete ${expr.object.accept(this)}`;
+  }
+
   visitIfStmt(stmt) {
     let mainBranch = `if(${stmt.condition.accept(this)}){${stmt.thenBranch.accept(this)}}`;
     let elifBranches = "";

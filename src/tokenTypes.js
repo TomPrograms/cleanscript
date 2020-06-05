@@ -61,6 +61,7 @@ module.exports = {
   ASYNC: "ASYNC",
   AWAIT: "AWAIT",
   VOID: "VOID",
+  DELETE: "DELETE",
   WHILE: "WHILE",
   BREAK: "BREAK",
   CONTINUE: "CONTINUE",
