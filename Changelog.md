@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 - 2020/06/12
+
+### Fixed
+
+- Fixed `null` literals.
+
 ## 1.1.0 - 2020/06/09
 
 ### Added
