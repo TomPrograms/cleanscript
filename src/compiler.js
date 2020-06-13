@@ -307,6 +307,7 @@ module.exports = class Compiler {
     else if (value === false) return false;
     else if (value === null) return null;
     else if (value === undefined) return undefined;
+    else if (value === NaN) return NaN;
   }
 
   visitGetExpr(expr) {

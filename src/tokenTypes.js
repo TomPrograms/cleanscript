@@ -48,6 +48,7 @@ module.exports = {
   CASE: "CASE",
   DEFAULT: "DEFAULT",
   NULL: "NULL",
+  NAN: "NAN",
   UNDEFINED: "UNDEFINED",
   AWAIT: "AWAIT",
   RETURN: "RETURN",

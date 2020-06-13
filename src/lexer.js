@@ -14,6 +14,7 @@ const reservedWords = {
   elif: tokenTypes.ELIF,
   else: tokenTypes.ELSE,
   null: tokenTypes.NULL,
+  NaN: tokenTypes.NAN,
   undefined: tokenTypes.UNDEFINED,
   return: tokenTypes.RETURN,
   yield: tokenTypes.YIELD,

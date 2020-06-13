@@ -151,6 +151,7 @@ module.exports = class Parser {
     if (this.match(tokenTypes.TRUE)) return new Expr.Literal(true);
     if (this.match(tokenTypes.NULL)) return new Expr.Literal(null);
     if (this.match(tokenTypes.UNDEFINED)) return new Expr.Literal(undefined);
+    if (this.match(tokenTypes.NAN)) return new Expr.Literal(NaN);
 
     // parse regex and bytes declarations
     if (
