@@ -303,11 +303,8 @@ module.exports = class Compiler {
       return `${value}`;
     } else if (value && value.constructor === RegExp) {
       return value;
-    } else if (value === true) return true;
-    else if (value === false) return false;
-    else if (value === null) return null;
-    else if (value === undefined) return undefined;
-    else if (value === NaN) return NaN;
+    }
+    return value;
   }
 
   visitGetExpr(expr) {
