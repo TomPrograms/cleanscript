@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0 - 2020/06/19
+
+### Added
+
+- `NaN` literals.
+
 ## 1.1.1 - 2020/06/12
 
 ### Fixed
