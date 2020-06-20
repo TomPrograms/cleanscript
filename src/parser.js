@@ -189,20 +189,17 @@ module.exports = class Parser {
       );
       return;
     }
-    if (this.match(tokenTypes.LAMBDA)) return this.lambdaExpression();
-
-    if (this.match(tokenTypes.NUMBER)) {
-      return new Expr.Literal(this.previous().literal);
-    }
 
     if (this.match(tokenTypes.STRING)) {
       let token = this.previous();
       return new Expr.Literal(token.literal, token.lexeme);
     }
 
-    if (this.match(tokenTypes.IDENTIFIER)) {
+    if (this.match(tokenTypes.LAMBDA)) return this.lambdaExpression();
+    if (this.match(tokenTypes.IDENTIFIER))
       return new Expr.Variable(this.previous());
-    }
+    if (this.match(tokenTypes.NUMBER))
+      return new Expr.Literal(this.previous().literal);
 
     if (this.match(tokenTypes.LEFT_PAREN)) {
       let expr = this.expression();

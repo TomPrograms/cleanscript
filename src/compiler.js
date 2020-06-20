@@ -297,13 +297,10 @@ module.exports = class Compiler {
 
   visitLiteralExpr(expr) {
     let value = expr.value;
-    if (typeof value === "string") {
-      return expr.lexeme || JSON.parse(expr.literal);
-    } else if (typeof value === "number") {
-      return `${value}`;
-    } else if (value && value.constructor === RegExp) {
-      return value;
-    }
+    if (typeof value === "string") return expr.lexeme || JSON.parse(expr.literal);
+    else if (typeof value === "number") return `${value}`;
+    else if (value && value.constructor === RegExp) return value;
+
     return value;
   }
 
