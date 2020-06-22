@@ -355,12 +355,23 @@ module.exports = class Parser {
     return this.call();
   }
 
-  exponent() {
+  increment() {
     let expr = this.unary();
+
+    if (this.match(tokenTypes.PLUS_PLUS, tokenTypes.MINUS_MINUS)) {
+      let operator = this.previous();
+      return new Expr.Increment(expr, operator);
+    }
+
+    return expr;
+  }
+
+  exponent() {
+    let expr = this.increment();
 
     while (this.match(tokenTypes.STAR_STAR)) {
       let operator = this.previous();
-      let right = this.unary();
+      let right = this.increment();
       expr = new Expr.Binary(expr, operator, right);
     }
 

@@ -242,6 +242,18 @@ module.exports = class Compiler {
     }
   }
 
+  visitIncrementExpr(expr) {
+    let operator = expr.operator.type;
+    let subject = expr.subject.accept(this);
+
+    switch (operator) {
+      case tokenTypes.PLUS_PLUS:
+        return `${subject}++`;
+      case tokenTypes.MINUS_MINUS:
+        return `${subject}--`;
+    }
+  }
+
   visitLogicalExpr(expr) {
     let left = expr.left.accept(this);
     let right = expr.right.accept(this);

@@ -188,6 +188,18 @@ class Unary extends Expr {
   }
 }
 
+class Increment extends Expr {
+  constructor(subject, operator) {
+    super();
+    this.subject = subject;
+    this.operator = operator;
+  }
+
+  accept(visitor) {
+    return visitor.visitIncrementExpr(this);
+  }
+}
+
 class Variable extends Expr {
   constructor(name) {
     super();
@@ -270,6 +282,7 @@ module.exports = {
   Logical,
   Set,
   Unary,
+  Increment,
   Variable,
   Lambda,
   New,
