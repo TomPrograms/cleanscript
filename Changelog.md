@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0 - 2020/06/24
+
+### Added
+
+- Postfix increment operator (`++`).
+- Postfix decrement operator (`--`).
+
 ## 1.2.0 - 2020/06/19
 
 ### Added
