@@ -188,7 +188,7 @@ class Unary extends Expr {
   }
 }
 
-class Increment extends Expr {
+class PostfixIncrement extends Expr {
   constructor(subject, operator) {
     super();
     this.subject = subject;
@@ -196,7 +196,19 @@ class Increment extends Expr {
   }
 
   accept(visitor) {
-    return visitor.visitIncrementExpr(this);
+    return visitor.visitPostfixIncrementExpr(this);
+  }
+}
+
+class PrefixIncrement extends Expr {
+  constructor(subject, operator) {
+    super();
+    this.subject = subject;
+    this.operator = operator;
+  }
+
+  accept(visitor) {
+    return visitor.visitPrefixIncrementExpr(this);
   }
 }
 
@@ -282,7 +294,8 @@ module.exports = {
   Logical,
   Set,
   Unary,
-  Increment,
+  PostfixIncrement,
+  PrefixIncrement,
   Variable,
   Lambda,
   New,

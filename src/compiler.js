@@ -242,7 +242,7 @@ module.exports = class Compiler {
     }
   }
 
-  visitIncrementExpr(expr) {
+  visitPostfixIncrementExpr(expr) {
     let operator = expr.operator.type;
     let subject = expr.subject.accept(this);
 
@@ -251,6 +251,18 @@ module.exports = class Compiler {
         return `${subject}++`;
       case tokenTypes.MINUS_MINUS:
         return `${subject}--`;
+    }
+  }
+
+  visitPrefixIncrementExpr(expr) {
+    let operator = expr.operator.type;
+    let subject = expr.subject.accept(this);
+
+    switch (operator) {
+      case tokenTypes.PLUS_PLUS:
+        return `++${subject}`;
+      case tokenTypes.MINUS_MINUS:
+        return `--${subject}`;
     }
   }
 

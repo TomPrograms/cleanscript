@@ -355,23 +355,33 @@ module.exports = class Parser {
     return this.call();
   }
 
-  increment() {
-    let expr = this.unary();
+  prefixIncrements() {
+    if (this.match(tokenTypes.PLUS_PLUS, tokenTypes.MINUS_MINUS)) {
+      let operator = this.previous();
+      let right = this.prefixIncrements();
+      return new Expr.PrefixIncrement(right, operator);
+    }
+
+    return this.unary();
+  }
+
+  postfixIncrements() {
+    let expr = this.prefixIncrements();
 
     if (this.match(tokenTypes.PLUS_PLUS, tokenTypes.MINUS_MINUS)) {
       let operator = this.previous();
-      return new Expr.Increment(expr, operator);
+      return new Expr.PostfixIncrement(expr, operator);
     }
 
     return expr;
   }
 
   exponent() {
-    let expr = this.increment();
+    let expr = this.postfixIncrements();
 
     while (this.match(tokenTypes.STAR_STAR)) {
       let operator = this.previous();
-      let right = this.increment();
+      let right = this.postfixIncrements();
       expr = new Expr.Binary(expr, operator, right);
     }
 
