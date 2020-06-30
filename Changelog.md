@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.0 - 2020/06/24
+
+### Added
+
+- Prefix increment operator (`++`).
+- Prefix decrement operator (`--`).
+
 ## 1.3.0 - 2020/06/24
 
 ### Added
