@@ -452,23 +452,16 @@ module.exports = class Compiler {
     ast.forEach((stmt) => {
       compiled += stmt.accept(this);
     });
-
-    // flag behaviour
-    if (this.flags.includeInFunctionFlag) {
-      compiled = getIncludedFunction("inFunction") + compiled;
+    
+    function addIncludedFunction(code, flag, functionName) {
+      if (!flag) return code;
+      return getIncludedFunction(functionName) + code;
     }
 
-    if (this.flags.includeCreateIterableFlag) {
-      compiled = getIncludedFunction("createIterable") + compiled;
-    }
-
-    if (this.flags.includeRangeFlag) {
-      compiled = getIncludedFunction("rangeFunction") + compiled;
-    }
-
-    if (this.flags.includeDeepEqualsFlag) {
-      compiled = getIncludedFunction("deepEqualsFunction") + compiled;
-    }
+    compiled = addIncludedFunction(compiled, this.flags.includeInFunctionFlag, "inFunction");
+    compiled = addIncludedFunction(compiled, this.flags.includeCreateIterableFlag, "inFunction");
+    compiled = addIncludedFunction(compiled, this.flags.includeRangeFlag, "createIterable");
+    compiled = addIncludedFunction(compiled, this.flags.includeDeepEqualsFlag, "deepEqualsFunction");
 
     if (this.flags.strictFlag) {
       compiled = '"use strict";' + compiled;
