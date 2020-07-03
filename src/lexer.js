@@ -283,15 +283,19 @@ module.exports = class Lexer {
         break;
 
       case "!":
-        this.addToken(
-          this.match("=") ? tokenTypes.BANG_EQUAL : tokenTypes.BANG
-        );
+        if (this.match("=")) {
+          this.addToken(tokenTypes.BANG_EQUAL);
+        } else {
+          this.addToken(tokenTypes.BANG);
+        }
         break;
 
       case "=":
-        this.addToken(
-          this.match("=") ? tokenTypes.EQUAL_EQUAL : tokenTypes.EQUAL
-        );
+        if (this.match("=")) {
+          this.addToken(tokenTypes.EQUAL_EQUAL);
+        } else {
+          this.addToken(tokenTypes.EQUAL);
+        }
         break;
 
       case "&":
