@@ -452,7 +452,7 @@ module.exports = class Compiler {
     ast.forEach((stmt) => {
       compiled += stmt.accept(this);
     });
-    
+
     function addIncludedFunction(code, flag, functionName) {
       if (!flag) return code;
       return getIncludedFunction(functionName) + code;
