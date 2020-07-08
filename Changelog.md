@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.1 - 2020/07/08
+
+### Fixed
+
+- Arrow syntax to apply functions to arguments.
+
 ## 1.4.0 - 2020/06/24
 
 ### Added
