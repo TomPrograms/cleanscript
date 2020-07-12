@@ -121,6 +121,26 @@ function findBiggest(list) {
 console.log(findBiggest([1, 4, 2, 10, 2, 8]));
 ```
 
+You can also compile the Cleanscript code programmatically:
+
+```js
+const cleanscript = require("cleanscript");
+
+var code = `
+function sortNumerically(list):
+  return list.sort(lambda x, y : x - y);
+
+function findBiggest(sortNumerically -> list):
+  return list[list.length - 1];
+
+console.log(findBiggest([ 1, 4, 2, 10, 2, 8 ]));
+`;
+
+let compiled = cleanscript.compileCode(code, {
+  prettify: true,
+});
+```
+
 ## Documentation
 
 ### Literals
