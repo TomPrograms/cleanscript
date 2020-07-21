@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.2 - 2020/07/21
+
+### Added
+
+- Documentation to Readme.md about how to compile Cleanscript code programmatically.
+
 ## 1.4.1 - 2020/07/08
 
 ### Fixed
