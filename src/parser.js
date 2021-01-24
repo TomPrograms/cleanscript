@@ -15,7 +15,6 @@ module.exports = class Parser {
   }
 
   error(token, message) {
-    throw new Error
     if (token.type === tokenTypes.EOF) {
       console.error(`[Line: ${token.line}] Error at end: ${message}`);
     } else {
@@ -98,7 +97,11 @@ module.exports = class Parser {
         return new Expr.Dictionary([], []);
       }
       while (!this.match(tokenTypes.RIGHT_BRACE)) {
-        while (this.match(tokenTypes.INDENT) || this.match(tokenTypes.DEDENT) || this.match(tokenTypes.EOL)) 
+        while (
+          this.match(tokenTypes.INDENT) ||
+          this.match(tokenTypes.DEDENT) ||
+          this.match(tokenTypes.EOL)
+        )
           continue;
 
         if (this.isAtEnd()) break;
@@ -124,9 +127,12 @@ module.exports = class Parser {
         keys.push(key);
         values.push(value);
 
-        while (this.match(tokenTypes.INDENT) || this.match(tokenTypes.DEDENT) || this.match(tokenTypes.EOL)) 
+        while (
+          this.match(tokenTypes.INDENT) ||
+          this.match(tokenTypes.DEDENT) ||
+          this.match(tokenTypes.EOL)
+        )
           continue;
-        
 
         if (this.peek().type !== tokenTypes.RIGHT_BRACE) {
           this.consume(
@@ -608,7 +614,7 @@ module.exports = class Parser {
   ifStatement() {
     function parseBody() {
       let body = [];
-      if (this.check(tokenTypes.EOL)) this.consume(tokenTypes.EOL)
+      if (this.check(tokenTypes.EOL)) this.consume(tokenTypes.EOL);
       if (this.match(tokenTypes.INDENT)) {
         body = this.block();
       } else {
@@ -724,8 +730,8 @@ module.exports = class Parser {
     this.consume(tokenTypes.COLON, "Expected ':' after switch statement.");
 
     function parseBody() {
-      let body = []
-      if (this.check(tokenTypes.EOL)) this.consume(tokenTypes.EOL)
+      let body = [];
+      if (this.check(tokenTypes.EOL)) this.consume(tokenTypes.EOL);
       if (this.match(tokenTypes.INDENT)) {
         body = this.block();
       } else {
@@ -737,7 +743,7 @@ module.exports = class Parser {
       return new Stmt.Block(body);
     }
 
-    this.consume(tokenTypes.EOL, "Expected new line.")
+    this.consume(tokenTypes.EOL, "Expected new line.");
     this.consume(tokenTypes.INDENT, "Expected indent after switch statement.");
 
     let branches = [];
@@ -866,7 +872,7 @@ module.exports = class Parser {
 
   letDeclaration() {
     let name = this.consume(tokenTypes.IDENTIFIER, "Expect variable name.");
-  
+
     let initializer = null;
     if (this.match(tokenTypes.EQUAL)) {
       initializer = this.expression();
@@ -926,7 +932,8 @@ module.exports = class Parser {
       tokenTypes.STRING,
       "Expected string containing Javascript code."
     );
-    if (!this.isAtEnd()) this.consume(tokenTypes.EOL, "Expected new line after JSRAW code.");
+    if (!this.isAtEnd())
+      this.consume(tokenTypes.EOL, "Expected new line after JSRAW code.");
     return new Stmt.JSRAW(code);
   }
 
@@ -942,7 +949,7 @@ module.exports = class Parser {
     }
 
     this.consume(tokenTypes.COLON, "Expected colon after class declaration.");
-    this.consume(tokenTypes.EOL, "Expected new line.")
+    this.consume(tokenTypes.EOL, "Expected new line.");
     this.consume(tokenTypes.INDENT, "Expected indent after class declaration.");
 
     let methods = [];

@@ -363,7 +363,11 @@ module.exports = class Lexer {
         break;
 
       case "\n":
-        if (this.tokens.length && this.tokens[this.tokens.length - 1].type !== tokenTypes.EOL && this.tokens[this.tokens.length - 1].type !== tokenTypes.DEDENT) {
+        if (
+          this.tokens.length &&
+          this.tokens[this.tokens.length - 1].type !== tokenTypes.EOL &&
+          this.tokens[this.tokens.length - 1].type !== tokenTypes.DEDENT
+        ) {
           this.tokens.push(new Token(tokenTypes.EOL, null, null, this.line));
         }
 
