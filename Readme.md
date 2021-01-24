@@ -10,7 +10,7 @@
 - Compiles to Javascript for compatibility with browsers, NodeJS and Electron.
 - Mix-in Javascript at-will to access the maturity and power of pure Javascript.
 
-[![Cleanscript NPM Version](https://img.shields.io/npm/v/cleanscript?color=green)](https://npmjs.com/package/cleanscript)
+[![Cleanscript NPM Version](https://img.shields.io/npm/v/cleanscript-lang?color=green)](https://npmjs.com/package/cleanscript-lang)
 [![Cleanscript License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
 ## Table of Contents
