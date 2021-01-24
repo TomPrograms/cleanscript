@@ -77,5 +77,6 @@ module.exports = {
   JSRAW: "JSRAW",
   INDENT: "INDENT",
   DEDENT: "DEDENT",
+  EOL: "EOL",
   EOF: "EOF",
 };

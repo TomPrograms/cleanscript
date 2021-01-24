@@ -4,7 +4,7 @@
 
 > Cleanscript is an small, indent-based language that compiles to Javascript.
 
-- Clean, indent-based grammar.
+- A blend of Javascript, Python and novel syntax.
 - Useful features such as Pythonic indexes, Pythonic for loops and effortless deep equality.
 - Still utilise all the powerful built-in Javascript libraries, objects and prototypes.
 - Compiles to Javascript for compatibility with browsers, NodeJS and Electron.
@@ -32,6 +32,7 @@
   - [For Loops](#For-Loops)
   - [While Loops](#While-Loops)
   - [Do Loops](#Do-Loops)
+  - [Switch](#Switch)
   - [Functions](#Functions)
   - [Lambda Functions](#Lambda-Functions)
   - [Classes](#Classes)
@@ -41,7 +42,7 @@
 
 ## Overview
 
-The syntax of Cleanscript is desgined to be a blend of syntax from Javascript and Python. Cleanscript mostly functions the same as standard Javascript, still allowing access to all the standard Javascript methods, prototypes and functions, however enforces (but more importanly allows) indent-based blocks and includes some useful features not present in ES5 or ES6 Javascript. Cleanscript is intended to have a low-overhead to learn and understand for Javascript users while maintaining extra, useful features and an indent-based syntax. Cleanscript is in an immature, early state, however can compile accurate Cleanscript stabily. Any pull-requests or issues would be apppreciated.
+The syntax of Cleanscript is desgined to be a blend of syntax from Javascript and Python. Cleanscript mostly functions the same as standard Javascript, still allowing access to all the standard Javascript methods, prototypes and functions, however writes more like Python, with indent-based grammar and no semi-colons at the end of lines. Cleanscript is intended to have a low-overhead to learn and understand for Javascript users while maintaining extra, useful features. Cleanscript is in an immature, early state, however can compile accurate Cleanscript stabily. Any pull-requests or issues would be apppreciated.
 
 ## Installation
 
@@ -92,12 +93,12 @@ For example, the following Cleanscript code:
 
 ```
 function sortNumerically(list):
-  return list.sort(lambda x, y : x - y);
+  return list.sort(lambda x, y : x - y)
 
 function findBiggest(sortNumerically -> list):
-  return list[list.length - 1];
+  return list[list.length - 1]
 
-console.log(findBiggest([ 1, 4, 2, 10, 2, 8 ]));
+console.log(findBiggest([ 1, 4, 2, 10, 2, 8 ]))
 ```
 
 Compiles to the following Javascript (when using the `--no-minify` and `--prettify` flags):
@@ -106,18 +107,15 @@ Compiles to the following Javascript (when using the `--no-minify` and `--pretti
 /* Compiled by Cleanscript */
 
 "use strict";
-
 function sortNumerically(list) {
   return list.sort(function (x, y) {
     return x - y;
   });
 }
-
 function findBiggest(list) {
   list = sortNumerically(list);
   return list[list.length - 1];
 }
-
 console.log(findBiggest([1, 4, 2, 10, 2, 8]));
 ```
 
@@ -128,12 +126,12 @@ const cleanscript = require("cleanscript");
 
 var code = `
 function sortNumerically(list):
-  return list.sort(lambda x, y : x - y);
+  return list.sort(lambda x, y : x - y)
 
 function findBiggest(sortNumerically -> list):
-  return list[list.length - 1];
+  return list[list.length - 1]
 
-console.log(findBiggest([ 1, 4, 2, 10, 2, 8 ]));
+console.log(findBiggest([ 1, 4, 2, 10, 2, 8 ]))
 `;
 
 let compiled = cleanscript.compileCode(code, {
@@ -149,26 +147,26 @@ Most literals have the same familiar syntax as Javascript, apart from regular ex
 
 ```
 # numbers
-1;
-1.1;
-1_000_000;
+1
+1.1
+1_000_000
 
 # strings
-"a";
-'a';
-`a`;
+"a"
+'a'
+`a`
 
 # regular expressions
-r"/search/g";
+r"/search/g"
 
 # arrays
-[1, 2, '3'];
+[1, 2, '3']
 
 # dictionaries
 {
   "key1": 'value1',
   "key2": 'value2'
-};
+}
 ```
 
 ### Operators
@@ -177,8 +175,8 @@ Cleanscript supports all the operators in Javascript (including the ES6 exponent
 
 ```
 # floor division operator
-10 // 3; # equal to 3
-11 // 4; # equal to 2
+10 // 3 # equal to 3
+11 // 4 # equal to 2
 ```
 
 ### Variable Assignment
@@ -186,10 +184,10 @@ Cleanscript supports all the operators in Javascript (including the ES6 exponent
 Variable assignment works the same as Javascript, with `const`, `let` and `var` variable declarations supported as well as variable reassignments.
 
 ```
-var a = "a";
-const b = {};
-let c = 1;
-c = [1, 2, 3];
+var a = "a"
+const b = {}
+let c = 1
+c = [1, 2, 3]
 ```
 
 ### Equality
@@ -198,15 +196,15 @@ Cleanscript supports deep equality checking with the operators `==` and `!=`. De
 
 ```
 # standard, type-strict, equality checking
-1 == 1; # true
-1 == '1'; # false
-1 == 2; # false
-1 != 1; # false
+1 == 1 # true
+1 == '1' # false
+1 == 2 # false
+1 != 1 # false
 
 # deep equality checking
-[1, 2, 3] == [1, 2, 3]; # true
-[1, 2] == [1, 2, 3]; # false
-new Set([1,2]) == new Set([1,2,3]); # false
+[1, 2, 3] == [1, 2, 3] # true
+[1, 2] == [1, 2, 3] # false
+new Set([1,2]) == new Set([1,2,3]) # false
 ```
 
 ### Control Keywords
@@ -214,15 +212,15 @@ new Set([1,2]) == new Set([1,2,3]); # false
 Cleanscript uses semantic, Pythonic, English control keywords instead of punctuation, as well as adding additional control keywords. `and` and `or` keywords are supported within Cleanscript:
 
 ```
-true and true; # check if both are true
-true or false; # check if at least one is true
+true and true # check if both are true
+true or false # check if at least one is true
 ```
 
 Cleanscript also includes `in` and `not` control keywords. The `in` keyword checks in an element is within a target, with similar functionality to Python. The `in` keyword can check if an element is within a list, a string or an object. The `not` keyword has identical functionality to negating a statement with `!` (both are supported in Cleanscript).
 
 ```
-var list = [1, 2, 3];
-2 in list; # checks if 2 is in the list
+var list = [1, 2, 3]
+2 in list # checks if 2 is in the list
 ```
 
 ### Comments
@@ -246,22 +244,22 @@ Block
 Cleanscript supports advanced indexing as well as standard indexes, such as `[1:]` and `[2:3]`. These indexes have the same functionality as they would within Python.
 
 ```
-var list = [1, 2, 3, 4];
+var list = [1, 2, 3, 4]
 
-console.log(list[0]); # outputs "1"
-console.log(list[1:]); # outputs "[ 2, 3, 4 ]"
-console.log(list[:3]); # outputs "[ 1, 2, 3 ]"
-console.log(list[1:2]); # outputs "[ 2 ]"
+console.log(list[0])    # outputs "1"
+console.log(list[1:])   # outputs "[ 2, 3, 4 ]"
+console.log(list[:3])   # outputs "[ 1, 2, 3 ]"
+console.log(list[1:2])  # outputs "[ 2 ]"
 ```
 
 These indexes can also be assigned to with the same functionality as Python. For the following examples, we will presume the `list` variable resets to `[1, 2, 3, 4]` before each index assignment.
 
 ```
-list[0] = 10;                   # list becomes equal to "[ 10, 2, 3, 4 ]"
-list[:2] = [100, 200];          # list becomes equal to "[ 100, 200, 3, 4 ]"
-list[:2] = 50;                  # list becomes equal to "[ 50, 3, 4 ]"
-list[2:] = [10, 11, 12];        # list becomes equal to "[ 1, 2, 10, 11, 12 ]"
-list[1:2] = [10, 11];           # list becomes equal to "[ 1, 10, 11, 3, 4 ]"
+list[0] = 10                   # list becomes equal to "[ 10, 2, 3, 4 ]"
+list[:2] = [100, 200]          # list becomes equal to "[ 100, 200, 3, 4 ]"
+list[:2] = 50                  # list becomes equal to "[ 50, 3, 4 ]"
+list[2:] = [10, 11, 12]        # list becomes equal to "[ 1, 2, 10, 11, 12 ]"
+list[1:2] = [10, 11]           # list becomes equal to "[ 1, 10, 11, 3, 4 ]"
 ```
 
 ### Ternary Operators
@@ -269,10 +267,10 @@ list[1:2] = [10, 11];           # list becomes equal to "[ 1, 10, 11, 3, 4 ]"
 Cleanscript uses the Pythonic style of ternary statements following the pattern `thenBranch if condition else elseBranch` as opposed to the Javascript format `condition ? thenBranch : elseBranch`. Ternary statements don't need to contain an else branch, and if no else branch is supplied, the compiled else branch of the ternary statement will have a value of `undefined`.
 
 ```
-var a = 'yes' if 1 == 1 else 'no';
-console.log('correct' if a == 'yes' else 'incorrect');
+var a = 'yes' if 1 == 1 else 'no'
+console.log('correct' if a == 'yes' else 'incorrect')
 
-var b = 'yes' if 1 == 2; # value will be undefined
+var b = 'yes' if 1 == 2 # value will be undefined
 ```
 
 ### If, Elif, Else
@@ -281,11 +279,11 @@ If, elif and else statements work similarly to Javascript, with minor difference
 
 ```
 if a == 1:
-  console.log("Option 1");
+  console.log("Option 1")
 elif a == 2:
-  console.log("Option 2");
+  console.log("Option 2")
 else:
-  console.log("No Option");
+  console.log("No Option")
 ```
 
 ### For Loops
@@ -293,19 +291,19 @@ else:
 Cleanscript implements Pythonic for loops. For loops can iterate over lists, sets, objects and strings.
 
 ```
-var names = ["jeff", "tom", "john"];
+var names = ["jeff", "tom", "john"]
 for name in names:
-  console.log(`I am friends with ${name}`);
+  console.log(`I am friends with ${name}`)
 ```
 
 If you want to iterate over indexes of a list or a list of numbers, the `range(start, end, step)` function is included to help. The `range()` function has the same functionality as the Python `range()` function:
 
 ```
-var names = ["jeff", "tom", "john"];
+var names = ["jeff", "tom", "john"]
 for i in range(0, names.length):
-  console.log(names[i]);
+  console.log(names[i])
 
-range(0, 10, 2); # generates list "[ 0, 2, 4, 6, 8 ]"
+range(0, 10, 2) # generates list "[ 0, 2, 4, 6, 8 ]"
 ```
 
 ### While Loops
@@ -314,8 +312,8 @@ Cleanscript while loops are the same as plain Javascript, but use an indent-base
 
 ```
 while true:
-  console.log('a');
-  console.log('b');
+  console.log('a')
+  console.log('b')
 ```
 
 ### Do Loops
@@ -324,15 +322,31 @@ Cleanscript also supports do-while loops.
 
 ```
 do:
-  console.log('a');
-while true;
+  console.log('a')
+while true
 ```
 
 Cleanscript doesn't require a while condition, and if no while condition is provided, the do block is only ran once.
 
 ```
 do:
-  console.log('a');
+  console.log('a')
+```
+
+### Switch
+
+Cleanscript also supports switch-case-default statements.
+
+```
+switch variable:
+  case 10:
+    console.log("a")
+
+  case 20:
+    console.log("b")
+
+  default:
+    console.log("c")
 ```
 
 ### Functions
@@ -340,17 +354,17 @@ do:
 Functions can be declared as regular functions, asynchronous functions or generators.
 
 ```
-# no parameters
-function main:
-  console.log('function main');
+# synchronous function
+function syncFunction:
+  console.log('function main')
 
 # asynchronous function
 async function nonSyncFunction:
-  return;
+  return
 
 # generator
 function* generatorFunction:
-  yield 1;
+  yield 1
 ```
 
 Functions can contain an unlimited number of parameters. Wildcard parameters are also supported, but must be the last parameter of the function.
@@ -358,14 +372,14 @@ Functions can contain an unlimited number of parameters. Wildcard parameters are
 ```
 # three parameters
 function main(a, b, c):
-  console.log(a);
-  console.log(b);
-  console.log(c);
+  console.log(a)
+  console.log(b)
+  console.log(c)
 
 # one parameter and a wildcard parameter
 function wildcard(a, *b):
-  console.log(a);
-  console.log(b);
+  console.log(a)
+  console.log(b)
 ```
 
 Both standard and wildcard parameters can have a default value, which will replace the parameters value if no value is provided for it in the function call.
@@ -373,22 +387,22 @@ Both standard and wildcard parameters can have a default value, which will repla
 ```
 # two parameters with default values
 function main(a=1, b=2):
-  console.log(a);
-  console.log(b);
+  console.log(a)
+  console.log(b)
 
 # a wildcard parameter with a default value
 function wildcard(*a=[1,2,3]):
-  console.log(a);
+  console.log(a)
 ```
 
 Cleanscript also has a feature for casting parameters to functions before the main body of the function. This is useful for performing operations on a parameter before the function, such as converting the type of the parameter. The name of provided function before the `->` statement is the name of the function that will be called with the parameter, and the returned value will be reassigned as the parameter variables value.
 
 ```
-var timesTwo = lambda x : x * 2;
+var timesTwo = lambda x : x * 2
 
 # call the timesTwo function with a and reassign a as the returned value
 function print(timesTwo -> a):
-  console.log(a);
+  console.log(a)
 ```
 
 ### Lambda Functions
@@ -397,14 +411,14 @@ Lambda functions are a clean, expressive way to create one-line functions with i
 
 ```
 # lambda functions with no arguments
-var randomUpto10 = lambda : Math.floor(Math.random() * 10);
+var randomUpto10 = lambda : Math.floor(Math.random() * 10)
 
 # lambda functions with parameters
-var double = lambda x : x * 2;
-var getIndex = lambda x, *y: y[x];
+var double = lambda x : x * 2
+var getIndex = lambda x, *y: y[x]
 
 # async lambda function with default parameter
-var asyncLambda = async lambda x=2 : x ** 3;
+var asyncLambda = async lambda x=2 : x ** 3
 ```
 
 ### Classes
@@ -415,11 +429,11 @@ In cleanscript, you can declare a class like the following. The class' methods u
 class Test:
   # synchronous method
   function constructor:
-    this.name = "tom";
+    this.name = "tom"
 
   # asynchronous method
   async function sayYourName:
-    console.log(this.name);
+    console.log(this.name)
 ```
 
 In Cleanscript, you can define class inheritance with similar syntax to Python's inheritance:
@@ -427,7 +441,7 @@ In Cleanscript, you can define class inheritance with similar syntax to Python's
 ```
 class Test(Main):
   function constructor:
-    this.name = "tom";
+    this.name = "tom"
 ```
 
 ### Try, Catch, Else, Finally
@@ -436,21 +450,23 @@ Cleanscript supports try, catch, else and finally branches. The else branch is o
 
 ```
 try:
-  console.log('Trying...');
+  console.log('Trying...')
 catch:
-  console.error("An error occurred.");
+  console.error("An error occurred.")
 else:
   # only run if catch isn't
-  console.log("No catch required.");
+  console.log("No catch required.")
 finally:
-  console.log('All Finished');
+  console.log('All Finished')
 ```
 
 If you want to specify the error parameter for the catch block, you can do so like:
 
 ```
+try:
+  console.log('Trying...')
 catch errorVar:
-  console.error(errorVar);
+  console.error(errorVar)
 ```
 
 ### Strict Mode
@@ -458,7 +474,7 @@ catch errorVar:
 Cleanscript by default enables strict mode. Strict mode helps to encourage better code and prevents common issues in the code. If you don't want strict mode, you can disable it explicitly by putting the statement `"unstrict";` before any other statement in your program, like so:
 
 ```
-"unstrict";
+"unstrict"
 
 # program contents
 ```
@@ -472,7 +488,7 @@ JSRAW "
 
 a+b;
 
-";
+"
 ```
 
 ## Credit

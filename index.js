@@ -9,19 +9,20 @@ const Lexer = require("./src/lexer.js");
 const Parser = require("./src/parser.js");
 const Compiler = require("./src/compiler.js");
 
-function findFilesInDir(base, ext, recursive = true) {
-  function recursiveFind(base, files, result) {
+function findFilesInDir(base, extension, recursive = true) {
+  function recursiveFind(base, files, result = []) {
     files = files || fs.readdirSync(base);
-    result = result || [];
 
     files.forEach(function (file) {
-      var newbase = path.join(base, file);
-      if (fs.statSync(newbase).isDirectory()) {
-        result = recursiveFind(newbase, fs.readdirSync(newbase), result);
+      let newBasePath = path.join(base, file);
+      if (fs.statSync(newBasePath).isDirectory()) {
+        result = recursiveFind(
+          newBasePath,
+          fs.readdirSync(newBasePath),
+          result
+        );
       } else {
-        if (file.substr(-1 * (ext.length + 1)) === "." + ext) {
-          result.push(newbase);
-        }
+        if (file.split(".").pop() === extension) result.push(newBasePath);
       }
     });
     return result;
@@ -31,9 +32,7 @@ function findFilesInDir(base, ext, recursive = true) {
     let files = fs.readdirSync(base);
     let result = [];
     files.forEach((file) => {
-      if (file.substr(-1 * (ext.length + 1)) === "." + ext) {
-        result.push(file);
-      }
+      if (file.split(".").pop() === extension) result.push(file);
     });
     return result;
   }

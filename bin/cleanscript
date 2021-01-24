@@ -1,7 +1,6 @@
 #! /usr/bin/env node
 
 const path = require("path");
-const fs = require("fs");
 const Cleanscript = require("../index.js");
 
 const args = process.argv.splice(2);
@@ -12,7 +11,7 @@ let watch = false;
 let minify = true;
 let mangle = true;
 let recursive = true;
-args.forEach((arg, i) => {
+args.forEach((arg) => {
   if (!arg.startsWith("--")) target = arg;
   else if (arg === "--watch") watch = true;
   else if (arg === "--no-minify") minify = false;

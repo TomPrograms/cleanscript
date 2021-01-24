@@ -81,7 +81,7 @@ module.exports = class Compiler {
     stmt.branches.forEach((branch) => {
       branchString += `case ${branch.condition.accept(this)}: ${branch.branch.accept(this)}`;
     });
-    let defaultString = `default: ${stmt.defaultBranch.branch.accept(this)}`;
+    let defaultString = stmt.defaultBranch ? `default: ${stmt.defaultBranch.branch.accept(this)}` : "";
     return `switch(${stmt.condition.accept(this)}){${branchString}${defaultString}}`;
   }
 
@@ -392,7 +392,7 @@ module.exports = class Compiler {
   }
 
   visitJSRAWStmt(expr) {
-    return expr.code.literal;
+    return expr.code.literal + ";";
   }
 
   visitDictionaryExpr(expr) {

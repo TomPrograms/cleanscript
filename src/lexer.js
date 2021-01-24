@@ -267,10 +267,6 @@ module.exports = class Lexer {
         this.addToken(tokenTypes.COLON);
         break;
 
-      case ";":
-        this.addToken(tokenTypes.SEMICOLON);
-        break;
-
       case "%":
         this.addToken(tokenTypes.MODULUS);
         break;
@@ -354,16 +350,23 @@ module.exports = class Lexer {
 
           this.advance();
           this.advance();
+
+          if (this.peek() === "\n") this.advance();
         }
 
         // single comment
         else {
           while (this.peek() !== "\n" && !this.endOfCode()) this.advance();
+          if (this.peek() === "\n") this.advance();
         }
 
         break;
 
       case "\n":
+        if (this.tokens.length && this.tokens[this.tokens.length - 1].type !== tokenTypes.EOL && this.tokens[this.tokens.length - 1].type !== tokenTypes.DEDENT) {
+          this.tokens.push(new Token(tokenTypes.EOL, null, null, this.line));
+        }
+
         this.line += 1;
 
         let indentStart = this.current;
