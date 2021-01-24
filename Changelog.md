@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0 - 2021/01/24
+
+### Changed
+
+- Changed syntax so ";" no longer can or have to follow after each line.
+
 ## 1.4.2 - 2020/07/21
 
 ### Added
