@@ -357,7 +357,6 @@ module.exports = class Lexer {
         // single comment
         else {
           while (this.peek() !== "\n" && !this.endOfCode()) this.advance();
-          if (this.peek() === "\n") this.advance();
         }
 
         break;
