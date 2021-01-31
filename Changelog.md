@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.1 - 2021/01/31
+
+### Fixed
+
+- In-line single comments
+
 ## 1.5.0 - 2021/01/24
 
 ### Changed
