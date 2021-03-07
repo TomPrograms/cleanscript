@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.6.0 - 2021/03/07
+
+### Added
+
+- Support for multiple case statements for each branch in switch statement.
+- Stopped switch-case fall through by default.
+- Extra code demo in Readme.md.
+
+### Fixed
+
+- Bug while lexing comment lines that caused Cleanscript programs to fail to compile.
+- Bug compiling programs using the in-built `range` function.
+
 ## 1.5.1 - 2021/01/31
 
 ### Fixed
