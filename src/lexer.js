@@ -345,18 +345,28 @@ module.exports = class Lexer {
         // block comment
         if (this.match("*")) {
           while (!(this.peek() === "*" && this.peekNext() === "#")) {
+            if (this.endOfCode()) {
+              this.errorMessage(
+                this.line,
+                ` at "${char}"`,
+                "Unterminated multi-line comment."
+              );
+              break;
+            }
             this.advance();
           }
 
           this.advance();
           this.advance();
-
+          if (this.peek() === "\r") this.advance();
           if (this.peek() === "\n") this.advance();
         }
 
         // single comment
         else {
           while (this.peek() !== "\n" && !this.endOfCode()) this.advance();
+          if (this.peek() === "\r") this.advance();
+          if (this.peek() === "\n") this.advance();
         }
 
         break;
