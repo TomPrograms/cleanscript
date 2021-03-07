@@ -70,7 +70,7 @@ module.exports = class Compiler {
   }
 
   visitForStmt(stmt) {
-    this.flags.includeCreateIterableFlag = true;
+    this.flags.includeCreateIterableFunctionFlag = true;
     let varName = stmt.variable.lexeme;
     let iterator = stmt.iterator.accept(this);
     return `var $_iterator = $_createIterable(${iterator});for (let $_forVar = 0; $_forVar < $_iterator.length; $_forVar++) {var ${varName} = $_iterator[$_forVar];${stmt.body.accept(this)}}`;
@@ -228,7 +228,7 @@ module.exports = class Compiler {
     const functionName = expr.callee.accept(this);
 
     if (functionName === "range") {
-      this.flags.includeRangeFlag = true;
+      this.flags.includeRangeFunctionFlag = true;
     }
 
     return `${functionName}(${argsString})`;
@@ -304,7 +304,7 @@ module.exports = class Compiler {
 
       let needsDeepEquals = isObject(expr.left) && isObject(expr.right);
       if (needsDeepEquals) {
-        this.flags.includeDeepEqualsFlag = true;
+        this.flags.includeDeepEqualsFunctionFlag = true;
         return `${negate ? "!" : ""}$_deepEquals(${left}, ${right})`;
       } else {
         return negate ? `${left}!==${right}` : `${left}===${right}`;
@@ -434,9 +434,9 @@ module.exports = class Compiler {
     // set default flags
     this.flags = {
       includeInFunctionFlag: false,
-      includeCreateIterableFlag: false,
-      includeRangeFlag: false,
-      includeDeepEqualsFlag: false,
+      includeCreateIterableFunctionFlag: false,
+      includeRangeFunctionFlag: false,
+      includeDeepEqualsFunctionFlag: false,
       strictFlag: true,
     };
 
@@ -465,10 +465,10 @@ module.exports = class Compiler {
       return getIncludedFunction(functionName) + code;
     }
 
-    compiled = addIncludedFunction(compiled, this.flags.includeInFunctionFlag, "inFunction");
-    compiled = addIncludedFunction(compiled, this.flags.includeCreateIterableFlag, "inFunction");
-    compiled = addIncludedFunction(compiled, this.flags.includeRangeFlag, "createIterable");
-    compiled = addIncludedFunction(compiled, this.flags.includeDeepEqualsFlag, "deepEqualsFunction");
+    compiled = addIncludedFunction(compiled, this.flags.includeInFunctionFlag, "in");
+    compiled = addIncludedFunction(compiled, this.flags.includeCreateIterableFunctionFlag, "createIterable");
+    compiled = addIncludedFunction(compiled, this.flags.includeRangeFunctionFlag, "range");
+    compiled = addIncludedFunction(compiled, this.flags.includeDeepEqualsFunctionFlag, "deepEqualsFunction");
 
     if (this.flags.strictFlag) {
       compiled = '"use strict";' + compiled;
