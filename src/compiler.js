@@ -80,8 +80,13 @@ module.exports = class Compiler {
     let branchString = "";
     stmt.branches.forEach((branch) => {
       let conditionStatement = ``;
-      branch.conditions.forEach(condition => conditionStatement += `case ${condition.accept(this)}:`)
-      branchString += conditionStatement + `${branch.branch.accept(this)}`;
+      branch.conditions.forEach((condition) => (conditionStatement += `case ${condition.accept(this)}:`));
+      let lastStatement = branch.branch.statements.pop();
+      let branchBody = branch.branch.accept(this);
+      if (!(lastStatement instanceof Stmt.Continue)) {
+        branchBody += lastStatement.accept(this) + "break;";
+      }
+      branchString += conditionStatement + branchBody;
     });
     let defaultString = stmt.defaultBranch ? `default: ${stmt.defaultBranch.branch.accept(this)}` : "";
     return `switch(${stmt.condition.accept(this)}){${branchString}${defaultString}}`;

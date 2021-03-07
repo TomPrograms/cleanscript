@@ -350,6 +350,34 @@ switch variable:
     console.log("c")
 ```
 
+The one difference between Javascript and Cleanscript switch statements is that Cleanscript switch statements by default stop fall through. For example:
+
+```
+switch(10):
+  case 10:
+    # this branch will run
+    console.log("a")
+
+  case 20:
+    # this branch will not run
+    console.log("b")
+
+```
+
+If you do want to cause a fall through, you can use the `continue` statement.
+
+```
+switch (a):
+  case 10:
+    # this branch will run if a=10
+    console.log("a")
+    continue
+
+  case 20:
+    # this branch will run if a=10 (because of fall through) or if a=20 because the case condition is met
+    console.log("b")
+```
+
 ### Functions
 
 Functions can be declared as regular functions, asynchronous functions or generators.
