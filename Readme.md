@@ -343,6 +343,7 @@ switch variable:
     console.log("a")
 
   case 20:
+  case 30:
     console.log("b")
 
   default:

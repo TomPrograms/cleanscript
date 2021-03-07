@@ -750,11 +750,17 @@ module.exports = class Parser {
     let defaultBranch = null;
     while (!this.match(tokenTypes.DEDENT) && !this.isAtEnd()) {
       if (this.match(tokenTypes.CASE)) {
-        let condition = this.expression();
+        let conditions = [this.expression()]
         this.consume(tokenTypes.COLON, "Expected ':' after case statement.");
+        this.match(tokenTypes.EOL);
+
+        while (this.match(tokenTypes.CASE)) {
+          conditions.push(this.expression());
+          this.consume(tokenTypes.COLON, "Expected ':' after case statement.");
+        }
 
         let branch = parseBody.call(this);
-        branches.push({ branch, condition });
+        branches.push({ branch, conditions });
       } else if (this.match(tokenTypes.DEFAULT)) {
         this.consume(tokenTypes.COLON, "Expected ':' after case statement.");
 

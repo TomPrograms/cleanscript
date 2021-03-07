@@ -79,7 +79,9 @@ module.exports = class Compiler {
   visitSwitchStmt(stmt) {
     let branchString = "";
     stmt.branches.forEach((branch) => {
-      branchString += `case ${branch.condition.accept(this)}: ${branch.branch.accept(this)}`;
+      let conditionStatement = ``;
+      branch.conditions.forEach(condition => conditionStatement += `case ${condition.accept(this)}:`)
+      branchString += conditionStatement + `${branch.branch.accept(this)}`;
     });
     let defaultString = stmt.defaultBranch ? `default: ${stmt.defaultBranch.branch.accept(this)}` : "";
     return `switch(${stmt.condition.accept(this)}){${branchString}${defaultString}}`;
