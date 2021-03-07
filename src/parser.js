@@ -750,7 +750,7 @@ module.exports = class Parser {
     let defaultBranch = null;
     while (!this.match(tokenTypes.DEDENT) && !this.isAtEnd()) {
       if (this.match(tokenTypes.CASE)) {
-        let conditions = [this.expression()]
+        let conditions = [this.expression()];
         this.consume(tokenTypes.COLON, "Expected ':' after case statement.");
         this.match(tokenTypes.EOL);
 
