@@ -39,6 +39,7 @@
   - [Switch](#Switch)
   - [Functions](#Functions)
   - [Lambda Functions](#Lambda-Functions)
+  - [Arrow Syntax](#Arrow-Syntax)
   - [Classes](#Classes)
   - [Try, Catch, Else, Finally](#Try-Catch-Else-Finally)
   - [Strict Mode](#Strict-Mode)
@@ -452,6 +453,22 @@ var getIndex = lambda x, *y: y[x]
 
 # async lambda function with default parameter
 var asyncLambda = async lambda x=2 : x ** 3
+```
+
+### Arrow Syntax
+
+You can use arrow syntax to apply functions to passed parameters before the main body of the function.
+
+```
+function double(number):
+  return number * 2
+
+# will run the double function with the passed "value" parameter, and replace the "value" parameter with the returned value, all before the console.log statement
+function main(double -> value):
+  console.log(value)
+
+# will print "20"
+main(10)
 ```
 
 ### Classes
