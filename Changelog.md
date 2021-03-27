@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.1 - 2021/03/27
+
+### Added
+
+- Documentation about arrow syntax.
+
 ## 1.6.0 - 2021/03/07
 
 ### Added
